@@ -1,0 +1,24 @@
+{
+  "packageId": "ir.protranslate.ai",
+  "host": "REPLACE-WITH-YOUR-FRONTEND-DOMAIN.com",
+  "name": "ترجمه‌گر حرفه‌ای",
+  "launcherName": "ترجمه‌گر",
+  "display": "standalone",
+  "themeColor": "#0e0e0e",
+  "navigationColor": "#0e0e0e",
+  "backgroundColor": "#0e0e0e",
+  "enableNotifications": false,
+  "startUrl": "/",
+  "iconUrl": "https://REPLACE-WITH-YOUR-FRONTEND-DOMAIN.com/icon-512.png",
+  "maskableIconUrl": "https://REPLACE-WITH-YOUR-FRONTEND-DOMAIN.com/icon-512-maskable.png",
+  "shortcuts": [],
+  "webManifestUrl": "https://REPLACE-WITH-YOUR-FRONTEND-DOMAIN.com/manifest.json",
+  "orientation": "portrait",
+  "fallbackType": "customtabs",
+  "appVersion": "1.0.0",
+  "appVersionCode": 1,
+  "signingKey": {
+    "path": "./android.keystore",
+    "alias": "protranslate"
+  }
+}

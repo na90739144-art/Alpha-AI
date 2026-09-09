@@ -1,0 +1,8 @@
+.env
+node_modules/
+android/android.keystore
+android/app-release-*.apk
+android/app-release-bundle.aab
+android/.gradle/
+android/build/
+.DS_Store

@@ -1,0 +1,87 @@
+name: Build Android APK (TWA)
+
+# این workflow باید در مسیر .github/workflows/build-apk.yml قرار بگیرد.
+# پیش‌نیاز: فرانت‌اند شما باید روی یک دامنه واقعی و HTTPS (مثل Netlify) منتشر شده باشد
+# و android/twa-manifest.json با آدرس آن دامنه به‌روزرسانی شده باشد.
+#
+# کلید امضای اپلیکیشن هرگز داخل ریپو قرار نمی‌گیرد؛ به‌صورت GitHub Secret تعریف می‌شود:
+#   Settings → Secrets and variables → Actions → New repository secret
+#   ANDROID_KEYSTORE_BASE64   -> خروجی base64 فایل keystore شما
+#   ANDROID_KEYSTORE_PASSWORD -> رمز keystore
+#   ANDROID_KEY_ALIAS         -> نام alias کلید
+#   ANDROID_KEY_PASSWORD      -> رمز alias
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "android/**"
+      - "frontend/manifest.json"
+
+jobs:
+  build-apk:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install Bubblewrap CLI
+        run: npm install -g @bubblewrap/cli
+
+      - name: Restore signing keystore from secret
+        if: ${{ secrets.ANDROID_KEYSTORE_BASE64 != '' }}
+        run: |
+          echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 -d > android/android.keystore
+
+      - name: Initialize TWA project from manifest
+        working-directory: android
+        run: |
+          bubblewrap init --manifest=./twa-manifest.json --skipPwaValidation || true
+          bubblewrap update || true
+
+      - name: Build signed APK
+        if: ${{ secrets.ANDROID_KEYSTORE_BASE64 != '' }}
+        working-directory: android
+        env:
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+        run: |
+          bubblewrap build \
+            --skipPwaValidation \
+            --signingKeyPath=./android.keystore \
+            --signingKeyAlias="$ANDROID_KEY_ALIAS" \
+            --signingKeyPassword="$ANDROID_KEY_PASSWORD" \
+            --signingKeystorePassword="$ANDROID_KEYSTORE_PASSWORD"
+
+      - name: Build unsigned APK (no keystore secret set)
+        if: ${{ secrets.ANDROID_KEYSTORE_BASE64 == '' }}
+        working-directory: android
+        run: bubblewrap build --skipPwaValidation
+
+      - name: Upload APK / AAB artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: protranslate-ai-android
+          path: |
+            android/app-release-signed.apk
+            android/app-release-unsigned.apk
+            android/app-release-bundle.aab
+          if-no-files-found: warn
+
+# نکته صادقانه: pipeline بابلورپ (Bubblewrap) گاهی به تنظیمات محیطی حساس است
+# و ممکن است در اولین اجرا نیاز به رفع خطای جزئی داشته باشد. اگر این workflow
+# خطا داد، ساده‌ترین جایگزین، استفاده دستی از سرویس رایگان PWABuilder است:
+# https://www.pwabuilder.com  -> آدرس سایت خود را وارد کرده و "Package for Android" را بزنید.
