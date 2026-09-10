@@ -9,11 +9,12 @@
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect fill='%23101010' width='192' height='192' rx='28'/><text x='96' y='128' font-size='70' font-weight='800' fill='%23d4af37' text-anchor='middle' font-family='Tahoma'>PT</text></svg>">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 <style>
 :root{
-  --gold:#d4af37; --gold-light:#f4e5a1; --bg:#0e0e0e; --bg2:#1a1a1a; --bg3:#232323;
-  --glass:rgba(255,255,255,.04); --glass-brd:rgba(212,175,55,.25); --txt:#f2f2f2; --muted:#9a9a9a; --danger:#e5484d; --ok:#3ecf8e;
-  --radius:14px; --shadow:0 8px 30px rgba(0,0,0,.45);
+ --gold:#d4af37; --gold-light:#f4e5a1; --bg:#0e0e0e; --bg2:#1a1a1a; --bg3:#232323;
+ --glass:rgba(255,255,255,.04); --glass-brd:rgba(212,175,55,.25); --txt:#f2f2f2; --muted:#9a9a9a; --danger:#e5484d; --ok:#3ecf8e;
+ --radius:14px; --shadow:0 8px 30px rgba(0,0,0,.45);
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{height:100%}
@@ -30,9 +31,9 @@ input,textarea,select{font-family:inherit;color:var(--txt);outline:none}
 #authScreen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
 .auth-card{width:100%;max-width:420px;padding:36px 28px;text-align:center;animation:fadeUp .5s ease}
 @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
-.brand-logo{width:72px;height:72px;border-radius:18px;margin:0 auto 14px;background:linear-gradient(135deg,var(--gold),var(--gold-light));display:flex;align-items:center;justify-content:center;font-weight:800;font-size:26px;color:#101010;box-shadow:0 8px 24px rgba(212,175,55,.35)}
-.brand-title{font-size:22px;font-weight:800;color:var(--gold);letter-spacing:.5px}
-.brand-sub{font-size:12px;color:var(--muted);margin-top:4px;margin-bottom:26px}
+.brand-logo{width:64px;height:64px;border-radius:14px;margin:0 auto 16px;background:var(--gold);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:22px;letter-spacing:1px;color:#101010}
+.brand-title{font-size:19px;font-weight:600;color:var(--txt);letter-spacing:.2px}
+.brand-sub{font-size:11px;color:var(--muted);margin-top:4px;margin-bottom:28px;letter-spacing:.5px;text-transform:uppercase}
 .tabbar{display:flex;background:var(--bg3);border-radius:10px;padding:4px;margin-bottom:20px}
 .tabbar button{flex:1;padding:9px;border-radius:8px;font-size:13px;color:var(--muted);font-weight:600;transition:.2s}
 .tabbar button.active{background:var(--gold);color:#101010}
@@ -77,7 +78,17 @@ input,textarea,select{font-family:inherit;color:var(--txt);outline:none}
 
 /* ---------- HOME ---------- */
 .home-hi{font-size:22px;font-weight:800;margin-bottom:4px}
-.home-sub{color:var(--muted);font-size:13px;margin-bottom:22px}
+.home-sub{color:var(--muted);font-size:13px;margin-bottom:20px}
+.quick-chips{display:flex;gap:9px;overflow-x:auto;padding-bottom:2px;margin-bottom:14px;scrollbar-width:none}
+.quick-chips::-webkit-scrollbar{display:none}
+.chip-pill{flex-shrink:0;padding:9px 18px;border-radius:24px;background:var(--bg3);border:1px solid var(--glass-brd);color:var(--gold);font-size:12.5px;font-weight:600;white-space:nowrap;transition:.2s}
+.chip-pill:hover{background:var(--bg2);border-color:var(--gold)}
+.quick-bar{border-radius:22px;padding:14px 16px 12px;margin-bottom:24px}
+.quick-bar input{width:100%;background:transparent;font-size:14.5px;padding:4px 2px 12px;margin-bottom:10px;border-bottom:1px solid #2a2a2a}
+.quick-bar-controls{display:flex;align-items:center;gap:8px}
+.quick-mode-select{background:var(--bg3);border:1px solid #333;border-radius:20px;padding:7px 12px;font-size:11.5px;color:#ccc;max-width:128px}
+.quick-send{background:var(--gold);color:#101010}
+.quick-send:hover{background:var(--gold-light)}
 .grid-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin-bottom:26px}
 .card{padding:20px 16px;text-align:center;cursor:pointer;transition:.2s}
 .card:hover{transform:translateY(-3px);border-color:var(--gold)}
@@ -167,12 +178,12 @@ textarea.ta{width:100%;min-height:130px;padding:14px;background:var(--bg3);borde
 .modal p{font-size:13px;color:#ccc;line-height:1.9;margin-bottom:18px}
 
 @media (max-width:860px){
-  .sidebar{position:fixed;inset-inline-start:0;top:0;bottom:0;z-index:50;transform:translateX(110%);transition:.25s;box-shadow:var(--shadow)}
-  html[dir="rtl"] .sidebar{transform:translateX(110%)}
-  html[dir="ltr"] .sidebar{transform:translateX(-110%)}
-  .sidebar.open{transform:translateX(0)}
-  .menu-toggle{display:flex}
-  .msg{max-width:90%}
+ .sidebar{position:fixed;inset-inline-start:0;top:0;bottom:0;z-index:50;transform:translateX(110%);transition:.25s;box-shadow:var(--shadow)}
+ html[dir="rtl"] .sidebar{transform:translateX(110%)}
+ html[dir="ltr"] .sidebar{transform:translateX(-110%)}
+ .sidebar.open{transform:translateX(0)}
+ .menu-toggle{display:flex}
+ .msg{max-width:90%}
 }
 </style>
 </head>
@@ -180,781 +191,796 @@ textarea.ta{width:100%;min-height:130px;padding:14px;background:var(--bg3);borde
 
 <!-- ================= AUTH SCREEN ================= -->
 <div id="authScreen">
-  <div class="auth-card glass">
-    <div class="brand-logo">PT</div>
-    <div class="brand-title">ترجمه‌گر حرفه‌ای</div>
-    <div class="brand-sub">Pro Translator AI — دستیار هوش مصنوعی شخصی شما</div>
+ <div class="auth-card glass">
+ <div class="brand-logo">PT</div>
+ <div class="brand-title">ترجمه‌گر حرفه‌ای</div>
+ <div class="brand-sub">Pro Translator AI</div>
 
-    <button class="btn-google" onclick="app.googleLoginInfo()">
-      <span>🔵</span> ورود با Google
-    </button>
-    <div class="divider">یا</div>
+ <div id="googleBtnContainer" style="display:flex;justify-content:center;margin-top:8px"></div>
+ <div id="googleNotConfigured" class="hidden" style="font-size:12px;color:var(--danger);margin-top:14px;line-height:1.9;text-align:right">
+ ورود با Google هنوز پیکربندی نشده است. GOOGLE_CLIENT_ID را در ابتدای اسکریپت این فایل تنظیم کنید.
+ </div>
 
-    <div class="tabbar">
-      <button id="tabLogin" class="active" onclick="app.switchAuthTab('login')">ورود</button>
-      <button id="tabRegister" onclick="app.switchAuthTab('register')">ثبت‌نام</button>
-    </div>
-
-    <div id="loginForm">
-      <div class="field"><label>ایمیل</label><input type="email" id="loginEmail" placeholder="you@example.com"></div>
-      <div class="field"><label>رمز عبور</label><input type="password" id="loginPass" placeholder="••••••••"></div>
-      <button class="btn-primary" onclick="app.login()">ورود</button>
-    </div>
-
-    <div id="registerForm" class="hidden">
-      <div class="field"><label>نام</label><input type="text" id="regName" placeholder="نام شما"></div>
-      <div class="field"><label>ایمیل</label><input type="email" id="regEmail" placeholder="you@example.com"></div>
-      <div class="field"><label>رمز عبور</label><input type="password" id="regPass" placeholder="حداقل ۴ کاراکتر"></div>
-      <button class="btn-primary" onclick="app.register()">ایجاد حساب</button>
-    </div>
-
-    <div id="authMsg" style="color:var(--danger);font-size:12px;margin-top:12px;min-height:14px"></div>
-    <div class="auth-note">🔒 بدون حساب کاربری، امکان استفاده از چت، مترجم و ترجمه PDF وجود ندارد.</div>
-  </div>
+ <div id="authMsg" style="color:var(--danger);font-size:12px;margin-top:12px;min-height:14px"></div>
+ <div class="auth-note">ورود فقط از طریق حساب Google امکان‌پذیر است.</div>
+ </div>
 </div>
 
 <!-- ================= APP SHELL ================= -->
 <div id="appShell" class="hidden">
-  <aside class="sidebar" id="sidebar">
-    <div class="sb-logo">
-      <div class="ic">PT</div>
-      <div><h1>ترجمه‌گر حرفه‌ای</h1><p>Pro Translator AI</p></div>
-    </div>
-    <button class="nav-item active" data-nav="home" onclick="app.nav('home')">🏠 خانه</button>
-    <button class="nav-item" data-nav="chat" onclick="app.nav('chat')">🤖 چت هوش مصنوعی</button>
-    <button class="nav-item" data-nav="translate" onclick="app.nav('translate')">🌐 ترجمه‌گر</button>
-    <button class="nav-item" data-nav="pdf" onclick="app.nav('pdf')">📄 ترجمه PDF</button>
-    <button class="nav-item" data-nav="voice" onclick="app.nav('voice')">🎙️ دستیار صوتی</button>
-    <button class="nav-item" data-nav="history" onclick="app.nav('history')">📚 تاریخچه</button>
+ <aside class="sidebar" id="sidebar">
+ <div class="sb-logo">
+ <div class="ic">PT</div>
+ <div><h1>ترجمه‌گر حرفه‌ای</h1><p>Pro Translator AI</p></div>
+ </div>
+ <button class="nav-item active" data-nav="home" onclick="app.nav('home')">خانه</button>
+ <button class="nav-item" data-nav="chat" onclick="app.nav('chat')">چت هوش مصنوعی</button>
+ <button class="nav-item" data-nav="translate" onclick="app.nav('translate')">ترجمه‌گر</button>
+ <button class="nav-item" data-nav="pdf" onclick="app.nav('pdf')">ترجمه PDF</button>
+ <button class="nav-item" data-nav="voice" onclick="app.nav('voice')">دستیار صوتی</button>
+ <button class="nav-item" data-nav="history" onclick="app.nav('history')">تاریخچه</button>
 
-    <div class="sb-section-title">فعالیت‌های اخیر</div>
-    <div class="sb-history" id="sbHistory"></div>
+ <div class="sb-section-title">فعالیت‌های اخیر</div>
+ <div class="sb-history" id="sbHistory"></div>
 
-    <div class="sb-user" onclick="app.nav('profile')">
-      <div class="av" id="sbAvatar">؟</div>
-      <div class="info"><b id="sbName">کاربر</b><span id="sbEmail"></span></div>
-      <span>⚙️</span>
-    </div>
-    <button class="nav-item" style="margin-top:6px" onclick="app.nav('settings')">⚙️ تنظیمات</button>
-  </aside>
+ <div class="sb-user" onclick="app.nav('profile')">
+ <div class="av" id="sbAvatar">؟</div>
+ <div class="info"><b id="sbName">کاربر</b><span id="sbEmail"></span></div>
+ </div>
+ <button class="nav-item" style="margin-top:6px" onclick="app.nav('settings')">تنظیمات</button>
+ </aside>
 
-  <main class="main">
-    <div class="topbar">
-      <div>
-        <button class="menu-toggle icon-btn" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
-      </div>
-      <div style="text-align:center;flex:1">
-        <h2 id="topTitle">خانه</h2>
-        <p id="topSub">داشبورد ترجمه‌گر حرفه‌ای</p>
-      </div>
-      <div style="width:38px"></div>
-    </div>
+ <main class="main">
+ <div class="topbar">
+ <div>
+ <button class="menu-toggle icon-btn" onclick="document.getElementById('sidebar').classList.toggle('open')" aria-label="منو"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+ </div>
+ <div style="text-align:center;flex:1">
+ <h2 id="topTitle">خانه</h2>
+ <p id="topSub">داشبورد ترجمه‌گر حرفه‌ای</p>
+ </div>
+ <div style="width:38px"></div>
+ </div>
 
-    <div class="view" id="view">
+ <div class="view" id="view">
 
-      <!-- HOME -->
-      <section id="view-home">
-        <div id="backendWarn" class="banner-warn hidden">
-          ⚠️ آدرس بک‌اند (API_BASE_URL) هنوز تنظیم نشده یا در دسترس نیست. برای فعال شدن چت و ترجمه، فایل backend را دیپلوی کرده و مقدار API_BASE_URL را در ابتدای اسکریپت این صفحه با آدرس واقعی جایگزین کنید.
-        </div>
-        <div class="home-hi" id="homeGreeting">سلام 👋</div>
-        <div class="home-sub">امروز چه کمکی از ترجمه‌گر حرفه‌ای می‌خواهید؟</div>
-        <div class="grid-cards">
-          <div class="card glass" onclick="app.newChat()"><div class="ic">✨</div><b>گفت‌وگوی جدید</b><span>شروع چت تازه</span></div>
-          <div class="card glass" onclick="app.nav('chat')"><div class="ic">🤖</div><b>چت هوش مصنوعی</b><span>پرسش و پاسخ هوشمند</span></div>
-          <div class="card glass" onclick="app.nav('translate')"><div class="ic">🌐</div><b>ترجمه‌گر</b><span>ترجمه فوری متن</span></div>
-          <div class="card glass" onclick="app.nav('pdf')"><div class="ic">📄</div><b>ترجمه PDF</b><span>ترجمه کامل فایل</span></div>
-          <div class="card glass" onclick="app.nav('voice')"><div class="ic">🎙️</div><b>دستیار صوتی</b><span>گفت‌وگوی صوتی</span></div>
-        </div>
-        <div class="sb-section-title" style="margin-bottom:10px">آخرین فعالیت‌ها</div>
-        <div id="homeRecent"></div>
-      </section>
+ <!-- HOME -->
+ <section id="view-home">
+ <div id="backendWarn" class="banner-warn hidden">آدرس بک‌اند (API_BASE_URL) هنوز تنظیم نشده یا در دسترس نیست. برای فعال شدن چت و ترجمه، فایل backend را دیپلوی کرده و مقدار API_BASE_URL را در ابتدای اسکریپت این صفحه با آدرس واقعی جایگزین کنید.
+ </div>
+ <div class="home-hi" id="homeGreeting">سلام</div>
+ <div class="home-sub">امروز چه کمکی از ترجمه‌گر حرفه‌ای می‌خواهید؟</div>
 
-      <!-- CHAT -->
-      <section id="view-chat" class="hidden">
-        <div class="chat-wrap">
-          <div class="mode-select" id="aiModes"></div>
-          <div class="chat-area" id="chatArea"></div>
-          <div class="input-bar">
-            <button class="icon-btn" title="پیوست فایل" onclick="document.getElementById('fileInput').click()">📎</button>
-            <input type="file" id="fileInput" class="hidden" accept=".pdf,.txt" onchange="app.handleChatFile(event)">
-            <button class="icon-btn" id="micChatBtn" title="ورودی صوتی" onclick="app.toggleMic('chat')">🎙️</button>
-            <input type="text" id="chatInput" placeholder="پیام خود را بنویسید..." onkeypress="if(event.key==='Enter')app.sendChat()">
-            <button class="send-btn" onclick="app.sendChat()">ارسال ➤</button>
-          </div>
-        </div>
-      </section>
+ <div class="quick-chips">
+ <button class="chip-pill" onclick="app.nav('translate')">ترجمه متن</button>
+ <button class="chip-pill" onclick="app.nav('pdf')">ترجمه PDF</button>
+ <button class="chip-pill" onclick="app.nav('voice')">دستیار صوتی</button>
+ <button class="chip-pill" onclick="app.nav('history')">تاریخچه</button>
+ </div>
 
-      <!-- TRANSLATE -->
-      <section id="view-translate" class="hidden">
-        <div class="lang-row">
-          <select id="srcLang"></select>
-          <button class="swap-btn" onclick="app.swapLangs()">⇄</button>
-          <select id="dstLang"></select>
-        </div>
-        <div style="font-size:12px;color:var(--muted);margin-bottom:8px">متن اصلی</div>
-        <textarea class="ta" id="srcText" placeholder="متن خود را وارد کنید..."></textarea>
-        <div style="font-size:12px;color:var(--muted);margin-bottom:8px">نتیجه ترجمه</div>
-        <textarea class="ta" id="dstText" readonly placeholder="ترجمه اینجا نمایش داده می‌شود..."></textarea>
-        <div class="btn-row">
-          <button class="btn-gold" onclick="app.translateText()">🔄 ترجمه کن</button>
-          <button class="btn-ghost" onclick="app.copyText('dstText')">📋 کپی</button>
-          <button class="btn-ghost" onclick="app.shareText('dstText')">📤 اشتراک‌گذاری</button>
-          <button class="btn-ghost" onclick="app.speak(document.getElementById('dstText').value, document.getElementById('dstLang').value)">🔊 پخش صوتی</button>
-        </div>
-      </section>
+ <div class="quick-bar glass">
+ <input type="text" id="quickAskInput" placeholder="سوال خود را بپرسید..." onkeypress="if(event.key==='Enter')app.quickAsk()">
+ <div class="quick-bar-controls">
+ <button class="icon-btn" title="پیوست فایل" onclick="document.getElementById('fileInput').click()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+ <select id="quickModeSelect" class="quick-mode-select"></select>
+ <span style="flex:1"></span>
+ <button class="icon-btn" title="ورودی صوتی" onclick="app.toggleMic('chat')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2M12 19v4M8 23h8"/></svg></button>
+ <button class="icon-btn quick-send" title="ارسال" onclick="app.quickAsk()"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg></button>
+ </div>
+ </div>
 
-      <!-- PDF -->
-      <section id="view-pdf" class="hidden">
-        <div class="dropzone" onclick="document.getElementById('pdfInput').click()">
-          <div class="ic">📄</div>
-          <b>برای انتخاب فایل PDF کلیک کنید</b>
-          <div style="font-size:11px;color:var(--muted);margin-top:6px" id="pdfFileName">هیچ فایلی انتخاب نشده</div>
-        </div>
-        <input type="file" id="pdfInput" class="hidden" accept="application/pdf" onchange="app.pdfSelected(event)">
-        <div class="lang-row">
-          <select id="pdfSrcLang"></select>
-          <div style="color:var(--muted)">→</div>
-          <select id="pdfDstLang"></select>
-        </div>
-        <div class="opt-row">☑ حفظ ترتیب صفحات و پاراگراف‌بندی · پردازش مرحله‌ای فایل‌های بزرگ</div>
-        <button class="btn-gold" id="pdfStartBtn" onclick="app.startPdfTranslate()" disabled>🚀 شروع ترجمه</button>
-        <div id="pdfProgressWrap" class="hidden">
-          <div style="font-size:12px;color:var(--muted);margin-top:14px" id="pdfProgressLabel">در حال ترجمه...</div>
-          <div class="progress-wrap"><div class="progress-bar" id="pdfProgressBar"></div></div>
-        </div>
-        <div id="pdfResultWrap" class="hidden" style="margin-top:16px">
-          <textarea class="ta" id="pdfResultText" style="min-height:260px" readonly></textarea>
-          <div class="btn-row">
-            <button class="btn-gold" onclick="app.downloadPdfResult()">⬇️ دانلود متن ترجمه</button>
-            <button class="btn-ghost" onclick="app.copyText('pdfResultText')">📋 کپی</button>
-          </div>
-        </div>
-      </section>
+ <div class="grid-cards">
+ <div class="card glass" onclick="app.newChat()"><b>گفت‌وگوی جدید</b><span>شروع چت تازه</span></div>
+ <div class="card glass" onclick="app.nav('chat')"><b>چت هوش مصنوعی</b><span>پرسش و پاسخ هوشمند</span></div>
+ <div class="card glass" onclick="app.nav('translate')"><b>ترجمه‌گر</b><span>ترجمه فوری متن</span></div>
+ <div class="card glass" onclick="app.nav('pdf')"><b>ترجمه PDF</b><span>ترجمه کامل فایل</span></div>
+ <div class="card glass" onclick="app.nav('voice')"><b>دستیار صوتی</b><span>گفت‌وگوی صوتی</span></div>
+ </div>
+ <div class="sb-section-title" style="margin-bottom:10px">آخرین فعالیت‌ها</div>
+ <div id="homeRecent"></div>
+ </section>
 
-      <!-- VOICE -->
-      <section id="view-voice" class="hidden">
-        <div class="voice-wrap">
-          <div class="mic-btn" id="micVoiceBtn" onclick="app.toggleMic('voice')">🎙️</div>
-          <div style="color:var(--muted);font-size:13px" id="voiceStatus">برای صحبت کردن لمس کنید</div>
-          <div class="voice-transcript hidden glass" id="voiceTranscript"></div>
-          <div class="voice-answer hidden glass" id="voiceAnswer"></div>
-        </div>
-      </section>
+ <!-- CHAT -->
+ <section id="view-chat" class="hidden">
+ <div class="chat-wrap">
+ <div class="mode-select" id="aiModes"></div>
+ <div class="chat-area" id="chatArea"></div>
+ <div class="input-bar">
+ <button class="icon-btn" title="پیوست فایل" onclick="document.getElementById('fileInput').click()"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a5.5 5.5 0 01-7.78-7.78l9.19-9.19a3.5 3.5 0 014.95 4.95l-9.2 9.19a1.5 1.5 0 01-2.12-2.12l8.49-8.48"/></svg></button>
+ <input type="file" id="fileInput" class="hidden" accept=".pdf,.txt" onchange="app.handleChatFile(event)">
+ <button class="icon-btn" id="micChatBtn" title="ورودی صوتی" onclick="app.toggleMic('chat')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2M12 19v4M8 23h8"/></svg></button>
+ <input type="text" id="chatInput" placeholder="پیام خود را بنویسید..." onkeypress="if(event.key==='Enter')app.sendChat()">
+ <button class="send-btn" onclick="app.sendChat()">ارسال</button>
+ </div>
+ </div>
+ </section>
 
-      <!-- HISTORY -->
-      <section id="view-history" class="hidden">
-        <input type="text" class="hist-search" id="histSearch" placeholder="🔎 جستجو در تاریخچه..." oninput="app.renderHistory()">
-        <div id="histList"></div>
-      </section>
+ <!-- TRANSLATE -->
+ <section id="view-translate" class="hidden">
+ <div class="lang-row">
+ <select id="srcLang"></select>
+ <button class="swap-btn" onclick="app.swapLangs()" aria-label="جابجایی زبان‌ها"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 1l4 4-4 4M3 11V9a4 4 0 014-4h14M7 23l-4-4 4-4M21 13v2a4 4 0 01-4 4H3"/></svg></button>
+ <select id="dstLang"></select>
+ </div>
+ <div style="font-size:12px;color:var(--muted);margin-bottom:8px">متن اصلی</div>
+ <textarea class="ta" id="srcText" placeholder="متن خود را وارد کنید..."></textarea>
+ <div style="font-size:12px;color:var(--muted);margin-bottom:8px">نتیجه ترجمه</div>
+ <textarea class="ta" id="dstText" readonly placeholder="ترجمه اینجا نمایش داده می‌شود..."></textarea>
+ <div class="btn-row">
+ <button class="btn-gold" onclick="app.translateText()">ترجمه کن</button>
+ <button class="btn-ghost" onclick="app.copyText('dstText')">کپی</button>
+ <button class="btn-ghost" onclick="app.shareText('dstText')">اشتراک‌گذاری</button>
+ <button class="btn-ghost" onclick="app.speak(document.getElementById('dstText').value, document.getElementById('dstLang').value)">پخش صوتی</button>
+ </div>
+ </section>
 
-      <!-- PROFILE -->
-      <section id="view-profile" class="hidden">
-        <div class="profile-card glass">
-          <div class="profile-av" id="profAv">؟</div>
-          <b id="profName" style="font-size:16px"></b>
-          <div style="color:var(--muted);font-size:12px;margin-top:4px" id="profEmail"></div>
-          <div class="stat-row">
-            <div class="stat"><b id="statChats">0</b><span>گفت‌وگو</span></div>
-            <div class="stat"><b id="statTrans">0</b><span>ترجمه</span></div>
-            <div class="stat"><b id="statFiles">0</b><span>فایل</span></div>
-          </div>
-          <button class="btn-ghost" style="margin-top:18px;width:100%" onclick="app.editProfile()">✏️ ویرایش پروفایل</button>
-        </div>
-      </section>
+ <!-- PDF -->
+ <section id="view-pdf" class="hidden">
+ <div class="dropzone" onclick="document.getElementById('pdfInput').click()">
+ <b>برای انتخاب فایل PDF کلیک کنید</b>
+ <div style="font-size:11px;color:var(--muted);margin-top:6px" id="pdfFileName">هیچ فایلی انتخاب نشده</div>
+ </div>
+ <input type="file" id="pdfInput" class="hidden" accept="application/pdf" onchange="app.pdfSelected(event)">
+ <div class="lang-row">
+ <select id="pdfSrcLang"></select>
+ <div style="color:var(--muted)">به</div>
+ <select id="pdfDstLang"></select>
+ </div>
+ <div class="opt-row">حفظ ترتیب صفحات و پاراگراف‌بندی · پردازش مرحله‌ای فایل‌های بزرگ</div>
+ <button class="btn-gold" id="pdfStartBtn" onclick="app.startPdfTranslate()" disabled>شروع ترجمه</button>
+ <div id="pdfProgressWrap" class="hidden">
+ <div style="font-size:12px;color:var(--muted);margin-top:14px" id="pdfProgressLabel">در حال ترجمه...</div>
+ <div class="progress-wrap"><div class="progress-bar" id="pdfProgressBar"></div></div>
+ </div>
+ <div id="pdfResultWrap" class="hidden" style="margin-top:16px">
+ <textarea class="ta" id="pdfResultText" style="min-height:260px" readonly></textarea>
+ <div class="btn-row">
+ <button class="btn-gold" onclick="app.downloadPdfResult()">دانلود متن ترجمه</button>
+ <button class="btn-ghost" onclick="app.copyText('pdfResultText')">کپی</button>
+ </div>
+ </div>
+ </section>
 
-      <!-- SETTINGS -->
-      <section id="view-settings" class="hidden">
-        <div class="settings-group">
-          <h4>حساب کاربری</h4>
-          <div class="setting-row glass"><span>👤 پروفایل</span><button class="btn-ghost" onclick="app.nav('profile')">مشاهده</button></div>
-          <div class="setting-row glass"><span>🚪 خروج از حساب</span><button class="btn-ghost danger-btn" onclick="app.logout()">خروج</button></div>
-        </div>
-        <div class="settings-group">
-          <h4>زبان رابط برنامه</h4>
-          <div class="setting-row glass"><span>زبان نمایش برنامه</span>
-            <div class="seg"><button id="uiFa" class="active" onclick="app.setUiLang('fa')">فارسی</button><button id="uiEn" onclick="app.setUiLang('en')">English</button></div>
-          </div>
-        </div>
-        <div class="settings-group">
-          <h4>زبان پاسخ هوش مصنوعی</h4>
-          <div class="setting-row glass"><span>زبان پاسخ‌های چت</span>
-            <select id="aiRespLang" class="btn-ghost" onchange="app.setAiRespLang(this.value)"></select>
-          </div>
-        </div>
-        <div class="settings-group">
-          <h4>صدا</h4>
-          <div class="setting-row glass"><span>🎙️ ورودی صوتی</span><div class="switch on" id="swVoiceIn" onclick="app.toggleSetting('voiceIn')"></div></div>
-          <div class="setting-row glass"><span>🔊 خواندن پاسخ به‌صورت خودکار</span><div class="switch" id="swVoiceOut" onclick="app.toggleSetting('voiceOut')"></div></div>
-        </div>
-        <div class="settings-group">
-          <h4>ظاهر</h4>
-          <div class="setting-row glass"><span>🌙 حالت تیره + طلایی (Glassmorphism)</span><div class="switch on" style="opacity:.5;pointer-events:none"></div></div>
-        </div>
-        <div class="settings-group">
-          <h4>درباره</h4>
-          <div class="setting-row glass"><span>ℹ️ درباره ترجمه‌گر حرفه‌ای</span><button class="btn-ghost" onclick="app.showModal('درباره ما','ترجمه‌گر حرفه‌ای (Pro Translator AI) یک دستیار هوش مصنوعی برای چت، ترجمه متن و ترجمه اسناد PDF است.')">مشاهده</button></div>
-          <div class="setting-row glass"><span>🔒 حریم خصوصی</span><button class="btn-ghost" onclick="app.showModal('حریم خصوصی','پیام‌ها برای پردازش به سرور ارسال می‌شوند و کلید API هرگز در برنامه ذخیره نمی‌شود. تاریخچه به‌صورت محلی روی همین دستگاه نگه‌داری می‌شود.')">مشاهده</button></div>
-        </div>
-      </section>
+ <!-- VOICE -->
+ <section id="view-voice" class="hidden">
+ <div class="voice-wrap">
+ <div class="mic-btn" id="micVoiceBtn" onclick="app.toggleMic('voice')"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#101010" stroke-width="2"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2M12 19v4M8 23h8"/></svg></div>
+ <div style="color:var(--muted);font-size:13px" id="voiceStatus">برای صحبت کردن لمس کنید</div>
+ <div class="voice-transcript hidden glass" id="voiceTranscript"></div>
+ <div class="voice-answer hidden glass" id="voiceAnswer"></div>
+ </div>
+ </section>
 
-    </div>
-  </main>
+ <!-- HISTORY -->
+ <section id="view-history" class="hidden">
+ <input type="text" class="hist-search" id="histSearch" placeholder=" جستجو در تاریخچه..." oninput="app.renderHistory()">
+ <div id="histList"></div>
+ </section>
+
+ <!-- PROFILE -->
+ <section id="view-profile" class="hidden">
+ <div class="profile-card glass">
+ <div class="profile-av" id="profAv">؟</div>
+ <b id="profName" style="font-size:16px"></b>
+ <div style="color:var(--muted);font-size:12px;margin-top:4px" id="profEmail"></div>
+ <div class="stat-row">
+ <div class="stat"><b id="statChats">0</b><span>گفت‌وگو</span></div>
+ <div class="stat"><b id="statTrans">0</b><span>ترجمه</span></div>
+ <div class="stat"><b id="statFiles">0</b><span>فایل</span></div>
+ </div>
+ <button class="btn-ghost" style="margin-top:18px;width:100%" onclick="app.editProfile()">ویرایش پروفایل</button>
+ </div>
+ </section>
+
+ <!-- SETTINGS -->
+ <section id="view-settings" class="hidden">
+ <div class="settings-group">
+ <h4>حساب کاربری</h4>
+ <div class="setting-row glass"><span>پروفایل</span><button class="btn-ghost" onclick="app.nav('profile')">مشاهده</button></div>
+ <div class="setting-row glass"><span>خروج از حساب</span><button class="btn-ghost danger-btn" onclick="app.logout()">خروج</button></div>
+ </div>
+ <div class="settings-group">
+ <h4>زبان رابط برنامه</h4>
+ <div class="setting-row glass"><span>زبان نمایش برنامه</span>
+ <div class="seg"><button id="uiFa" class="active" onclick="app.setUiLang('fa')">فارسی</button><button id="uiEn" onclick="app.setUiLang('en')">English</button></div>
+ </div>
+ </div>
+ <div class="settings-group">
+ <h4>زبان پاسخ هوش مصنوعی</h4>
+ <div class="setting-row glass"><span>زبان پاسخ‌های چت</span>
+ <select id="aiRespLang" class="btn-ghost" onchange="app.setAiRespLang(this.value)"></select>
+ </div>
+ </div>
+ <div class="settings-group">
+ <h4>صدا</h4>
+ <div class="setting-row glass"><span>ورودی صوتی</span><div class="switch on" id="swVoiceIn" onclick="app.toggleSetting('voiceIn')"></div></div>
+ <div class="setting-row glass"><span>خواندن پاسخ به‌صورت خودکار</span><div class="switch" id="swVoiceOut" onclick="app.toggleSetting('voiceOut')"></div></div>
+ </div>
+ <div class="settings-group">
+ <h4>ظاهر</h4>
+ <div class="setting-row glass"><span>حالت تیره + طلایی (Glassmorphism)</span><div class="switch on" style="opacity:.5;pointer-events:none"></div></div>
+ </div>
+ <div class="settings-group">
+ <h4>درباره</h4>
+ <div class="setting-row glass"><span>درباره ترجمه‌گر حرفه‌ای</span><button class="btn-ghost" onclick="app.showModal('درباره ما','ترجمه‌گر حرفه‌ای (Pro Translator AI) یک دستیار هوش مصنوعی برای چت، ترجمه متن و ترجمه اسناد PDF است.')">مشاهده</button></div>
+ <div class="setting-row glass"><span>حریم خصوصی</span><button class="btn-ghost" onclick="app.showModal('حریم خصوصی','پیام‌ها برای پردازش به سرور ارسال می‌شوند و کلید API هرگز در برنامه ذخیره نمی‌شود. تاریخچه به‌صورت محلی روی همین دستگاه نگه‌داری می‌شود.')">مشاهده</button></div>
+ </div>
+ </section>
+
+ </div>
+ </main>
 </div>
 
 <div id="modalBg" class="modal-bg hidden" onclick="if(event.target===this)this.classList.add('hidden')">
-  <div class="modal glass">
-    <h3 id="modalTitle"></h3>
-    <p id="modalBody"></p>
-    <button class="btn-gold" onclick="document.getElementById('modalBg').classList.add('hidden')">متوجه شدم</button>
-  </div>
+ <div class="modal glass">
+ <h3 id="modalTitle"></h3>
+ <p id="modalBody"></p>
+ <button class="btn-gold" onclick="document.getElementById('modalBg').classList.add('hidden')">متوجه شدم</button>
+ </div>
 </div>
 
 <script>
 /* =====================================================================
-   ترجمه‌گر حرفه‌ای — Pro Translator AI
-   نکته مهم امنیتی: هیچ کلید API‌ای در این فایل وجود ندارد و نباید اضافه شود.
-   تمام درخواست‌های هوش مصنوعی از طریق بک‌اند (backend/server.js) انجام
-   می‌شود که کلید Groq را به‌صورت GitHub Secret / متغیر محیطی نگه می‌دارد.
-   ===================================================================== */
+ ترجمه‌گر حرفه‌ای — Pro Translator AI
+ نکته مهم امنیتی: هیچ کلید API‌ای در این فایل وجود ندارد و نباید اضافه شود.
+ تمام درخواست‌های هوش مصنوعی از طریق بک‌اند (backend/server.js) انجام
+ می‌شود که کلید Groq را به‌صورت GitHub Secret / متغیر محیطی نگه می‌دارد.
+ ===================================================================== */
 
-// ⚠️ تنها خطی که باید بعد از دیپلوی بک‌اند ویرایش شود:
+// تنها خطی که باید بعد از دیپلوی بک‌اند ویرایش شود:
 const API_BASE_URL = "https://alpha-ai-jpz9.onrender.com/api";
 
+// GOOGLE_CLIENT_ID را بعد از ساخت پروژه در Google Cloud Console اینجا قرار دهید
+const GOOGLE_CLIENT_ID = "";
+
 const LANGS = [
-  { code: "auto", fa: "تشخیص خودکار", en: "Auto Detect" },
-  { code: "fa", fa: "فارسی", en: "Persian" },
-  { code: "en", fa: "English", en: "English" },
-  { code: "ar", fa: "العربية", en: "Arabic" },
-  { code: "ur", fa: "اردو", en: "Urdu" },
-  { code: "tr", fa: "Türkçe", en: "Turkish" },
-  { code: "ku", fa: "کوردی", en: "Kurdish" },
-  { code: "az", fa: "Azərbaycanca", en: "Azerbaijani" },
-  { code: "fr", fa: "Français", en: "French" },
-  { code: "de", fa: "Deutsch", en: "German" },
-  { code: "es", fa: "Español", en: "Spanish" },
-  { code: "zh", fa: "中文", en: "Chinese" },
-  { code: "ru", fa: "Русский", en: "Russian" },
+ { code: "auto", fa: "تشخیص خودکار", en: "Auto Detect" },
+ { code: "fa", fa: "فارسی", en: "Persian" },
+ { code: "en", fa: "English", en: "English" },
+ { code: "ar", fa: "العربية", en: "Arabic" },
+ { code: "ur", fa: "اردو", en: "Urdu" },
+ { code: "tr", fa: "Türkçe", en: "Turkish" },
+ { code: "ku", fa: "کوردی", en: "Kurdish" },
+ { code: "az", fa: "Azərbaycanca", en: "Azerbaijani" },
+ { code: "fr", fa: "Français", en: "French" },
+ { code: "de", fa: "Deutsch", en: "German" },
+ { code: "es", fa: "Español", en: "Spanish" },
+ { code: "zh", fa: "中文", en: "Chinese" },
+ { code: "ru", fa: "Русский", en: "Russian" },
 ];
 
 const AI_MODES = [
-  { id: "general", fa: "✨ عمومی", sys: "You are a helpful, professional general-purpose assistant." },
-  { id: "code", fa: "💻 برنامه‌نویسی", sys: "You are an expert programming assistant. Answer with clear, correct code and concise explanations." },
-  { id: "edu", fa: "📚 آموزش", sys: "You are a patient tutor. Explain concepts step by step with simple examples." },
-  { id: "writing", fa: "✍️ نویسندگی", sys: "You are a professional writing assistant. Help improve style, grammar and structure." },
-  { id: "translate", fa: "🌐 ترجمه‌گر", sys: "You are a professional translator. Translate accurately preserving tone and meaning." },
-  { id: "file", fa: "📄 تحلیل فایل", sys: "You analyze the provided file content and answer questions about it precisely." },
-  { id: "analysis", fa: "📊 تحلیل متن", sys: "You analyze text for structure, sentiment, and key insights." },
+ { id: "general", fa: "عمومی", sys: "You are a helpful, professional general-purpose assistant." },
+ { id: "code", fa: "برنامه‌نویسی", sys: "You are an expert programming assistant. Answer with clear, correct code and concise explanations." },
+ { id: "edu", fa: "آموزش", sys: "You are a patient tutor. Explain concepts step by step with simple examples." },
+ { id: "writing", fa: "نویسندگی", sys: "You are a professional writing assistant. Help improve style, grammar and structure." },
+ { id: "translate", fa: "ترجمه‌گر", sys: "You are a professional translator. Translate accurately preserving tone and meaning." },
+ { id: "file", fa: "تحلیل فایل", sys: "You analyze the provided file content and answer questions about it precisely." },
+ { id: "analysis", fa: "تحلیل متن", sys: "You analyze text for structure, sentiment, and key insights." },
 ];
 
 const state = {
-  user: null,
-  currentMode: "general",
-  currentChatId: null,
-  uiLang: "fa",
-  aiRespLang: "fa",
-  settings: { voiceIn: true, voiceOut: false },
-  recognition: null,
-  recTarget: null,
+ user: null,
+ currentMode: "general",
+ currentChatId: null,
+ uiLang: "fa",
+ aiRespLang: "fa",
+ settings: { voiceIn: true, voiceOut: false },
+ recognition: null,
+ recTarget: null,
 };
 
 const store = {
-  get(k, d) { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch { return d; } },
-  set(k, v) { localStorage.setItem(k, JSON.stringify(v)); },
+ get(k, d) { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch { return d; } },
+ set(k, v) { localStorage.setItem(k, JSON.stringify(v)); },
 };
 
 const app = {
-  /* ---------------- INIT ---------------- */
-  init() {
-    if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});
-    if (!API_BASE_URL) document.getElementById("backendWarn").classList.remove("hidden");
+ /* ---------------- INIT ---------------- */
+ init() {
+ if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});
+ if (!API_BASE_URL) document.getElementById("backendWarn").classList.remove("hidden");
 
-    state.settings = store.get("pta_settings", state.settings);
-    document.getElementById("swVoiceIn").classList.toggle("on", state.settings.voiceIn);
-    document.getElementById("swVoiceOut").classList.toggle("on", state.settings.voiceOut);
-    state.aiRespLang = store.get("pta_ai_lang", "fa");
+ state.settings = store.get("pta_settings", state.settings);
+ document.getElementById("swVoiceIn").classList.toggle("on", state.settings.voiceIn);
+ document.getElementById("swVoiceOut").classList.toggle("on", state.settings.voiceOut);
+ state.aiRespLang = store.get("pta_ai_lang", "fa");
 
-    this.populateLangSelects();
-    this.populateAiModes();
+ this.populateLangSelects();
+ this.populateAiModes();
 
-    const u = store.get("pta_currentUser", null);
-    if (u) this.enterApp(u);
-  },
+ const u = store.get("pta_currentUser", null);
+ if (u) { this.enterApp(u); } else { this.initGoogleAuth(); }
+ },
 
-  /* ---------------- AUTH ---------------- */
-  switchAuthTab(tab) {
-    document.getElementById("tabLogin").classList.toggle("active", tab === "login");
-    document.getElementById("tabRegister").classList.toggle("active", tab === "register");
-    document.getElementById("loginForm").classList.toggle("hidden", tab !== "login");
-    document.getElementById("registerForm").classList.toggle("hidden", tab !== "register");
-    document.getElementById("authMsg").textContent = "";
-  },
-  googleLoginInfo() {
-    this.showModal(
-      "ورود با Google",
-      "برای فعال‌سازی ورود واقعی با Google، باید یک Google OAuth Client ID از Google Cloud Console بسازید و آن را در تنظیمات پروژه جایگزین کنید. این مرحله فقط توسط مالک پروژه قابل انجام است."
-    );
-  },
-  register() {
-    const name = document.getElementById("regName").value.trim();
-    const email = document.getElementById("regEmail").value.trim().toLowerCase();
-    const pass = document.getElementById("regPass").value;
-    const msg = document.getElementById("authMsg");
-    if (!name || !email || pass.length < 4) { msg.textContent = "لطفاً همه فیلدها را درست پر کنید (رمز حداقل ۴ کاراکتر)."; return; }
-    const users = store.get("pta_users", {});
-    if (users[email]) { msg.textContent = "این ایمیل قبلاً ثبت شده است."; return; }
-    users[email] = { name, email, pass };
-    store.set("pta_users", users);
-    this.enterApp({ name, email });
-  },
-  login() {
-    const email = document.getElementById("loginEmail").value.trim().toLowerCase();
-    const pass = document.getElementById("loginPass").value;
-    const msg = document.getElementById("authMsg");
-    const users = store.get("pta_users", {});
-    const u = users[email];
-    if (!u || u.pass !== pass) { msg.textContent = "ایمیل یا رمز عبور اشتباه است."; return; }
-    this.enterApp({ name: u.name, email: u.email });
-  },
-  enterApp(user) {
-    state.user = user;
-    store.set("pta_currentUser", user);
-    document.getElementById("authScreen").classList.add("hidden");
-    document.getElementById("appShell").classList.remove("hidden");
-    const initial = (user.name || user.email || "?").trim()[0]?.toUpperCase() || "؟";
-    document.getElementById("sbAvatar").textContent = initial;
-    document.getElementById("sbName").textContent = user.name || user.email;
-    document.getElementById("sbEmail").textContent = user.email || "";
-    document.getElementById("profAv").textContent = initial;
-    document.getElementById("profName").textContent = user.name || user.email;
-    document.getElementById("profEmail").textContent = user.email || "";
-    document.getElementById("homeGreeting").textContent = `سلام ${user.name || ""} 👋`;
-    this.renderSidebarHistory();
-    this.renderHome();
-    this.updateStats();
-  },
-  logout() {
-    if (!confirm("آیا مطمئن هستید که می‌خواهید از حساب خارج شوید؟")) return;
-    localStorage.removeItem("pta_currentUser");
-    location.reload();
-  },
-  editProfile() {
-    const name = prompt("نام جدید:", state.user.name || "");
-    if (!name) return;
-    state.user.name = name;
-    store.set("pta_currentUser", state.user);
-    const users = store.get("pta_users", {});
-    if (users[state.user.email]) { users[state.user.email].name = name; store.set("pta_users", users); }
-    this.enterApp(state.user);
-  },
+ /* ---------------- AUTH (Google Identity Services) ---------------- */
+ initGoogleAuth() {
+ if (!GOOGLE_CLIENT_ID) {
+ document.getElementById("googleNotConfigured").classList.remove("hidden");
+ return;
+ }
+ if (!window.google || !window.google.accounts) {
+ setTimeout(() => this.initGoogleAuth(), 300);
+ return;
+ }
+ google.accounts.id.initialize({
+ client_id: GOOGLE_CLIENT_ID,
+ callback: (resp) => this.handleGoogleCredential(resp),
+ });
+ google.accounts.id.renderButton(document.getElementById("googleBtnContainer"), {
+ theme: "outline",
+ size: "large",
+ shape: "pill",
+ text: "signin_with",
+ width: 260,
+ });
+ },
+ handleGoogleCredential(response) {
+ try {
+ const payload = JSON.parse(atob(response.credential.split(".")[1]));
+ this.enterApp({ name: payload.name, email: payload.email, picture: payload.picture });
+ } catch (e) {
+ document.getElementById("authMsg").textContent = "ورود با Google ناموفق بود. دوباره تلاش کنید.";
+ }
+ },
+ enterApp(user) {
+ state.user = user;
+ store.set("pta_currentUser", user);
+ document.getElementById("authScreen").classList.add("hidden");
+ document.getElementById("appShell").classList.remove("hidden");
+ const initial = (user.name || user.email || "?").trim()[0]?.toUpperCase() || "؟";
+ document.getElementById("sbAvatar").textContent = initial;
+ document.getElementById("sbName").textContent = user.name || user.email;
+ document.getElementById("sbEmail").textContent = user.email || "";
+ document.getElementById("profAv").textContent = initial;
+ document.getElementById("profName").textContent = user.name || user.email;
+ document.getElementById("profEmail").textContent = user.email || "";
+ document.getElementById("homeGreeting").textContent = `سلام ${user.name || ""}`;
+ this.renderSidebarHistory();
+ this.renderHome();
+ this.updateStats();
+ },
+ logout() {
+ if (!confirm("آیا مطمئن هستید که می‌خواهید از حساب خارج شوید؟")) return;
+ localStorage.removeItem("pta_currentUser");
+ location.reload();
+ },
+ editProfile() {
+ const name = prompt("نام جدید:", state.user.name || "");
+ if (!name) return;
+ state.user.name = name;
+ store.set("pta_currentUser", state.user);
+ this.enterApp(state.user);
+ },
 
-  /* ---------------- NAV ---------------- */
-  nav(view) {
-    document.querySelectorAll(".view > section").forEach(s => s.classList.add("hidden"));
-    document.getElementById("view-" + view).classList.remove("hidden");
-    document.querySelectorAll(".nav-item").forEach(b => b.classList.remove("active"));
-    const btn = document.querySelector(`.nav-item[data-nav="${view}"]`);
-    if (btn) btn.classList.add("active");
-    const titles = {
-      home: ["خانه", "داشبورد ترجمه‌گر حرفه‌ای"], chat: ["چت هوش مصنوعی", "گفت‌وگو با دستیار هوشمند"],
-      translate: ["ترجمه‌گر", "ترجمه فوری و دقیق متن"], pdf: ["ترجمه PDF", "ترجمه کامل اسناد"],
-      voice: ["دستیار صوتی", "گفت‌وگوی صوتی با هوش مصنوعی"], history: ["تاریخچه", "گفت‌وگوها و ترجمه‌های قبلی"],
-      profile: ["پروفایل", "اطلاعات حساب کاربری"], settings: ["تنظیمات", "شخصی‌سازی برنامه"],
-    };
-    document.getElementById("topTitle").textContent = titles[view][0];
-    document.getElementById("topSub").textContent = titles[view][1];
-    document.getElementById("sidebar").classList.remove("open");
-    if (view === "history") this.renderHistory();
-    if (view === "profile") this.updateStats();
-  },
+ /* ---------------- NAV ---------------- */
+ nav(view) {
+ document.querySelectorAll(".view >section").forEach(s =>s.classList.add("hidden"));
+ document.getElementById("view-" + view).classList.remove("hidden");
+ document.querySelectorAll(".nav-item").forEach(b =>b.classList.remove("active"));
+ const btn = document.querySelector(`.nav-item[data-nav="${view}"]`);
+ if (btn) btn.classList.add("active");
+ const titles = {
+ home: ["خانه", "داشبورد ترجمه‌گر حرفه‌ای"], chat: ["چت هوش مصنوعی", "گفت‌وگو با دستیار هوشمند"],
+ translate: ["ترجمه‌گر", "ترجمه فوری و دقیق متن"], pdf: ["ترجمه PDF", "ترجمه کامل اسناد"],
+ voice: ["دستیار صوتی", "گفت‌وگوی صوتی با هوش مصنوعی"], history: ["تاریخچه", "گفت‌وگوها و ترجمه‌های قبلی"],
+ profile: ["پروفایل", "اطلاعات حساب کاربری"], settings: ["تنظیمات", "شخصی‌سازی برنامه"],
+ };
+ document.getElementById("topTitle").textContent = titles[view][0];
+ document.getElementById("topSub").textContent = titles[view][1];
+ document.getElementById("sidebar").classList.remove("open");
+ if (view === "history") this.renderHistory();
+ if (view === "profile") this.updateStats();
+ },
 
-  /* ---------------- BACKEND CALL ---------------- */
-  async callAI(messages, maxTokens = 800) {
-    if (!API_BASE_URL) throw new Error("آدرس بک‌اند تنظیم نشده است (API_BASE_URL خالی است).");
-    const res = await fetch(`${API_BASE_URL}/chat`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ messages, max_tokens: maxTokens }),
-    });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || "خطای ناشناخته");
-    return data.answer;
-  },
+ /* ---------------- BACKEND CALL ---------------- */
+ async callAI(messages, maxTokens = 800) {
+ if (!API_BASE_URL) throw new Error("آدرس بک‌اند تنظیم نشده است (API_BASE_URL خالی است).");
+ const res = await fetch(`${API_BASE_URL}/chat`, {
+ method: "POST",
+ headers: { "Content-Type": "application/json" },
+ body: JSON.stringify({ messages, max_tokens: maxTokens }),
+ });
+ const data = await res.json();
+ if (!res.ok) throw new Error(data.error || "خطای ناشناخته");
+ return data.answer;
+ },
 
-  /* ---------------- CHAT ---------------- */
-  populateAiModes() {
-    const wrap = document.getElementById("aiModes");
-    wrap.innerHTML = "";
-    AI_MODES.forEach(m => {
-      const b = document.createElement("button");
-      b.className = "chip" + (m.id === state.currentMode ? " active" : "");
-      b.textContent = m.fa;
-      b.onclick = () => { state.currentMode = m.id; this.populateAiModes(); };
-      wrap.appendChild(b);
-    });
-  },
-  newChat() {
-    state.currentChatId = "c_" + Date.now();
-    const chats = store.get("pta_chats", {});
-    chats[state.currentChatId] = { id: state.currentChatId, title: "گفت‌وگوی جدید", messages: [], ts: Date.now() };
-    store.set("pta_chats", chats);
-    document.getElementById("chatArea").innerHTML = "";
-    this.nav("chat");
-    this.addChatBubble("سلام! من ترجمه‌گر حرفه‌ای هستم. چطور می‌تونم کمکتون کنم؟", "ai");
-  },
-  addChatBubble(text, who, msgId) {
-    const area = document.getElementById("chatArea");
-    const div = document.createElement("div");
-    div.className = "msg " + who;
-    div.textContent = text;
-    if (who === "ai") {
-      const actions = document.createElement("div");
-      actions.className = "msg-actions";
-      actions.innerHTML = `
-        <button onclick="navigator.clipboard.writeText(this.closest('.msg').firstChild.textContent)">📋 کپی</button>
-        <button onclick="app.speak(this.closest('.msg').firstChild.textContent)">🔊 خواندن</button>
-        <button onclick="app.shareRaw(this.closest('.msg').firstChild.textContent)">📤 اشتراک</button>
-      `;
-      div.appendChild(actions);
-    }
-    area.appendChild(div);
-    area.scrollTop = area.scrollHeight;
-    return div;
-  },
-  async sendChat() {
-    const input = document.getElementById("chatInput");
-    const text = input.value.trim();
-    if (!text) return;
-    if (!state.currentChatId) this.newChat();
-    input.value = "";
-    this.addChatBubble(text, "user");
+ /* ---------------- CHAT ---------------- */
+ populateAiModes() {
+ const wrap = document.getElementById("aiModes");
+ wrap.innerHTML = "";
+ AI_MODES.forEach(m => {
+ const b = document.createElement("button");
+ b.className = "chip" + (m.id === state.currentMode ? " active" : "");
+ b.textContent = m.fa;
+ b.onclick = () => { state.currentMode = m.id; this.populateAiModes(); };
+ wrap.appendChild(b);
+ });
 
-    const chats = store.get("pta_chats", {});
-    const chat = chats[state.currentChatId];
-    chat.messages.push({ role: "user", content: text });
-    if (chat.messages.length === 1) chat.title = text.slice(0, 40);
+ const qSel = document.getElementById("quickModeSelect");
+ if (qSel) {
+ qSel.innerHTML = "";
+ AI_MODES.forEach(m => {
+ const o = document.createElement("option");
+ o.value = m.id; o.textContent = m.fa;
+ qSel.appendChild(o);
+ });
+ qSel.value = state.currentMode;
+ qSel.onchange = () => { state.currentMode = qSel.value; this.populateAiModes(); };
+ }
+ },
+ quickAsk() {
+ const input = document.getElementById("quickAskInput");
+ const text = input.value.trim();
+ if (!text) return;
+ this.newChat();
+ document.getElementById("chatInput").value = text;
+ input.value = "";
+ this.sendChat();
+ },
+ newChat() {
+ state.currentChatId = "c_" + Date.now();
+ const chats = store.get("pta_chats", {});
+ chats[state.currentChatId] = { id: state.currentChatId, title: "گفت‌وگوی جدید", messages: [], ts: Date.now() };
+ store.set("pta_chats", chats);
+ document.getElementById("chatArea").innerHTML = "";
+ this.nav("chat");
+ this.addChatBubble("سلام! من ترجمه‌گر حرفه‌ای هستم. چطور می‌تونم کمکتون کنم؟", "ai");
+ },
+ addChatBubble(text, who, msgId) {
+ const area = document.getElementById("chatArea");
+ const div = document.createElement("div");
+ div.className = "msg " + who;
+ div.textContent = text;
+ if (who === "ai") {
+ const actions = document.createElement("div");
+ actions.className = "msg-actions";
+ actions.innerHTML = `
+ <button onclick="navigator.clipboard.writeText(this.closest('.msg').firstChild.textContent)">کپی</button>
+ <button onclick="app.speak(this.closest('.msg').firstChild.textContent)">خواندن</button>
+ <button onclick="app.shareRaw(this.closest('.msg').firstChild.textContent)">اشتراک</button>
+ `;
+ div.appendChild(actions);
+ }
+ area.appendChild(div);
+ area.scrollTop = area.scrollHeight;
+ return div;
+ },
+ async sendChat() {
+ const input = document.getElementById("chatInput");
+ const text = input.value.trim();
+ if (!text) return;
+ if (!state.currentChatId) this.newChat();
+ input.value = "";
+ this.addChatBubble(text, "user");
 
-    const typing = document.createElement("div");
-    typing.className = "typing";
-    typing.textContent = "در حال نوشتن پاسخ...";
-    document.getElementById("chatArea").appendChild(typing);
+ const chats = store.get("pta_chats", {});
+ const chat = chats[state.currentChatId];
+ chat.messages.push({ role: "user", content: text });
+ if (chat.messages.length === 1) chat.title = text.slice(0, 40);
 
-    const modeObj = AI_MODES.find(m => m.id === state.currentMode);
-    const sys = `${modeObj.sys} Respond in ${state.aiRespLang === "fa" ? "Persian (فارسی)" : "the language: " + state.aiRespLang}.`;
-    const payload = [{ role: "system", content: sys }, ...chat.messages.slice(-12)];
+ const typing = document.createElement("div");
+ typing.className = "typing";
+ typing.textContent = "در حال نوشتن پاسخ...";
+ document.getElementById("chatArea").appendChild(typing);
 
-    try {
-      const answer = await this.callAI(payload);
-      typing.remove();
-      this.addChatBubble(answer, "ai");
-      chat.messages.push({ role: "assistant", content: answer });
-      if (state.settings.voiceOut) this.speak(answer);
-    } catch (e) {
-      typing.remove();
-      this.addChatBubble("⚠️ خطا: " + e.message, "ai");
-    }
-    chats[state.currentChatId] = chat;
-    store.set("pta_chats", chats);
-    this.renderSidebarHistory();
-  },
-  async handleChatFile(ev) {
-    const file = ev.target.files[0];
-    if (!file) return;
-    let text = "";
-    if (file.type === "application/pdf") {
-      text = await this.extractPdfText(file, () => {});
-    } else {
-      text = await file.text();
-    }
-    document.getElementById("chatInput").value = `فایل «${file.name}» پیوست شد. لطفاً این متن را تحلیل کن:\n\n${text.slice(0, 6000)}`;
-    ev.target.value = "";
-  },
+ const modeObj = AI_MODES.find(m =>m.id === state.currentMode);
+ const sys = `${modeObj.sys} Respond in ${state.aiRespLang === "fa" ? "Persian (فارسی)" : "the language: " + state.aiRespLang}.`;
+ const payload = [{ role: "system", content: sys }, ...chat.messages.slice(-12)];
 
-  /* ---------------- TRANSLATE ---------------- */
-  populateLangSelects() {
-    ["srcLang", "dstLang", "pdfSrcLang", "pdfDstLang"].forEach(id => {
-      const sel = document.getElementById(id);
-      sel.innerHTML = "";
-      LANGS.forEach(l => {
-        if (id.includes("dst") && l.code === "auto") return;
-        const o = document.createElement("option");
-        o.value = l.code; o.textContent = l.fa;
-        sel.appendChild(o);
-      });
-    });
-    document.getElementById("dstLang").value = "fa";
-    document.getElementById("pdfDstLang").value = "fa";
+ try {
+ const answer = await this.callAI(payload);
+ typing.remove();
+ this.addChatBubble(answer, "ai");
+ chat.messages.push({ role: "assistant", content: answer });
+ if (state.settings.voiceOut) this.speak(answer);
+ } catch (e) {
+ typing.remove();
+ this.addChatBubble("خطا: " + e.message, "ai");
+ }
+ chats[state.currentChatId] = chat;
+ store.set("pta_chats", chats);
+ this.renderSidebarHistory();
+ },
+ async handleChatFile(ev) {
+ const file = ev.target.files[0];
+ if (!file) return;
+ let text = "";
+ if (file.type === "application/pdf") {
+ text = await this.extractPdfText(file, () => {});
+ } else {
+ text = await file.text();
+ }
+ document.getElementById("chatInput").value = `فایل «${file.name}» پیوست شد. لطفاً این متن را تحلیل کن:\n\n${text.slice(0, 6000)}`;
+ ev.target.value = "";
+ },
 
-    const respSel = document.getElementById("aiRespLang");
-    respSel.innerHTML = "";
-    LANGS.filter(l => l.code !== "auto").forEach(l => {
-      const o = document.createElement("option");
-      o.value = l.code; o.textContent = l.fa;
-      respSel.appendChild(o);
-    });
-    respSel.value = state.aiRespLang;
-  },
-  swapLangs() {
-    const s = document.getElementById("srcLang"), d = document.getElementById("dstLang");
-    if (s.value === "auto") return;
-    [s.value, d.value] = [d.value, s.value];
-    const st = document.getElementById("srcText"), dt = document.getElementById("dstText");
-    [st.value, dt.value] = [dt.value, st.value];
-  },
-  async translateText() {
-    const src = document.getElementById("srcText").value.trim();
-    const dstBox = document.getElementById("dstText");
-    if (!src) { dstBox.value = "لطفاً متنی وارد کنید."; return; }
-    const srcLangName = LANGS.find(l => l.code === document.getElementById("srcLang").value).fa;
-    const dstLangName = LANGS.find(l => l.code === document.getElementById("dstLang").value).fa;
-    dstBox.value = "در حال ترجمه...";
-    try {
-      const answer = await this.callAI([
-        { role: "system", content: "You are a professional translator. Reply with ONLY the translation, no notes." },
-        { role: "user", content: `Translate the following text from ${srcLangName} to ${dstLangName}:\n\n${src}` },
-      ]);
-      dstBox.value = answer.trim();
-      const list = store.get("pta_translations", []);
-      list.unshift({ id: "t_" + Date.now(), src, dst: answer.trim(), from: srcLangName, to: dstLangName, ts: Date.now() });
-      store.set("pta_translations", list.slice(0, 200));
-      this.renderSidebarHistory();
-    } catch (e) {
-      dstBox.value = "⚠️ خطا: " + e.message;
-    }
-  },
+ /* ---------------- TRANSLATE ---------------- */
+ populateLangSelects() {
+ ["srcLang", "dstLang", "pdfSrcLang", "pdfDstLang"].forEach(id => {
+ const sel = document.getElementById(id);
+ sel.innerHTML = "";
+ LANGS.forEach(l => {
+ if (id.includes("dst") && l.code === "auto") return;
+ const o = document.createElement("option");
+ o.value = l.code; o.textContent = l.fa;
+ sel.appendChild(o);
+ });
+ });
+ document.getElementById("dstLang").value = "fa";
+ document.getElementById("pdfDstLang").value = "fa";
 
-  /* ---------------- PDF TRANSLATE ---------------- */
-  pdfFile: null,
-  pdfSelected(ev) {
-    const f = ev.target.files[0];
-    if (!f) return;
-    this.pdfFile = f;
-    document.getElementById("pdfFileName").textContent = f.name;
-    document.getElementById("pdfStartBtn").disabled = false;
-    document.getElementById("pdfResultWrap").classList.add("hidden");
-  },
-  async extractPdfText(file, onProgress) {
-    const buf = await file.arrayBuffer();
-    const pdf = await pdfjsLib.getDocument({ data: buf }).promise;
-    let full = "";
-    for (let i = 1; i <= pdf.numPages; i++) {
-      const page = await pdf.getPage(i);
-      const content = await page.getTextContent();
-      full += content.items.map(it => it.str).join(" ") + "\n\n";
-      onProgress(i, pdf.numPages);
-    }
-    return full;
-  },
-  async startPdfTranslate() {
-    if (!this.pdfFile) return;
-    const btn = document.getElementById("pdfStartBtn");
-    btn.disabled = true;
-    const wrap = document.getElementById("pdfProgressWrap");
-    const bar = document.getElementById("pdfProgressBar");
-    const label = document.getElementById("pdfProgressLabel");
-    wrap.classList.remove("hidden");
-    label.textContent = "در حال استخراج متن از PDF...";
-    bar.style.width = "5%";
+ const respSel = document.getElementById("aiRespLang");
+ respSel.innerHTML = "";
+ LANGS.filter(l =>l.code !== "auto").forEach(l => {
+ const o = document.createElement("option");
+ o.value = l.code; o.textContent = l.fa;
+ respSel.appendChild(o);
+ });
+ respSel.value = state.aiRespLang;
+ },
+ swapLangs() {
+ const s = document.getElementById("srcLang"), d = document.getElementById("dstLang");
+ if (s.value === "auto") return;
+ [s.value, d.value] = [d.value, s.value];
+ const st = document.getElementById("srcText"), dt = document.getElementById("dstText");
+ [st.value, dt.value] = [dt.value, st.value];
+ },
+ async translateText() {
+ const src = document.getElementById("srcText").value.trim();
+ const dstBox = document.getElementById("dstText");
+ if (!src) { dstBox.value = "لطفاً متنی وارد کنید."; return; }
+ const srcLangName = LANGS.find(l =>l.code === document.getElementById("srcLang").value).fa;
+ const dstLangName = LANGS.find(l =>l.code === document.getElementById("dstLang").value).fa;
+ dstBox.value = "در حال ترجمه...";
+ try {
+ const answer = await this.callAI([
+ { role: "system", content: "You are a professional translator. Reply with ONLY the translation, no notes." },
+ { role: "user", content: `Translate the following text from ${srcLangName} to ${dstLangName}:\n\n${src}` },
+ ]);
+ dstBox.value = answer.trim();
+ const list = store.get("pta_translations", []);
+ list.unshift({ id: "t_" + Date.now(), src, dst: answer.trim(), from: srcLangName, to: dstLangName, ts: Date.now() });
+ store.set("pta_translations", list.slice(0, 200));
+ this.renderSidebarHistory();
+ } catch (e) {
+ dstBox.value = "خطا: " + e.message;
+ }
+ },
 
-    let fullText;
-    try {
-      fullText = await this.extractPdfText(this.pdfFile, (p, total) => {
-        bar.style.width = (5 + (p / total) * 25) + "%";
-      });
-    } catch (e) {
-      label.textContent = "⚠️ خطا در خواندن PDF: " + e.message;
-      btn.disabled = false;
-      return;
-    }
+ /* ---------------- PDF TRANSLATE ---------------- */
+ pdfFile: null,
+ pdfSelected(ev) {
+ const f = ev.target.files[0];
+ if (!f) return;
+ this.pdfFile = f;
+ document.getElementById("pdfFileName").textContent = f.name;
+ document.getElementById("pdfStartBtn").disabled = false;
+ document.getElementById("pdfResultWrap").classList.add("hidden");
+ },
+ async extractPdfText(file, onProgress) {
+ const buf = await file.arrayBuffer();
+ const pdf = await pdfjsLib.getDocument({ data: buf }).promise;
+ let full = "";
+ for (let i = 1; i <= pdf.numPages; i++) {
+ const page = await pdf.getPage(i);
+ const content = await page.getTextContent();
+ full += content.items.map(it =>it.str).join(" ") + "\n\n";
+ onProgress(i, pdf.numPages);
+ }
+ return full;
+ },
+ async startPdfTranslate() {
+ if (!this.pdfFile) return;
+ const btn = document.getElementById("pdfStartBtn");
+ btn.disabled = true;
+ const wrap = document.getElementById("pdfProgressWrap");
+ const bar = document.getElementById("pdfProgressBar");
+ const label = document.getElementById("pdfProgressLabel");
+ wrap.classList.remove("hidden");
+ label.textContent = "در حال استخراج متن از PDF...";
+ bar.style.width = "5%";
 
-    const srcLangName = LANGS.find(l => l.code === document.getElementById("pdfSrcLang").value).fa;
-    const dstLangName = LANGS.find(l => l.code === document.getElementById("pdfDstLang").value).fa;
-    const chunks = fullText.match(/[\s\S]{1,3000}/g) || [];
-    let translated = "";
-    for (let i = 0; i < chunks.length; i++) {
-      label.textContent = `در حال ترجمه بخش ${i + 1} از ${chunks.length}...`;
-      try {
-        const ans = await this.callAI([
-          { role: "system", content: "You are a professional document translator. Preserve paragraph structure. Reply with ONLY the translation." },
-          { role: "user", content: `Translate from ${srcLangName} to ${dstLangName}:\n\n${chunks[i]}` },
-        ], 1500);
-        translated += ans.trim() + "\n\n";
-      } catch (e) {
-        translated += `\n[⚠️ خطا در ترجمه این بخش: ${e.message}]\n`;
-      }
-      bar.style.width = (30 + ((i + 1) / chunks.length) * 70) + "%";
-    }
+ let fullText;
+ try {
+ fullText = await this.extractPdfText(this.pdfFile, (p, total) => {
+ bar.style.width = (5 + (p / total) * 25) + "%";
+ });
+ } catch (e) {
+ label.textContent = "خطا در خواندن PDF: " + e.message;
+ btn.disabled = false;
+ return;
+ }
 
-    label.textContent = "✅ ترجمه کامل شد";
-    document.getElementById("pdfResultText").value = translated;
-    document.getElementById("pdfResultWrap").classList.remove("hidden");
-    btn.disabled = false;
+ const srcLangName = LANGS.find(l =>l.code === document.getElementById("pdfSrcLang").value).fa;
+ const dstLangName = LANGS.find(l =>l.code === document.getElementById("pdfDstLang").value).fa;
+ const chunks = fullText.match(/[\s\S]{1,3000}/g) || [];
+ let translated = "";
+ for (let i = 0; i < chunks.length; i++) {
+ label.textContent = `در حال ترجمه بخش ${i + 1} از ${chunks.length}...`;
+ try {
+ const ans = await this.callAI([
+ { role: "system", content: "You are a professional document translator. Preserve paragraph structure. Reply with ONLY the translation." },
+ { role: "user", content: `Translate from ${srcLangName} to ${dstLangName}:\n\n${chunks[i]}` },
+ ], 1500);
+ translated += ans.trim() + "\n\n";
+ } catch (e) {
+ translated += `\n[ خطا در ترجمه این بخش: ${e.message}]\n`;
+ }
+ bar.style.width = (30 + ((i + 1) / chunks.length) * 70) + "%";
+ }
 
-    const list = store.get("pta_pdfs", []);
-    list.unshift({ id: "p_" + Date.now(), name: this.pdfFile.name, ts: Date.now() });
-    store.set("pta_pdfs", list.slice(0, 100));
-    this.renderSidebarHistory();
-  },
-  downloadPdfResult() {
-    const text = document.getElementById("pdfResultText").value;
-    const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = (this.pdfFile?.name || "translation").replace(/\.pdf$/i, "") + "-ترجمه.txt";
-    a.click();
-  },
+ label.textContent = "ترجمه کامل شد.";
+ document.getElementById("pdfResultText").value = translated;
+ document.getElementById("pdfResultWrap").classList.remove("hidden");
+ btn.disabled = false;
 
-  /* ---------------- VOICE ---------------- */
-  toggleMic(target) {
-    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SR) { this.showModal("پشتیبانی نشد", "مرورگر شما از ورودی صوتی پشتیبانی نمی‌کند."); return; }
-    if (state.recognition && state.recTarget === target) {
-      state.recognition.stop();
-      return;
-    }
-    state.recognition = new SR();
-    state.recTarget = target;
-    state.recognition.lang = state.aiRespLang === "fa" ? "fa-IR" : "en-US";
-    state.recognition.interimResults = false;
+ const list = store.get("pta_pdfs", []);
+ list.unshift({ id: "p_" + Date.now(), name: this.pdfFile.name, ts: Date.now() });
+ store.set("pta_pdfs", list.slice(0, 100));
+ this.renderSidebarHistory();
+ },
+ downloadPdfResult() {
+ const text = document.getElementById("pdfResultText").value;
+ const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+ const a = document.createElement("a");
+ a.href = URL.createObjectURL(blob);
+ a.download = (this.pdfFile?.name || "translation").replace(/\.pdf$/i, "") + "-ترجمه.txt";
+ a.click();
+ },
 
-    const micBtn = target === "voice" ? document.getElementById("micVoiceBtn") : document.getElementById("micChatBtn");
-    micBtn.classList.add(target === "voice" ? "listening" : "rec");
-    if (target === "voice") document.getElementById("voiceStatus").textContent = "در حال گوش دادن...";
+ /* ---------------- VOICE ---------------- */
+ toggleMic(target) {
+ const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+ if (!SR) { this.showModal("پشتیبانی نشد", "مرورگر شما از ورودی صوتی پشتیبانی نمی‌کند."); return; }
+ if (state.recognition && state.recTarget === target) {
+ state.recognition.stop();
+ return;
+ }
+ state.recognition = new SR();
+ state.recTarget = target;
+ state.recognition.lang = state.aiRespLang === "fa" ? "fa-IR" : "en-US";
+ state.recognition.interimResults = false;
 
-    state.recognition.onresult = async (e) => {
-      const said = e.results[0][0].transcript;
-      if (target === "chat") {
-        document.getElementById("chatInput").value = said;
-        this.sendChat();
-      } else {
-        const tEl = document.getElementById("voiceTranscript");
-        tEl.textContent = "🗣️ " + said;
-        tEl.classList.remove("hidden");
-        const aEl = document.getElementById("voiceAnswer");
-        aEl.textContent = "در حال فکر کردن...";
-        aEl.classList.remove("hidden");
-        try {
-          const answer = await this.callAI([
-            { role: "system", content: `Reply in ${state.aiRespLang === "fa" ? "Persian" : state.aiRespLang}.` },
-            { role: "user", content: said },
-          ]);
-          aEl.textContent = "🤖 " + answer;
-          this.speak(answer);
-        } catch (e2) {
-          aEl.textContent = "⚠️ خطا: " + e2.message;
-        }
-      }
-    };
-    state.recognition.onend = () => {
-      micBtn.classList.remove("listening", "rec");
-      if (target === "voice") document.getElementById("voiceStatus").textContent = "برای صحبت کردن لمس کنید";
-      state.recognition = null;
-    };
-    state.recognition.onerror = () => { state.recognition = null; micBtn.classList.remove("listening", "rec"); };
-    state.recognition.start();
-  },
-  speak(text, langCode) {
-    if (!text || !("speechSynthesis" in window)) return;
-    speechSynthesis.cancel();
-    const u = new SpeechSynthesisUtterance(text);
-    u.lang = (langCode || state.aiRespLang) === "fa" ? "fa-IR" : (langCode || state.aiRespLang);
-    speechSynthesis.speak(u);
-  },
+ const micBtn = target === "voice" ? document.getElementById("micVoiceBtn") : document.getElementById("micChatBtn");
+ micBtn.classList.add(target === "voice" ? "listening" : "rec");
+ if (target === "voice") document.getElementById("voiceStatus").textContent = "در حال گوش دادن...";
 
-  /* ---------------- HISTORY ---------------- */
-  renderSidebarHistory() {
-    const chats = Object.values(store.get("pta_chats", {})).sort((a, b) => b.ts - a.ts).slice(0, 5);
-    const wrap = document.getElementById("sbHistory");
-    wrap.innerHTML = "";
-    chats.forEach(c => {
-      const d = document.createElement("div");
-      d.className = "sb-hist-item";
-      d.textContent = "💬 " + (c.title || "گفت‌وگو");
-      d.onclick = () => this.openChat(c.id);
-      wrap.appendChild(d);
-    });
-    this.renderHome();
-  },
-  renderHome() {
-    const chats = Object.values(store.get("pta_chats", {})).sort((a, b) => b.ts - a.ts).slice(0, 4);
-    const wrap = document.getElementById("homeRecent");
-    if (!wrap) return;
-    wrap.innerHTML = chats.map(c => `<div class="hist-row glass"><div class="l">💬 <b>${this.esc(c.title)}</b></div></div>`).join("") || `<p style="color:var(--muted);font-size:12px">هنوز فعالیتی ثبت نشده است.</p>`;
-  },
-  renderHistory() {
-    const q = (document.getElementById("histSearch").value || "").toLowerCase();
-    const chats = Object.values(store.get("pta_chats", {}));
-    const trans = store.get("pta_translations", []);
-    const pdfs = store.get("pta_pdfs", []);
-    let rows = [];
-    chats.forEach(c => rows.push({ type: "chat", id: c.id, title: c.title, ts: c.ts, icon: "💬" }));
-    trans.forEach(t => rows.push({ type: "trans", id: t.id, title: `${t.src.slice(0, 30)}...`, ts: t.ts, icon: "🌐" }));
-    pdfs.forEach(p => rows.push({ type: "pdf", id: p.id, title: p.name, ts: p.ts, icon: "📄" }));
-    rows = rows.filter(r => r.title.toLowerCase().includes(q)).sort((a, b) => b.ts - a.ts);
+ state.recognition.onresult = async (e) => {
+ const said = e.results[0][0].transcript;
+ if (target === "chat") {
+ document.getElementById("chatInput").value = said;
+ this.sendChat();
+ } else {
+ const tEl = document.getElementById("voiceTranscript");
+ tEl.textContent = said;
+ tEl.classList.remove("hidden");
+ const aEl = document.getElementById("voiceAnswer");
+ aEl.textContent = "در حال فکر کردن...";
+ aEl.classList.remove("hidden");
+ try {
+ const answer = await this.callAI([
+ { role: "system", content: `Reply in ${state.aiRespLang === "fa" ? "Persian" : state.aiRespLang}.` },
+ { role: "user", content: said },
+ ]);
+ aEl.textContent = answer;
+ this.speak(answer);
+ } catch (e2) {
+ aEl.textContent = "خطا: " + e2.message;
+ }
+ }
+ };
+ state.recognition.onend = () => {
+ micBtn.classList.remove("listening", "rec");
+ if (target === "voice") document.getElementById("voiceStatus").textContent = "برای صحبت کردن لمس کنید";
+ state.recognition = null;
+ };
+ state.recognition.onerror = () => { state.recognition = null; micBtn.classList.remove("listening", "rec"); };
+ state.recognition.start();
+ },
+ speak(text, langCode) {
+ if (!text || !("speechSynthesis" in window)) return;
+ speechSynthesis.cancel();
+ const u = new SpeechSynthesisUtterance(text);
+ u.lang = (langCode || state.aiRespLang) === "fa" ? "fa-IR" : (langCode || state.aiRespLang);
+ speechSynthesis.speak(u);
+ },
 
-    const wrap = document.getElementById("histList");
-    wrap.innerHTML = rows.map(r => `
-      <div class="hist-row glass">
-        <div class="l">${r.icon} <div><b>${this.esc(r.title)}</b><span>${new Date(r.ts).toLocaleString("fa-IR")}</span></div></div>
-        <div class="hist-actions">
-          ${r.type === "chat" ? `<button onclick="app.openChat('${r.id}')">ادامه</button>` : ""}
-          <button onclick="app.deleteHistory('${r.type}','${r.id}')">🗑️ حذف</button>
-        </div>
-      </div>`).join("") || `<p style="color:var(--muted);font-size:12px;text-align:center;margin-top:30px">چیزی یافت نشد.</p>`;
-  },
-  openChat(id) {
-    state.currentChatId = id;
-    const chats = store.get("pta_chats", {});
-    const chat = chats[id];
-    document.getElementById("chatArea").innerHTML = "";
-    chat.messages.forEach(m => this.addChatBubble(m.content, m.role === "user" ? "user" : "ai"));
-    this.nav("chat");
-  },
-  deleteHistory(type, id) {
-    if (!confirm("حذف شود؟")) return;
-    if (type === "chat") { const c = store.get("pta_chats", {}); delete c[id]; store.set("pta_chats", c); }
-    if (type === "trans") { store.set("pta_translations", store.get("pta_translations", []).filter(t => t.id !== id)); }
-    if (type === "pdf") { store.set("pta_pdfs", store.get("pta_pdfs", []).filter(p => p.id !== id)); }
-    this.renderHistory();
-    this.renderSidebarHistory();
-  },
+ /* ---------------- HISTORY ---------------- */
+ renderSidebarHistory() {
+ const chats = Object.values(store.get("pta_chats", {})).sort((a, b) =>b.ts - a.ts).slice(0, 5);
+ const wrap = document.getElementById("sbHistory");
+ wrap.innerHTML = "";
+ chats.forEach(c => {
+ const d = document.createElement("div");
+ d.className = "sb-hist-item";
+ d.textContent = " " + (c.title || "گفت‌وگو");
+ d.onclick = () =>this.openChat(c.id);
+ wrap.appendChild(d);
+ });
+ this.renderHome();
+ },
+ renderHome() {
+ const chats = Object.values(store.get("pta_chats", {})).sort((a, b) =>b.ts - a.ts).slice(0, 4);
+ const wrap = document.getElementById("homeRecent");
+ if (!wrap) return;
+ wrap.innerHTML = chats.map(c => `<div class="hist-row glass"><div class="l"> <b>${this.esc(c.title)}</b></div></div>`).join("") || `<p style="color:var(--muted);font-size:12px">هنوز فعالیتی ثبت نشده است.</p>`;
+ },
+ renderHistory() {
+ const q = (document.getElementById("histSearch").value || "").toLowerCase();
+ const chats = Object.values(store.get("pta_chats", {}));
+ const trans = store.get("pta_translations", []);
+ const pdfs = store.get("pta_pdfs", []);
+ let rows = [];
+ chats.forEach(c =>rows.push({ type: "chat", id: c.id, title: c.title, ts: c.ts, icon: "" }));
+ trans.forEach(t =>rows.push({ type: "trans", id: t.id, title: `${t.src.slice(0, 30)}...`, ts: t.ts, icon: "" }));
+ pdfs.forEach(p =>rows.push({ type: "pdf", id: p.id, title: p.name, ts: p.ts, icon: "" }));
+ rows = rows.filter(r =>r.title.toLowerCase().includes(q)).sort((a, b) =>b.ts - a.ts);
 
-  /* ---------------- SETTINGS ---------------- */
-  setUiLang(l) {
-    state.uiLang = l;
-    document.getElementById("uiFa").classList.toggle("active", l === "fa");
-    document.getElementById("uiEn").classList.toggle("active", l === "en");
-    document.documentElement.setAttribute("dir", l === "fa" ? "rtl" : "ltr");
-    document.documentElement.setAttribute("lang", l);
-  },
-  setAiRespLang(v) { state.aiRespLang = v; store.set("pta_ai_lang", v); },
-  toggleSetting(key) {
-    state.settings[key] = !state.settings[key];
-    store.set("pta_settings", state.settings);
-    document.getElementById(key === "voiceIn" ? "swVoiceIn" : "swVoiceOut").classList.toggle("on", state.settings[key]);
-  },
+ const wrap = document.getElementById("histList");
+ wrap.innerHTML = rows.map(r => `
+ <div class="hist-row glass">
+ <div class="l">${r.icon} <div><b>${this.esc(r.title)}</b><span>${new Date(r.ts).toLocaleString("fa-IR")}</span></div></div>
+ <div class="hist-actions">
+ ${r.type === "chat" ? `<button onclick="app.openChat('${r.id}')">ادامه</button>` : ""}
+ <button onclick="app.deleteHistory('${r.type}','${r.id}')">حذف</button>
+ </div>
+ </div>`).join("") || `<p style="color:var(--muted);font-size:12px;text-align:center;margin-top:30px">چیزی یافت نشد.</p>`;
+ },
+ openChat(id) {
+ state.currentChatId = id;
+ const chats = store.get("pta_chats", {});
+ const chat = chats[id];
+ document.getElementById("chatArea").innerHTML = "";
+ chat.messages.forEach(m =>this.addChatBubble(m.content, m.role === "user" ? "user" : "ai"));
+ this.nav("chat");
+ },
+ deleteHistory(type, id) {
+ if (!confirm("حذف شود؟")) return;
+ if (type === "chat") { const c = store.get("pta_chats", {}); delete c[id]; store.set("pta_chats", c); }
+ if (type === "trans") { store.set("pta_translations", store.get("pta_translations", []).filter(t =>t.id !== id)); }
+ if (type === "pdf") { store.set("pta_pdfs", store.get("pta_pdfs", []).filter(p =>p.id !== id)); }
+ this.renderHistory();
+ this.renderSidebarHistory();
+ },
 
-  /* ---------------- HELPERS ---------------- */
-  updateStats() {
-    document.getElementById("statChats").textContent = Object.keys(store.get("pta_chats", {})).length;
-    document.getElementById("statTrans").textContent = store.get("pta_translations", []).length;
-    document.getElementById("statFiles").textContent = store.get("pta_pdfs", []).length;
-  },
-  copyText(id) { navigator.clipboard.writeText(document.getElementById(id).value); },
-  shareText(id) { this.shareRaw(document.getElementById(id).value); },
-  shareRaw(text) {
-    if (navigator.share) navigator.share({ text }).catch(() => {});
-    else { navigator.clipboard.writeText(text); this.showModal("اشتراک‌گذاری", "متن در کلیپ‌بورد کپی شد."); }
-  },
-  showModal(title, body) {
-    document.getElementById("modalTitle").textContent = title;
-    document.getElementById("modalBody").textContent = body;
-    document.getElementById("modalBg").classList.remove("hidden");
-  },
-  esc(s) { const d = document.createElement("div"); d.textContent = s || ""; return d.innerHTML; },
+ /* ---------------- SETTINGS ---------------- */
+ setUiLang(l) {
+ state.uiLang = l;
+ document.getElementById("uiFa").classList.toggle("active", l === "fa");
+ document.getElementById("uiEn").classList.toggle("active", l === "en");
+ document.documentElement.setAttribute("dir", l === "fa" ? "rtl" : "ltr");
+ document.documentElement.setAttribute("lang", l);
+ },
+ setAiRespLang(v) { state.aiRespLang = v; store.set("pta_ai_lang", v); },
+ toggleSetting(key) {
+ state.settings[key] = !state.settings[key];
+ store.set("pta_settings", state.settings);
+ document.getElementById(key === "voiceIn" ? "swVoiceIn" : "swVoiceOut").classList.toggle("on", state.settings[key]);
+ },
+
+ /* ---------------- HELPERS ---------------- */
+ updateStats() {
+ document.getElementById("statChats").textContent = Object.keys(store.get("pta_chats", {})).length;
+ document.getElementById("statTrans").textContent = store.get("pta_translations", []).length;
+ document.getElementById("statFiles").textContent = store.get("pta_pdfs", []).length;
+ },
+ copyText(id) { navigator.clipboard.writeText(document.getElementById(id).value); },
+ shareText(id) { this.shareRaw(document.getElementById(id).value); },
+ shareRaw(text) {
+ if (navigator.share) navigator.share({ text }).catch(() => {});
+ else { navigator.clipboard.writeText(text); this.showModal("اشتراک‌گذاری", "متن در کلیپ‌بورد کپی شد."); }
+ },
+ showModal(title, body) {
+ document.getElementById("modalTitle").textContent = title;
+ document.getElementById("modalBody").textContent = body;
+ document.getElementById("modalBg").classList.remove("hidden");
+ },
+ esc(s) { const d = document.createElement("div"); d.textContent = s || ""; return d.innerHTML; },
 };
 
-window.addEventListener("load", () => app.init());
+window.addEventListener("load", () =>app.init());
 </script>
 </body>
 </html>
