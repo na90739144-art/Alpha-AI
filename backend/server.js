@@ -1,15 +1,3 @@
-/**
- * ترجمه‌گر حرفه‌ای (Pro Translator AI) — بک‌اند پروکسی امن
- * -------------------------------------------------------
- * این سرور کلید Groq API را مخفی نگه می‌دارد و فقط درخواست‌های
- * مجاز (چت، ترجمه) را با نرخ محدود (rate limit) به Groq ارسال می‌کند.
- *
- * اجرا:
- *   1) cp .env.example .env  و کلید Groq خود را بگذارید
- *   2) npm install
- *   3) npm start
- */
-
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
@@ -17,11 +5,17 @@ const rateLimit = require("express-rate-limit");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const GROQ_API_KEY = process.env.GROQ_API_KEY;
-const GROQ_MODEL = process.env.GROQ_MODEL || "llama-3.3-70b-versatile";
 
-if (!GROQ_API_KEY) {
-  console.warn("⚠️  GROQ_API_KEY تنظیم نشده است. فایل .env را بررسی کنید.");
+const AI_API_KEY = process.env.AI_API_KEY || process.env.GROQ_API_KEY;
+const AI_BASE_URL =
+  process.env.AI_BASE_URL || "https://api.groq.com/openai/v1/chat/completions";
+const AI_MODEL =
+  process.env.AI_MODEL || process.env.GROQ_MODEL || "llama-3.3-70b-versatile";
+const AI_REFERER = process.env.AI_REFERER || "";
+const AI_TITLE = process.env.AI_TITLE || "";
+
+if (!AI_API_KEY) {
+  console.warn("⚠️  AI_API_KEY / GROQ_API_KEY تنظیم نشده است. فایل .env را بررسی کنید.");
 }
 
 const allowedOrigins = (process.env.ALLOWED_ORIGINS || "*")
@@ -35,7 +29,6 @@ app.use(
 );
 app.use(express.json({ limit: "2mb" }));
 
-// محدودیت نرخ درخواست برای جلوگیری از سوءاستفاده از کلید API
 const limiter = rateLimit({
   windowMs: 60 * 1000,
   max: 30,
@@ -46,13 +39,9 @@ const limiter = rateLimit({
 app.use("/api/", limiter);
 
 app.get("/api/health", (req, res) => {
-  res.json({ ok: true, service: "protranslate-ai-backend" });
+  res.json({ ok: true, service: "protranslate-ai-backend", model: AI_MODEL });
 });
 
-/**
- * بدنه درخواست:
- * { messages: [{role, content}, ...], max_tokens?: number, temperature?: number }
- */
 app.post("/api/chat", async (req, res) => {
   try {
     const { messages, max_tokens = 800, temperature = 0.6 } = req.body;
@@ -61,27 +50,28 @@ app.post("/api/chat", async (req, res) => {
       return res.status(400).json({ error: "messages نامعتبر است" });
     }
 
-    const groqRes = await fetch(
-      "https://api.groq.com/openai/v1/chat/completions",
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${GROQ_API_KEY}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          model: GROQ_MODEL,
-          messages,
-          max_tokens,
-          temperature,
-        }),
-      }
-    );
+    const headers = {
+      Authorization: `Bearer ${AI_API_KEY}`,
+      "Content-Type": "application/json",
+    };
+    if (AI_REFERER) headers["HTTP-Referer"] = AI_REFERER;
+    if (AI_TITLE) headers["X-Title"] = AI_TITLE;
 
-    const data = await groqRes.json();
+    const aiRes = await fetch(AI_BASE_URL, {
+      method: "POST",
+      headers,
+      body: JSON.stringify({
+        model: AI_MODEL,
+        messages,
+        max_tokens,
+        temperature,
+      }),
+    });
 
-    if (!groqRes.ok) {
-      return res.status(groqRes.status).json({
+    const data = await aiRes.json();
+
+    if (!aiRes.ok) {
+      return res.status(aiRes.status).json({
         error: data?.error?.message || "خطا در ارتباط با سرویس هوش مصنوعی",
       });
     }
@@ -95,5 +85,5 @@ app.post("/api/chat", async (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`✅ بک‌اند ترجمه‌گر حرفه‌ای روی پورت ${PORT} اجرا شد`);
+  console.log(`✅ بک‌اند ترجمه‌گر حرفه‌ای روی پورت ${PORT} اجرا شد (مدل: ${AI_MODEL})`);
 });
