@@ -9,7 +9,7 @@
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect fill='%23101010' width='192' height='192' rx='28'/><text x='96' y='128' font-size='70' font-weight='800' fill='%23d4af37' text-anchor='middle' font-family='Tahoma'>PT</text></svg>">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-<script src="https://accounts.google.com/gsi/client" async defer></script>
+
 <style>
 :root{
  --gold:#d4af37; --gold-light:#f4e5a1; --bg:#0e0e0e; --bg2:#1a1a1a; --bg3:#232323;
@@ -47,6 +47,15 @@ input,textarea,select{font-family:inherit;color:var(--txt);outline:none}
 .divider{display:flex;align-items:center;gap:10px;margin:16px 0;color:var(--muted);font-size:11px}
 .divider::before,.divider::after{content:"";flex:1;height:1px;background:#333}
 .auth-note{font-size:11px;color:var(--muted);margin-top:16px;line-height:1.8}
+.auth-tabs{display:flex;gap:8px;margin-bottom:18px}
+.auth-tab{flex:1;padding:10px;border-radius:10px;background:var(--bg3);color:#999;font-size:12.5px;border:1px solid #333}
+.auth-tab.active{background:var(--gold);color:#101010;font-weight:700;border-color:var(--gold)}
+.assist-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:20px}
+.assist-card{padding:18px 14px;text-align:center;cursor:pointer;transition:.2s}
+.assist-card:hover{transform:translateY(-3px);border-color:var(--gold)}
+.assist-card .ic{width:34px;height:34px;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;border-radius:10px;background:rgba(212,175,55,.12);color:var(--gold)}
+.assist-card b{font-size:12.5px;display:block;margin-bottom:4px}
+.assist-card span{font-size:10px;color:var(--muted);line-height:1.6;display:block}
 
 /* ---------- APP SHELL ---------- */
 #appShell{display:flex;height:100vh}
@@ -196,13 +205,26 @@ textarea.ta{width:100%;min-height:130px;padding:14px;background:var(--bg3);borde
  <div class="brand-title">ترجمه‌گر حرفه‌ای</div>
  <div class="brand-sub">Pro Translator AI</div>
 
- <div id="googleBtnContainer" style="display:flex;justify-content:center;margin-top:8px"></div>
- <div id="googleNotConfigured" class="hidden" style="font-size:12px;color:var(--danger);margin-top:14px;line-height:1.9;text-align:right">
- ورود با Google هنوز پیکربندی نشده است. GOOGLE_CLIENT_ID را در ابتدای اسکریپت این فایل تنظیم کنید.
+ <div class="auth-tabs">
+ <button class="auth-tab active" id="tabLoginBtn" onclick="app.switchAuthTab('login')">ورود</button>
+ <button class="auth-tab" id="tabRegisterBtn" onclick="app.switchAuthTab('register')">ثبت‌نام</button>
+ </div>
+
+ <div id="formLogin">
+ <div class="field"><label>ایمیل</label><input type="email" id="loginEmail" placeholder="example@mail.com"></div>
+ <div class="field"><label>رمز عبور</label><input type="password" id="loginPass" placeholder="••••••••"></div>
+ <button class="btn-primary" onclick="app.login()">ورود</button>
+ </div>
+
+ <div id="formRegister" class="hidden">
+ <div class="field"><label>نام</label><input type="text" id="regName" placeholder="نام شما"></div>
+ <div class="field"><label>ایمیل</label><input type="email" id="regEmail" placeholder="example@mail.com"></div>
+ <div class="field"><label>رمز عبور</label><input type="password" id="regPass" placeholder="حداقل ۶ کاراکتر"></div>
+ <button class="btn-primary" onclick="app.register()">ساخت حساب</button>
  </div>
 
  <div id="authMsg" style="color:var(--danger);font-size:12px;margin-top:12px;min-height:14px"></div>
- <div class="auth-note">ورود فقط از طریق حساب Google امکان‌پذیر است.</div>
+ <div style="font-size:10px;color:var(--muted);margin-top:14px;letter-spacing:.3px">سازنده: نیما حجتی</div>
  </div>
 </div>
 
@@ -213,7 +235,8 @@ textarea.ta{width:100%;min-height:130px;padding:14px;background:var(--bg3);borde
  <div class="ic">PT</div>
  <div><h1>ترجمه‌گر حرفه‌ای</h1><p>Pro Translator AI</p></div>
  </div>
- <button class="nav-item active" data-nav="home" onclick="app.nav('home')">خانه</button>
+ <button class="nav-item active" data-nav="assistants" onclick="app.nav('assistants')">دستیارها</button>
+ <button class="nav-item" data-nav="home" onclick="app.nav('home')">خانه</button>
  <button class="nav-item" data-nav="chat" onclick="app.nav('chat')">چت هوش مصنوعی</button>
  <button class="nav-item" data-nav="translate" onclick="app.nav('translate')">ترجمه‌گر</button>
  <button class="nav-item" data-nav="pdf" onclick="app.nav('pdf')">ترجمه PDF</button>
@@ -239,13 +262,20 @@ textarea.ta{width:100%;min-height:130px;padding:14px;background:var(--bg3);borde
  <h2 id="topTitle">خانه</h2>
  <p id="topSub">داشبورد ترجمه‌گر حرفه‌ای</p>
  </div>
- <div style="width:38px"></div>
+ <button class="icon-btn" title="بازگشت" onclick="app.goBack()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l-6-6 6-6M4 12h16"/></svg></button>
  </div>
 
  <div class="view" id="view">
 
+ <!-- ASSISTANTS -->
+ <section id="view-assistants">
+ <div class="home-hi" id="assistGreeting">سلام</div>
+ <div class="home-sub">یک دستیار هوش مصنوعی را برای شروع انتخاب کنید</div>
+ <div class="assist-grid" id="assistGrid"></div>
+ </section>
+
  <!-- HOME -->
- <section id="view-home">
+ <section id="view-home" class="hidden">
  <div id="backendWarn" class="banner-warn hidden">آدرس بک‌اند (API_BASE_URL) هنوز تنظیم نشده یا در دسترس نیست. برای فعال شدن چت و ترجمه، فایل backend را دیپلوی کرده و مقدار API_BASE_URL را در ابتدای اسکریپت این صفحه با آدرس واقعی جایگزین کنید.
  </div>
  <div class="home-hi" id="homeGreeting">سلام</div>
@@ -404,6 +434,8 @@ textarea.ta{width:100%;min-height:130px;padding:14px;background:var(--bg3);borde
  <h4>درباره</h4>
  <div class="setting-row glass"><span>درباره ترجمه‌گر حرفه‌ای</span><button class="btn-ghost" onclick="app.showModal('درباره ما','ترجمه‌گر حرفه‌ای (Pro Translator AI) یک دستیار هوش مصنوعی برای چت، ترجمه متن و ترجمه اسناد PDF است.')">مشاهده</button></div>
  <div class="setting-row glass"><span>حریم خصوصی</span><button class="btn-ghost" onclick="app.showModal('حریم خصوصی','پیام‌ها برای پردازش به سرور ارسال می‌شوند و کلید API هرگز در برنامه ذخیره نمی‌شود. تاریخچه به‌صورت محلی روی همین دستگاه نگه‌داری می‌شود.')">مشاهده</button></div>
+ <div class="setting-row glass"><span>پشتیبانی</span><a class="btn-ghost" href="mailto:alphannna@gmail.com" style="text-decoration:none">alphannna@gmail.com</a></div>
+ <div class="setting-row glass"><span>سازنده</span><span style="color:var(--gold);font-weight:700;font-size:12.5px">نیما حجتی</span></div>
  </div>
  </section>
 
@@ -430,9 +462,6 @@ textarea.ta{width:100%;min-height:130px;padding:14px;background:var(--bg3);borde
 // تنها خطی که باید بعد از دیپلوی بک‌اند ویرایش شود:
 const API_BASE_URL = "https://alpha-ai-jpz9.onrender.com/api";
 
-// GOOGLE_CLIENT_ID را بعد از ساخت پروژه در Google Cloud Console اینجا قرار دهید
-const GOOGLE_CLIENT_ID = "";
-
 const LANGS = [
  { code: "auto", fa: "تشخیص خودکار", en: "Auto Detect" },
  { code: "fa", fa: "فارسی", en: "Persian" },
@@ -457,12 +486,41 @@ const AI_MODES = [
  { id: "translate", fa: "ترجمه‌گر", sys: "You are a professional translator. Translate accurately preserving tone and meaning." },
  { id: "file", fa: "تحلیل فایل", sys: "You analyze the provided file content and answer questions about it precisely." },
  { id: "analysis", fa: "تحلیل متن", sys: "You analyze text for structure, sentiment, and key insights." },
+ { id: "doctor", fa: "پزشک هوش مصنوعی", sys: "You are a knowledgeable medical assistant speaking Persian. Answer directly and helpfully like a doctor explaining things to a patient: discuss likely causes, practical guidance, and next steps clearly and completely. Do not repeat generic disclaimers in every reply — only add a brief note to see a real doctor in person if the situation sounds urgent, severe, or requires an in-person exam (e.g. for prescriptions, imaging, or emergencies)." },
+ { id: "lawyer", fa: "وکیل هوش مصنوعی", sys: "You are a knowledgeable legal-information assistant speaking Persian. Answer directly and helpfully: explain the relevant law and give clear practical guidance. Do not repeat generic disclaimers in every reply — only note that a licensed lawyer is needed when the matter is complex, urgent, or involves an active legal case." },
+ { id: "teacher", fa: "معلم هوش مصنوعی", sys: "You are a patient, encouraging Persian-speaking tutor. Give personalized, step-by-step explanations and help solve exercises, checking understanding as you go." },
+ { id: "architect", fa: "معمار و طراح خانه", sys: "You are an architecture and interior-design assistant speaking Persian. Help with floor plans, decoration ideas and building facade concepts, and note when a licensed engineer must review structural work." },
+ { id: "electrical", fa: "مهندس برق AI", sys: "You are an electrical engineering assistant speaking Persian. Help with basic circuit design and calculations, and note when a licensed electrician or engineer must verify real installations for safety." },
+ { id: "compeng", fa: "مهندس کامپیوتر AI", sys: "You are a computer engineering assistant speaking Persian. Help with system design, networking and troubleshooting." },
+ { id: "agri", fa: "مشاور کشاورزی AI", sys: "You are an agriculture advisor speaking Persian. Suggest cultivation methods, irrigation practices and help diagnose plant problems." },
+ { id: "social", fa: "طراح سوشال‌مدیا AI", sys: "You are a social-media design assistant speaking Persian. Help write captions, plan posts/banners and shape visual brand identity." },
+ { id: "boyfriend", fa: "دوست‌پسر AI", sys: "You are a warm, respectful, supportive male companion character speaking Persian, for friendly daily conversation. Be caring and encouraging, keep all content appropriate and non-explicit, and encourage the user's real-world relationships and wellbeing." },
+ { id: "girlfriend", fa: "دوست‌دختر AI", sys: "You are a warm, respectful, supportive female companion character speaking Persian, for friendly daily conversation. Be caring and encouraging, keep all content appropriate and non-explicit, and encourage the user's real-world relationships and wellbeing." },
+];
+
+const ASSISTANTS = [
+ { id: "voice", title: "دستیار صوتی", desc: "گفت‌وگوی صوتی با هوش مصنوعی", nav: "voice", icon: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2M12 19v4M8 23h8"/></svg>' },
+ { id: "chat", title: "چت هوش مصنوعی", desc: "پرسش و پاسخ هوشمند", nav: "chat", mode: "general", icon: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>' },
+ { id: "translate", title: "مترجم AI", desc: "ترجمه متن، PDF و اسناد بین زبان‌ها", nav: "translate", icon: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 8l6 6M4 14l6-6 2-3M2 5h12M7 2h1M22 22l-5-10-5 10M14 18h6"/></svg>' },
+ { id: "doctor", title: "پزشک هوش مصنوعی", desc: "بررسی علائم و راهنمایی اولیه، نه تشخیص قطعی", nav: "chat", mode: "doctor", icon: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 14c1.5-1.5 3-3.5 3-6a4 4 0 00-7-2.7A4 4 0 008 8c0 2.5 1.5 4.5 3 6l5 5z"/><path d="M12 21l-3-3M5 8v6M2 11h6"/></svg>' },
+ { id: "lawyer", title: "وکیل هوش مصنوعی", desc: "توضیح قوانین و بررسی اولیه اسناد", nav: "chat", mode: "lawyer", icon: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v18M5 7l-3 6a3 3 0 006 0l-3-6zM19 7l-3 6a3 3 0 006 0l-3-6zM5 7h14M8 21h8"/></svg>' },
+ { id: "teacher", title: "معلم هوش مصنوعی", desc: "آموزش شخصی‌سازی‌شده و حل تمرین", nav: "chat", mode: "teacher", icon: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10L12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1.5 3 3 6 3s6-1.5 6-3v-5"/></svg>' },
+ { id: "architect", title: "معمار و طراح خانه", desc: "طراحی پلان، دکوراسیون و ایده نمای ساختمان", nav: "chat", mode: "architect", icon: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-8 9 8M5 10v10h14V10M9 20v-6h6v6"/></svg>' },
+ { id: "electrical", title: "مهندس برق AI", desc: "محاسبات و طراحی اولیه مدار و سیستم‌های برق", nav: "chat", mode: "electrical", icon: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/></svg>' },
+ { id: "compeng", title: "مهندس کامپیوتر AI", desc: "طراحی سیستم، شبکه و عیب‌یابی", nav: "chat", mode: "compeng", icon: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 21h8M12 16v5"/></svg>' },
+ { id: "programmer", title: "برنامه‌نویس AI", desc: "تولید، توضیح و رفع خطای کد", nav: "chat", mode: "code", icon: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg>' },
+ { id: "agri", title: "مشاور کشاورزی AI", desc: "پیشنهاد روش کشت، آبیاری و بررسی مشکلات گیاه", nav: "chat", mode: "agri", icon: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22V12M12 12c0-4 3-7 7-7 0 4-3 7-7 7zM12 12C12 8 9 5 5 5c0 4 3 7 7 7z"/></svg>' },
+ { id: "social", title: "طراح سوشال‌مدیا AI", desc: "پست، بنر، کپشن و هویت بصری", nav: "chat", mode: "social", icon: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5-9 9"/></svg>' },
+ { id: "boyfriend", title: "دوست‌پسر AI", desc: "گفت‌وگوی دوستانه و همراهی روزانه", nav: "chat", mode: "boyfriend", icon: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.8 4.6a5.5 5.5 0 00-7.8 0L12 5.6l-1-1a5.5 5.5 0 00-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 000-7.8z"/></svg>' },
+ { id: "girlfriend", title: "دوست‌دختر AI", desc: "گفت‌وگوی دوستانه و همراهی روزانه", nav: "chat", mode: "girlfriend", icon: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.8 4.6a5.5 5.5 0 00-7.8 0L12 5.6l-1-1a5.5 5.5 0 00-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 000-7.8z"/></svg>' },
 ];
 
 const state = {
  user: null,
  currentMode: "general",
  currentChatId: null,
+ currentView: null,
+ navHistory: [],
  uiLang: "fa",
  aiRespLang: "fa",
  settings: { voiceIn: true, voiceOut: false },
@@ -488,40 +546,41 @@ const app = {
 
  this.populateLangSelects();
  this.populateAiModes();
+ this.populateAssistants();
 
  const u = store.get("pta_currentUser", null);
- if (u) { this.enterApp(u); } else { this.initGoogleAuth(); }
+ if (u) { this.enterApp(u); }
  },
 
- /* ---------------- AUTH (Google Identity Services) ---------------- */
- initGoogleAuth() {
- if (!GOOGLE_CLIENT_ID) {
- document.getElementById("googleNotConfigured").classList.remove("hidden");
- return;
- }
- if (!window.google || !window.google.accounts) {
- setTimeout(() => this.initGoogleAuth(), 300);
- return;
- }
- google.accounts.id.initialize({
- client_id: GOOGLE_CLIENT_ID,
- callback: (resp) => this.handleGoogleCredential(resp),
- });
- google.accounts.id.renderButton(document.getElementById("googleBtnContainer"), {
- theme: "outline",
- size: "large",
- shape: "pill",
- text: "signin_with",
- width: 260,
- });
+ /* ---------------- AUTH (email + password) ---------------- */
+ switchAuthTab(tab) {
+ document.getElementById("tabLoginBtn").classList.toggle("active", tab === "login");
+ document.getElementById("tabRegisterBtn").classList.toggle("active", tab === "register");
+ document.getElementById("formLogin").classList.toggle("hidden", tab !== "login");
+ document.getElementById("formRegister").classList.toggle("hidden", tab !== "register");
+ document.getElementById("authMsg").textContent = "";
  },
- handleGoogleCredential(response) {
- try {
- const payload = JSON.parse(atob(response.credential.split(".")[1]));
- this.enterApp({ name: payload.name, email: payload.email, picture: payload.picture });
- } catch (e) {
- document.getElementById("authMsg").textContent = "ورود با Google ناموفق بود. دوباره تلاش کنید.";
- }
+ register() {
+ const name = document.getElementById("regName").value.trim();
+ const email = document.getElementById("regEmail").value.trim().toLowerCase();
+ const pass = document.getElementById("regPass").value;
+ const msg = document.getElementById("authMsg");
+ if (!name || !email || !pass) { msg.textContent = "همه فیلدها را پر کنید."; return; }
+ if (pass.length < 6) { msg.textContent = "رمز عبور باید حداقل ۶ کاراکتر باشد."; return; }
+ const users = store.get("pta_users", {});
+ if (users[email]) { msg.textContent = "این ایمیل قبلاً ثبت‌نام کرده است."; return; }
+ users[email] = { name, email, pass };
+ store.set("pta_users", users);
+ this.enterApp({ name, email });
+ },
+ login() {
+ const email = document.getElementById("loginEmail").value.trim().toLowerCase();
+ const pass = document.getElementById("loginPass").value;
+ const msg = document.getElementById("authMsg");
+ const users = store.get("pta_users", {});
+ const u = users[email];
+ if (!u || u.pass !== pass) { msg.textContent = "ایمیل یا رمز عبور اشتباه است."; return; }
+ this.enterApp({ name: u.name, email: u.email });
  },
  enterApp(user) {
  state.user = user;
@@ -536,9 +595,12 @@ const app = {
  document.getElementById("profName").textContent = user.name || user.email;
  document.getElementById("profEmail").textContent = user.email || "";
  document.getElementById("homeGreeting").textContent = `سلام ${user.name || ""}`;
+ const ag = document.getElementById("assistGreeting");
+ if (ag) ag.textContent = `سلام ${user.name || ""}`;
  this.renderSidebarHistory();
  this.renderHome();
  this.updateStats();
+ this.nav("assistants");
  },
  logout() {
  if (!confirm("آیا مطمئن هستید که می‌خواهید از حساب خارج شوید؟")) return;
@@ -553,14 +615,42 @@ const app = {
  this.enterApp(state.user);
  },
 
+ /* ---------------- ASSISTANTS ---------------- */
+ populateAssistants() {
+ const wrap = document.getElementById("assistGrid");
+ wrap.innerHTML = "";
+ ASSISTANTS.forEach(a => {
+ const c = document.createElement("div");
+ c.className = "assist-card glass";
+ c.onclick = () => this.openAssistant(a.id);
+ c.innerHTML = `<div class="ic">${a.icon}</div><b>${a.title}</b><span>${a.desc}</span>`;
+ wrap.appendChild(c);
+ });
+ },
+ openAssistant(id) {
+ const a = ASSISTANTS.find(x => x.id === id);
+ if (!a) return;
+ if (a.mode) {
+ state.currentMode = a.mode;
+ this.newChat();
+ this.populateAiModes();
+ }
+ this.nav(a.nav);
+ },
+
  /* ---------------- NAV ---------------- */
- nav(view) {
+ nav(view, isBack) {
+ if (!isBack && state.currentView && state.currentView !== view) {
+ state.navHistory.push(state.currentView);
+ }
+ state.currentView = view;
  document.querySelectorAll(".view >section").forEach(s =>s.classList.add("hidden"));
  document.getElementById("view-" + view).classList.remove("hidden");
  document.querySelectorAll(".nav-item").forEach(b =>b.classList.remove("active"));
  const btn = document.querySelector(`.nav-item[data-nav="${view}"]`);
  if (btn) btn.classList.add("active");
  const titles = {
+ assistants: ["دستیارها", "انتخاب دستیار هوش مصنوعی"],
  home: ["خانه", "داشبورد ترجمه‌گر حرفه‌ای"], chat: ["چت هوش مصنوعی", "گفت‌وگو با دستیار هوشمند"],
  translate: ["ترجمه‌گر", "ترجمه فوری و دقیق متن"], pdf: ["ترجمه PDF", "ترجمه کامل اسناد"],
  voice: ["دستیار صوتی", "گفت‌وگوی صوتی با هوش مصنوعی"], history: ["تاریخچه", "گفت‌وگوها و ترجمه‌های قبلی"],
@@ -571,6 +661,14 @@ const app = {
  document.getElementById("sidebar").classList.remove("open");
  if (view === "history") this.renderHistory();
  if (view === "profile") this.updateStats();
+ },
+ goBack() {
+ if (state.navHistory.length > 0) {
+ const prev = state.navHistory.pop();
+ this.nav(prev, true);
+ } else {
+ this.logout();
+ }
  },
 
  /* ---------------- BACKEND CALL ---------------- */
