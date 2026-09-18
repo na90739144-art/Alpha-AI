@@ -764,7 +764,8 @@ const app = {
  document.getElementById("chatArea").appendChild(typing);
 
  const modeObj = AI_MODES.find(m =>m.id === state.currentMode);
- const sys = `${modeObj.sys} Respond in ${state.aiRespLang === "fa" ? "Persian (فارسی)" : "the language: " + state.aiRespLang}.`;
+ const langName = state.aiRespLang === "fa" ? "Persian (فارسی)" : state.aiRespLang;
+ const sys = `${modeObj.sys}\n\nIMPORTANT: Respond ONLY in ${langName}. Write your entire reply in a single language — do not mix in English or any other language, not even individual words or phrases, unless the user's message itself is written in a different language (in that case, reply fully in that same single language instead). Never switch languages mid-reply.`;
  const payload = [{ role: "system", content: sys }, ...chat.messages.slice(-12)];
 
  try {
