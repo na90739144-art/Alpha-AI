@@ -147,6 +147,7 @@ textarea.ta{width:100%;min-height:130px;padding:14px;background:var(--bg3);borde
 .voice-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;text-align:center}
 .mic-btn{width:110px;height:110px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold-light));display:flex;align-items:center;justify-content:center;font-size:44px;box-shadow:0 0 0 0 rgba(212,175,55,.5);margin-bottom:20px}
 .mic-btn.listening{animation:pulse 1.4s infinite}
+.mic-btn.speaking{animation:pulse 0.7s infinite;background:linear-gradient(135deg,#8fd3a8,#5fb37f)}
 @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(212,175,55,.55)}70%{box-shadow:0 0 0 26px rgba(212,175,55,0)}100%{box-shadow:0 0 0 0 rgba(212,175,55,0)}}
 .voice-transcript{max-width:520px;margin-top:20px;color:#ccc;font-size:14px;line-height:1.9}
 .voice-answer{max-width:520px;margin-top:14px;padding:16px;font-size:14px;line-height:1.9}
@@ -375,7 +376,7 @@ textarea.ta{width:100%;min-height:130px;padding:14px;background:var(--bg3);borde
  <section id="view-voice" class="hidden">
  <div class="voice-wrap">
  <div class="mic-btn" id="micVoiceBtn" onclick="app.toggleMic('voice')"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#101010" stroke-width="2"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2M12 19v4M8 23h8"/></svg></div>
- <div style="color:var(--muted);font-size:13px" id="voiceStatus">برای صحبت کردن لمس کنید</div>
+ <div style="color:var(--muted);font-size:13px" id="voiceStatus">برای شروع مکالمهٔ صوتی لمس کنید</div>
  <div class="voice-transcript hidden glass" id="voiceTranscript"></div>
  <div class="voice-answer hidden glass" id="voiceAnswer"></div>
  </div>
@@ -521,6 +522,7 @@ const state = {
  currentChatId: null,
  currentView: null,
  navHistory: [],
+ voiceActive: false,
  uiLang: "fa",
  aiRespLang: "fa",
  settings: { voiceIn: true, voiceOut: false },
@@ -640,6 +642,12 @@ const app = {
 
  /* ---------------- NAV ---------------- */
  nav(view, isBack) {
+ if (state.currentView === "voice" && view !== "voice") {
+ // در صورت خروج از صفحهٔ دستیار صوتی، مکالمهٔ صوتی خودکار متوقف شود
+ state.voiceActive = false;
+ speechSynthesis.cancel();
+ if (state.recognition) state.recognition.stop();
+ }
  if (!isBack && state.currentView && state.currentView !== view) {
  state.navHistory.push(state.currentView);
  }
@@ -933,10 +941,26 @@ const app = {
  toggleMic(target) {
  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
  if (!SR) { this.showModal("پشتیبانی نشد", "مرورگر شما از ورودی صوتی پشتیبانی نمی‌کند."); return; }
+
+ // اگر در حال گوش‌دادن یا صحبت‌کردن هستیم، با لمس دوباره کل مکالمه صوتی متوقف شود
+ if (target === "voice" && (state.voiceActive || speechSynthesis.speaking)) {
+ state.voiceActive = false;
+ speechSynthesis.cancel();
+ if (state.recognition) state.recognition.stop();
+ document.getElementById("micVoiceBtn").classList.remove("listening", "speaking");
+ document.getElementById("voiceStatus").textContent = "برای صحبت کردن لمس کنید";
+ return;
+ }
+ if (target === "voice") state.voiceActive = true;
+
  if (state.recognition && state.recTarget === target) {
  state.recognition.stop();
  return;
  }
+ this.startListening(target);
+ },
+ startListening(target) {
+ const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
  state.recognition = new SR();
  state.recTarget = target;
  state.recognition.lang = state.aiRespLang === "fa" ? "fa-IR" : "en-US";
@@ -958,31 +982,53 @@ const app = {
  const aEl = document.getElementById("voiceAnswer");
  aEl.textContent = "در حال فکر کردن...";
  aEl.classList.remove("hidden");
+ document.getElementById("voiceStatus").textContent = "در حال فکر کردن...";
  try {
  const answer = await this.callAI([
- { role: "system", content: `Reply in ${state.aiRespLang === "fa" ? "Persian" : state.aiRespLang}.` },
+ { role: "system", content: `Reply in ${state.aiRespLang === "fa" ? "Persian" : state.aiRespLang}. Keep the reply conversational and reasonably short, like spoken speech.` },
  { role: "user", content: said },
  ]);
  aEl.textContent = answer;
- this.speak(answer);
+ // پخش صوتی جواب، و بعد از تمام‌شدن، اگر مکالمهٔ صوتی هنوز فعاله، خودکار دوباره گوش بده
+ this.speak(answer, null, () => {
+ if (state.voiceActive) this.startListening("voice");
+ });
  } catch (e2) {
  aEl.textContent = "خطا: " + e2.message;
+ document.getElementById("voiceStatus").textContent = "برای صحبت کردن لمس کنید";
+ state.voiceActive = false;
  }
  }
  };
  state.recognition.onend = () => {
  micBtn.classList.remove("listening", "rec");
- if (target === "voice") document.getElementById("voiceStatus").textContent = "برای صحبت کردن لمس کنید";
  state.recognition = null;
  };
- state.recognition.onerror = () => { state.recognition = null; micBtn.classList.remove("listening", "rec"); };
+ state.recognition.onerror = () => {
+ state.recognition = null;
+ micBtn.classList.remove("listening", "rec");
+ if (target === "voice") {
+ document.getElementById("voiceStatus").textContent = "برای صحبت کردن لمس کنید";
+ state.voiceActive = false;
+ }
+ };
  state.recognition.start();
  },
- speak(text, langCode) {
- if (!text || !("speechSynthesis" in window)) return;
+ speak(text, langCode, onEnd) {
+ if (!text || !("speechSynthesis" in window)) { if (onEnd) onEnd(); return; }
  speechSynthesis.cancel();
  const u = new SpeechSynthesisUtterance(text);
  u.lang = (langCode || state.aiRespLang) === "fa" ? "fa-IR" : (langCode || state.aiRespLang);
+ const micBtn = document.getElementById("micVoiceBtn");
+ u.onstart = () => {
+ if (micBtn) micBtn.classList.add("speaking");
+ document.getElementById("voiceStatus").textContent = "در حال صحبت...";
+ };
+ u.onend = () => {
+ if (micBtn) micBtn.classList.remove("speaking");
+ if (state.voiceActive) document.getElementById("voiceStatus").textContent = "در حال گوش دادن...";
+ if (onEnd) onEnd();
+ };
  speechSynthesis.speak(u);
  },
 
