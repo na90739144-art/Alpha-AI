@@ -379,6 +379,7 @@ textarea.ta{width:100%;min-height:130px;padding:14px;background:var(--bg3);borde
  <div style="color:var(--muted);font-size:13px" id="voiceStatus">برای شروع مکالمهٔ صوتی لمس کنید</div>
  <div class="voice-transcript hidden glass" id="voiceTranscript"></div>
  <div class="voice-answer hidden glass" id="voiceAnswer"></div>
+ <button class="btn-ghost hidden" id="replaySpeakBtn" style="margin-top:10px" onclick="app.speak(state.lastVoiceAnswer, null, () => { if (state.voiceActive) app.startListening('voice'); })">🔊 پخش صدا</button>
  </div>
  </section>
 
@@ -951,13 +952,28 @@ const app = {
  document.getElementById("voiceStatus").textContent = "برای صحبت کردن لمس کنید";
  return;
  }
- if (target === "voice") state.voiceActive = true;
+ if (target === "voice") {
+ state.voiceActive = true;
+ // فعال‌سازی موتور صدا درست همین‌جا (داخل لمس کاربر)؛ روی موبایل اگر پخش صدا
+ // فقط بعد از یک درخواست شبکه‌ای (async) صدا زده بشه، خیلی از مرورگرها بی‌صدا نادیده‌اش می‌گیرن
+ this.primeSpeech();
+ }
 
  if (state.recognition && state.recTarget === target) {
  state.recognition.stop();
  return;
  }
  this.startListening(target);
+ },
+ primeSpeech() {
+ if (!("speechSynthesis" in window)) return;
+ try {
+ // اگر فهرست صداها هنوز لود نشده، لودش کن (روی اندروید معمولاً async لود می‌شه)
+ speechSynthesis.getVoices();
+ const warm = new SpeechSynthesisUtterance(" ");
+ warm.volume = 0;
+ speechSynthesis.speak(warm);
+ } catch (e) {}
  },
  startListening(target) {
  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -989,6 +1005,8 @@ const app = {
  { role: "user", content: said },
  ]);
  aEl.textContent = answer;
+ state.lastVoiceAnswer = answer;
+ document.getElementById("replaySpeakBtn").classList.remove("hidden");
  // پخش صوتی جواب، و بعد از تمام‌شدن، اگر مکالمهٔ صوتی هنوز فعاله، خودکار دوباره گوش بده
  this.speak(answer, null, () => {
  if (state.voiceActive) this.startListening("voice");
@@ -1017,19 +1035,42 @@ const app = {
  speak(text, langCode, onEnd) {
  if (!text || !("speechSynthesis" in window)) { if (onEnd) onEnd(); return; }
  speechSynthesis.cancel();
+ const targetLang = (langCode || state.aiRespLang) === "fa" ? "fa-IR" : (langCode || state.aiRespLang);
+ const doSpeak = () => {
  const u = new SpeechSynthesisUtterance(text);
- u.lang = (langCode || state.aiRespLang) === "fa" ? "fa-IR" : (langCode || state.aiRespLang);
+ u.lang = targetLang;
+ // اگر صدایی متناسب با زبان روی دستگاه نصب باشه صریحاً انتخابش کن؛
+ // بعضی مرورگرها اگه صدای دقیق پیدا نشه، بی‌صدا هیچ‌کاری نمی‌کنن
+ const voices = speechSynthesis.getVoices();
+ const match = voices.find(v =>v.lang === targetLang) || voices.find(v =>v.lang && v.lang.startsWith(targetLang.split("-")[0]));
+ if (match) u.voice = match;
  const micBtn = document.getElementById("micVoiceBtn");
+ const statusEl = document.getElementById("voiceStatus");
  u.onstart = () => {
  if (micBtn) micBtn.classList.add("speaking");
- document.getElementById("voiceStatus").textContent = "در حال صحبت...";
+ if (statusEl) statusEl.textContent = "در حال صحبت...";
  };
  u.onend = () => {
  if (micBtn) micBtn.classList.remove("speaking");
- if (state.voiceActive) document.getElementById("voiceStatus").textContent = "در حال گوش دادن...";
+ if (statusEl && state.voiceActive) statusEl.textContent = "در حال گوش دادن...";
+ if (onEnd) onEnd();
+ };
+ u.onerror = () => {
+ if (micBtn) micBtn.classList.remove("speaking");
+ if (statusEl) statusEl.textContent = match ? "برای صحبت کردن لمس کنید" : "صدای فارسی روی این دستگاه نصب نیست";
  if (onEnd) onEnd();
  };
  speechSynthesis.speak(u);
+ };
+ // روی برخی مرورگرها فهرست صداها به‌صورت async لود می‌شه؛ اگه هنوز خالیه کمی صبر کن
+ if (speechSynthesis.getVoices().length === 0) {
+ let already = false;
+ const once = () => { if (already) return; already = true; speechSynthesis.onvoiceschanged = null; doSpeak(); };
+ speechSynthesis.onvoiceschanged = once;
+ setTimeout(once, 400); // پشتیبان، اگر رویداد بالا شلیک نشد
+ } else {
+ doSpeak();
+ }
  },
 
  /* ---------------- HISTORY ---------------- */
