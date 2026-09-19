@@ -17,6 +17,9 @@ const rateLimit = require("express-rate-limit");
 const { MsEdgeTTS, OUTPUT_FORMAT } = require("msedge-tts");
 
 const app = express();
+// Render پشت یک پروکسی معکوس اجرا می‌شود؛ این تنظیم به Express می‌گوید
+// به هدر X-Forwarded-For اعتماد کند تا express-rate-limit خطا ندهد
+app.set("trust proxy", 1);
 const PORT = process.env.PORT || 3000;
 
 // پشتیبانی از چند سرویس هوش مصنوعی: به‌صورت پیش‌فرض Groq، ولی اگر
