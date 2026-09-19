@@ -14,6 +14,7 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const rateLimit = require("express-rate-limit");
+const { MsEdgeTTS, OUTPUT_FORMAT } = require("msedge-tts");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -101,6 +102,35 @@ app.post("/api/chat", async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "خطای داخلی سرور" });
+  }
+});
+
+/**
+ * بدنه درخواست: { text: string, voice?: string }
+ * سرور خودش صدا (فایل mp3) را می‌سازد و برمی‌گرداند — نیازی نیست
+ * روی گوشی کاربر صدای فارسی نصب باشه.
+ */
+app.post("/api/tts", async (req, res) => {
+  try {
+    const { text, voice } = req.body;
+    if (!text || typeof text !== "string" || !text.trim()) {
+      return res.status(400).json({ error: "text نامعتبر است" });
+    }
+    const tts = new MsEdgeTTS();
+    await tts.setMetadata(
+      voice || "fa-IR-FaridNeural",
+      OUTPUT_FORMAT.AUDIO_24KHZ_48KBITRATE_MONO_MP3
+    );
+    const { audioStream } = await tts.toStream(text.slice(0, 3000));
+    res.setHeader("Content-Type", "audio/mpeg");
+    audioStream.on("error", (e) => {
+      console.error("tts stream error", e);
+      if (!res.headersSent) res.status(500).end();
+    });
+    audioStream.pipe(res);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "خطا در تولید صدا" });
   }
 });
 
