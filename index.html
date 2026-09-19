@@ -1069,9 +1069,31 @@ const app = {
  if (p && p.catch) p.catch(() => { finish(); });
  })
  .catch(() => {
+ // اگر ساخت صدا روی سرور شکست خورد، به‌صورت پشتیبان از موتور صدای خودِ مرورگر استفاده کن
+ this.fallbackSpeak(text, langCode, finish, statusEl);
+ });
+ },
+ fallbackSpeak(text, langCode, finish, statusEl) {
+ if (!("speechSynthesis" in window)) {
  if (statusEl) statusEl.textContent = "خطا در پخش صدا — دکمهٔ 🔊 پخش صدا را بزنید";
  finish();
- });
+ return;
+ }
+ try {
+ speechSynthesis.cancel();
+ const u = new SpeechSynthesisUtterance(text);
+ u.lang = (langCode || state.aiRespLang) === "fa" ? "fa-IR" : (langCode || state.aiRespLang);
+ u.onstart = () => { if (statusEl) statusEl.textContent = "در حال صحبت..."; };
+ u.onend = finish;
+ u.onerror = () => {
+ if (statusEl) statusEl.textContent = "صدای فارسی روی این دستگاه نصب نیست";
+ finish();
+ };
+ speechSynthesis.speak(u);
+ } catch (e) {
+ if (statusEl) statusEl.textContent = "خطا در پخش صدا";
+ finish();
+ }
  },
 
  /* ---------------- HISTORY ---------------- */
