@@ -132,7 +132,7 @@ app.post("/api/tts", async (req, res) => {
     });
     audioStream.pipe(res);
   } catch (err) {
-    console.error(err);
+    console.error("tts error:", err?.message || err);
     res.status(500).json({ error: "خطا در تولید صدا" });
   }
 });
