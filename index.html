@@ -4,10 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#0e0e0e">
-<meta name="description" content="ترجمه‌گر حرفه‌ای | Pro Translator AI - چت هوش مصنوعی، ترجمه متن، ترجمه PDF و دستیار صوتی">
-<title>ترجمه‌گر حرفه‌ای | Pro Translator AI</title>
+<meta name="description" content="هوش مصنوعی همه‌کاره Alpha - چت هوش مصنوعی، ترجمه متن، ترجمه PDF و دستیار صوتی">
+<title>هوش مصنوعی همه‌کاره Alpha</title>
 <link rel="manifest" href="manifest.json">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect fill='%23101010' width='192' height='192' rx='28'/><text x='96' y='128' font-size='70' font-weight='800' fill='%23d4af37' text-anchor='middle' font-family='Tahoma'>PT</text></svg>">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect fill='%23101010' width='192' height='192' rx='28'/><text x='96' y='128' font-size='70' font-weight='800' fill='%23d4af37' text-anchor='middle' font-family='Tahoma'>A</text></svg>">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 
 <style>
@@ -208,9 +208,9 @@ textarea.ta{width:100%;min-height:130px;padding:14px;background:var(--bg3);borde
 <!-- ================= AUTH SCREEN ================= -->
 <div id="authScreen">
  <div class="auth-card glass">
- <div class="brand-logo">PT</div>
- <div class="brand-title">ترجمه‌گر حرفه‌ای</div>
- <div class="brand-sub">Pro Translator AI</div>
+ <div class="brand-logo">A</div>
+ <div class="brand-title">هوش مصنوعی همه‌کاره Alpha</div>
+ <div class="brand-sub">Alpha AI</div>
 
  <div class="auth-tabs">
  <button class="auth-tab active" id="tabLoginBtn" onclick="app.switchAuthTab('login')">ورود</button>
@@ -239,8 +239,8 @@ textarea.ta{width:100%;min-height:130px;padding:14px;background:var(--bg3);borde
 <div id="appShell" class="hidden">
  <aside class="sidebar" id="sidebar">
  <div class="sb-logo">
- <div class="ic">PT</div>
- <div><h1>ترجمه‌گر حرفه‌ای</h1><p>Pro Translator AI</p></div>
+ <div class="ic">A</div>
+ <div><h1>Alpha</h1><p>هوش مصنوعی همه‌کاره</p></div>
  </div>
  <button class="nav-item active" data-nav="assistants" onclick="app.nav('assistants')">دستیارها</button>
  <button class="nav-item" data-nav="home" onclick="app.nav('home')">خانه</button>
@@ -267,7 +267,7 @@ textarea.ta{width:100%;min-height:130px;padding:14px;background:var(--bg3);borde
  </div>
  <div style="text-align:center;flex:1">
  <h2 id="topTitle">خانه</h2>
- <p id="topSub">داشبورد ترجمه‌گر حرفه‌ای</p>
+ <p id="topSub">داشبورد Alpha</p>
  </div>
  <button class="icon-btn" title="بازگشت" onclick="app.goBack()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l-6-6 6-6M4 12h16"/></svg></button>
  </div>
@@ -286,7 +286,7 @@ textarea.ta{width:100%;min-height:130px;padding:14px;background:var(--bg3);borde
  <div id="backendWarn" class="banner-warn hidden">آدرس بک‌اند (API_BASE_URL) هنوز تنظیم نشده یا در دسترس نیست. برای فعال شدن چت و ترجمه، فایل backend را دیپلوی کرده و مقدار API_BASE_URL را در ابتدای اسکریپت این صفحه با آدرس واقعی جایگزین کنید.
  </div>
  <div class="home-hi" id="homeGreeting">سلام</div>
- <div class="home-sub">امروز چه کمکی از ترجمه‌گر حرفه‌ای می‌خواهید؟</div>
+ <div class="home-sub">امروز چه کمکی از Alpha می‌خواهید؟</div>
 
  <div class="quick-chips">
  <button class="chip-pill" onclick="app.nav('translate')">ترجمه متن</button>
@@ -445,7 +445,7 @@ textarea.ta{width:100%;min-height:130px;padding:14px;background:var(--bg3);borde
  </div>
  <div class="settings-group">
  <h4>درباره</h4>
- <div class="setting-row glass"><span>درباره ترجمه‌گر حرفه‌ای</span><button class="btn-ghost" onclick="app.showModal('درباره ما','ترجمه‌گر حرفه‌ای (Pro Translator AI) یک دستیار هوش مصنوعی برای چت، ترجمه متن و ترجمه اسناد PDF است.')">مشاهده</button></div>
+ <div class="setting-row glass"><span>درباره Alpha</span><button class="btn-ghost" onclick="app.showModal('درباره ما','هوش مصنوعی همه‌کاره Alpha یک دستیار هوش مصنوعی برای چت، ترجمه متن، ترجمه اسناد PDF و بسیاری از کارهای دیگر است.')">مشاهده</button></div>
  <div class="setting-row glass"><span>حریم خصوصی</span><button class="btn-ghost" onclick="app.showModal('حریم خصوصی','پیام‌ها برای پردازش به سرور ارسال می‌شوند و کلید API هرگز در برنامه ذخیره نمی‌شود. تاریخچه به‌صورت محلی روی همین دستگاه نگه‌داری می‌شود.')">مشاهده</button></div>
  <div class="setting-row glass"><span>پشتیبانی</span><a class="btn-ghost" href="mailto:alphannna@gmail.com" style="text-decoration:none">alphannna@gmail.com</a></div>
  <div class="setting-row glass"><span>سازنده</span><span style="color:var(--gold);font-weight:700;font-size:12.5px">نیما حجتی</span></div>
@@ -466,7 +466,7 @@ textarea.ta{width:100%;min-height:130px;padding:14px;background:var(--bg3);borde
 
 <script>
 /* =====================================================================
- ترجمه‌گر حرفه‌ای — Pro Translator AI
+ هوش مصنوعی همه‌کاره Alpha
  نکته مهم امنیتی: هیچ کلید API‌ای در این فایل وجود ندارد و نباید اضافه شود.
  تمام درخواست‌های هوش مصنوعی از طریق بک‌اند (backend/server.js) انجام
  می‌شود که کلید Groq را به‌صورت GitHub Secret / متغیر محیطی نگه می‌دارد.
@@ -669,7 +669,7 @@ const app = {
  if (btn) btn.classList.add("active");
  const titles = {
  assistants: ["دستیارها", "انتخاب دستیار هوش مصنوعی"],
- home: ["خانه", "داشبورد ترجمه‌گر حرفه‌ای"], chat: ["چت هوش مصنوعی", "گفت‌وگو با دستیار هوشمند"],
+ home: ["خانه", "داشبورد Alpha"], chat: ["چت هوش مصنوعی", "گفت‌وگو با دستیار هوشمند"],
  translate: ["ترجمه‌گر", "ترجمه فوری و دقیق متن"], pdf: ["ترجمه PDF", "ترجمه کامل اسناد"],
  voice: ["دستیار صوتی", "گفت‌وگوی صوتی با هوش مصنوعی"], history: ["تاریخچه", "گفت‌وگوها و ترجمه‌های قبلی"],
  profile: ["پروفایل", "اطلاعات حساب کاربری"], settings: ["تنظیمات", "شخصی‌سازی برنامه"],
@@ -742,7 +742,7 @@ const app = {
  store.set("pta_chats", chats);
  document.getElementById("chatArea").innerHTML = "";
  this.nav("chat");
- this.addChatBubble("سلام! من ترجمه‌گر حرفه‌ای هستم. چطور می‌تونم کمکتون کنم؟", "ai");
+ this.addChatBubble("سلام! من Alpha هستم، هوش مصنوعی همه‌کاره. چطور می‌تونم کمکتون کنم؟", "ai");
  },
  addChatBubble(text, who, msgId) {
  const area = document.getElementById("chatArea");
