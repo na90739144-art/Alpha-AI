@@ -147,7 +147,6 @@ textarea.ta{width:100%;min-height:130px;padding:14px;background:var(--bg3);borde
 .voice-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;text-align:center}
 .mic-btn{width:110px;height:110px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold-light));display:flex;align-items:center;justify-content:center;font-size:44px;box-shadow:0 0 0 0 rgba(212,175,55,.5);margin-bottom:20px}
 .mic-btn.listening{animation:pulse 1.4s infinite}
-.mic-btn.speaking{animation:pulse 0.7s infinite;background:linear-gradient(135deg,#8fd3a8,#5fb37f)}
 @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(212,175,55,.55)}70%{box-shadow:0 0 0 26px rgba(212,175,55,0)}100%{box-shadow:0 0 0 0 rgba(212,175,55,0)}}
 .voice-transcript{max-width:520px;margin-top:20px;color:#ccc;font-size:14px;line-height:1.9}
 .voice-answer{max-width:520px;margin-top:14px;padding:16px;font-size:14px;line-height:1.9}
@@ -341,7 +340,6 @@ textarea.ta{width:100%;min-height:130px;padding:14px;background:var(--bg3);borde
  <button class="btn-gold" onclick="app.translateText()">ترجمه کن</button>
  <button class="btn-ghost" onclick="app.copyText('dstText')">کپی</button>
  <button class="btn-ghost" onclick="app.shareText('dstText')">اشتراک‌گذاری</button>
- <button class="btn-ghost" onclick="app.speak(document.getElementById('dstText').value, document.getElementById('dstLang').value)">پخش صوتی</button>
  </div>
  </section>
 
@@ -379,7 +377,6 @@ textarea.ta{width:100%;min-height:130px;padding:14px;background:var(--bg3);borde
  <div style="color:var(--muted);font-size:13px" id="voiceStatus">برای شروع مکالمهٔ صوتی لمس کنید</div>
  <div class="voice-transcript hidden glass" id="voiceTranscript"></div>
  <div class="voice-answer hidden glass" id="voiceAnswer"></div>
- <button class="btn-ghost hidden" id="replaySpeakBtn" style="margin-top:10px" onclick="app.speak(state.lastVoiceAnswer, null, () => { if (state.voiceActive) app.startListening('voice'); })">🔊 پخش صدا</button>
  </div>
  </section>
 
@@ -426,7 +423,6 @@ textarea.ta{width:100%;min-height:130px;padding:14px;background:var(--bg3);borde
  <div class="settings-group">
  <h4>صدا</h4>
  <div class="setting-row glass"><span>ورودی صوتی</span><div class="switch on" id="swVoiceIn" onclick="app.toggleSetting('voiceIn')"></div></div>
- <div class="setting-row glass"><span>خواندن پاسخ به‌صورت خودکار</span><div class="switch" id="swVoiceOut" onclick="app.toggleSetting('voiceOut')"></div></div>
  </div>
  <div class="settings-group">
  <h4>ظاهر</h4>
@@ -526,7 +522,7 @@ const state = {
  voiceActive: false,
  uiLang: "fa",
  aiRespLang: "fa",
- settings: { voiceIn: true, voiceOut: false },
+ settings: { voiceIn: true },
  recognition: null,
  recTarget: null,
 };
@@ -544,7 +540,6 @@ const app = {
 
  state.settings = store.get("pta_settings", state.settings);
  document.getElementById("swVoiceIn").classList.toggle("on", state.settings.voiceIn);
- document.getElementById("swVoiceOut").classList.toggle("on", state.settings.voiceOut);
  state.aiRespLang = store.get("pta_ai_lang", "fa");
 
  this.populateLangSelects();
@@ -646,7 +641,6 @@ const app = {
  if (state.currentView === "voice" && view !== "voice") {
  // در صورت خروج از صفحهٔ دستیار صوتی، مکالمهٔ صوتی خودکار متوقف شود
  state.voiceActive = false;
- if (state.audioEl) { state.audioEl.pause(); state.audioEl.src = ""; }
  if (state.recognition) state.recognition.stop();
  }
  if (!isBack && state.currentView && state.currentView !== view) {
@@ -745,7 +739,6 @@ const app = {
  actions.className = "msg-actions";
  actions.innerHTML = `
  <button onclick="navigator.clipboard.writeText(this.closest('.msg').firstChild.textContent)">کپی</button>
- <button onclick="app.speak(this.closest('.msg').firstChild.textContent)">خواندن</button>
  <button onclick="app.shareRaw(this.closest('.msg').firstChild.textContent)">اشتراک</button>
  `;
  div.appendChild(actions);
@@ -782,7 +775,6 @@ const app = {
  typing.remove();
  this.addChatBubble(answer, "ai");
  chat.messages.push({ role: "assistant", content: answer });
- if (state.settings.voiceOut) this.speak(answer);
  } catch (e) {
  typing.remove();
  this.addChatBubble("خطا: " + e.message, "ai");
@@ -943,39 +935,21 @@ const app = {
  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
  if (!SR) { this.showModal("پشتیبانی نشد", "مرورگر شما از ورودی صوتی پشتیبانی نمی‌کند."); return; }
 
- // اگر در حال گوش‌دادن یا صحبت‌کردن هستیم، با لمس دوباره کل مکالمه صوتی متوقف شود
- if (target === "voice" && (state.voiceActive || (state.audioEl && !state.audioEl.paused))) {
+ // اگر در حال گوش‌دادن هستیم، با لمس دوباره مکالمه صوتی متوقف شود
+ if (target === "voice" && state.voiceActive) {
  state.voiceActive = false;
- if (state.audioEl) { state.audioEl.pause(); state.audioEl.src = ""; }
  if (state.recognition) state.recognition.stop();
- document.getElementById("micVoiceBtn").classList.remove("listening", "speaking");
+ document.getElementById("micVoiceBtn").classList.remove("listening");
  document.getElementById("voiceStatus").textContent = "برای صحبت کردن لمس کنید";
  return;
  }
- if (target === "voice") {
- state.voiceActive = true;
- // فعال‌سازی پخش صدا درست همین‌جا (داخل لمس کاربر)، چون روی موبایل
- // اگه اولین پخش صدا بعد از یک تأخیر شبکه‌ای باشه، مرورگر بی‌صدا نادیده‌اش می‌گیره
- this.primeSpeech();
- }
+ if (target === "voice") state.voiceActive = true;
 
  if (state.recognition && state.recTarget === target) {
  state.recognition.stop();
  return;
  }
  this.startListening(target);
- },
- primeSpeech() {
- try {
- if (!state.audioEl) state.audioEl = new Audio();
- // یک پخش خیلی کوتاه و بی‌صدا، فقط برای باز کردن قفل پخش صدای خودکار مرورگر
- state.audioEl.muted = true;
- state.audioEl.src =
- "data:audio/mp3;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4LjI5LjEwMAAAAAAAAAAAAAAA//uQxAAAAAAAAAAAAAAAAAAAAAAASW5mbwAAAA8AAAABAAABIADAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDA//////////////////////////////////8AAAA5TEFNRTMuMTAwBK8AAAAAAAAAABQgJAUHQQAB4AAAASBn2QDpAAAAAAAAAAAAAAAAAAAAAA==";
- const p = state.audioEl.play();
- if (p && p.catch) p.catch(() => {});
- state.audioEl.muted = false;
- } catch (e) {}
  },
  startListening(target) {
  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -1007,12 +981,9 @@ const app = {
  { role: "user", content: said },
  ]);
  aEl.textContent = answer;
- state.lastVoiceAnswer = answer;
- document.getElementById("replaySpeakBtn").classList.remove("hidden");
- // پخش صوتی جواب، و بعد از تمام‌شدن، اگر مکالمهٔ صوتی هنوز فعاله، خودکار دوباره گوش بده
- this.speak(answer, null, () => {
+ document.getElementById("voiceStatus").textContent = state.voiceActive ? "در حال گوش دادن..." : "برای صحبت کردن لمس کنید";
+ // اگر مکالمهٔ صوتی هنوز فعاله، خودکار دوباره گوش بده
  if (state.voiceActive) this.startListening("voice");
- });
  } catch (e2) {
  aEl.textContent = "خطا: " + e2.message;
  document.getElementById("voiceStatus").textContent = "برای صحبت کردن لمس کنید";
@@ -1034,68 +1005,6 @@ const app = {
  };
  state.recognition.start();
  },
- speak(text, langCode, onEnd) {
- if (!text || !text.trim()) { if (onEnd) onEnd(); return; }
- const micBtn = document.getElementById("micVoiceBtn");
- const statusEl = document.getElementById("voiceStatus");
- const finish = () => {
- if (micBtn) micBtn.classList.remove("speaking");
- if (statusEl && state.voiceActive) statusEl.textContent = "در حال گوش دادن...";
- if (onEnd) onEnd();
- };
- if (statusEl) statusEl.textContent = "در حال آماده‌سازی صدا...";
- fetch(`${API_BASE_URL}/tts`, {
- method: "POST",
- headers: { "Content-Type": "application/json" },
- body: JSON.stringify({ text: text.slice(0, 3000) }),
- })
- .then((r) => {
- if (!r.ok) throw new Error("tts-failed");
- return r.blob();
- })
- .then((blob) => {
- const url = URL.createObjectURL(blob);
- if (!state.audioEl) state.audioEl = new Audio();
- const a = state.audioEl;
- a.muted = false;
- a.onplay = () => {
- if (micBtn) micBtn.classList.add("speaking");
- if (statusEl) statusEl.textContent = "در حال صحبت...";
- };
- a.onended = () => { URL.revokeObjectURL(url); finish(); };
- a.onerror = () => { URL.revokeObjectURL(url); finish(); };
- a.src = url;
- const p = a.play();
- if (p && p.catch) p.catch(() => { finish(); });
- })
- .catch(() => {
- // اگر ساخت صدا روی سرور شکست خورد، به‌صورت پشتیبان از موتور صدای خودِ مرورگر استفاده کن
- this.fallbackSpeak(text, langCode, finish, statusEl);
- });
- },
- fallbackSpeak(text, langCode, finish, statusEl) {
- if (!("speechSynthesis" in window)) {
- if (statusEl) statusEl.textContent = "خطا در پخش صدا — دکمهٔ 🔊 پخش صدا را بزنید";
- finish();
- return;
- }
- try {
- speechSynthesis.cancel();
- const u = new SpeechSynthesisUtterance(text);
- u.lang = (langCode || state.aiRespLang) === "fa" ? "fa-IR" : (langCode || state.aiRespLang);
- u.onstart = () => { if (statusEl) statusEl.textContent = "در حال صحبت..."; };
- u.onend = finish;
- u.onerror = () => {
- if (statusEl) statusEl.textContent = "صدای فارسی روی این دستگاه نصب نیست";
- finish();
- };
- speechSynthesis.speak(u);
- } catch (e) {
- if (statusEl) statusEl.textContent = "خطا در پخش صدا";
- finish();
- }
- },
-
  /* ---------------- HISTORY ---------------- */
  renderSidebarHistory() {
  const chats = Object.values(store.get("pta_chats", {})).sort((a, b) =>b.ts - a.ts).slice(0, 5);
@@ -1166,7 +1075,9 @@ const app = {
  toggleSetting(key) {
  state.settings[key] = !state.settings[key];
  store.set("pta_settings", state.settings);
- document.getElementById(key === "voiceIn" ? "swVoiceIn" : "swVoiceOut").classList.toggle("on", state.settings[key]);
+ const id = "sw" + key.charAt(0).toUpperCase() + key.slice(1);
+ const el = document.getElementById(id);
+ if (el) el.classList.toggle("on", state.settings[key]);
  },
 
  /* ---------------- HELPERS ---------------- */
