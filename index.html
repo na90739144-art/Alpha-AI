@@ -113,14 +113,14 @@ input,textarea,select{font-family:inherit;color:var(--txt);outline:none}
 .msg-actions button{font-size:10.5px;color:var(--muted);background:var(--bg2);padding:4px 9px;border-radius:6px}
 .msg-actions button:hover{color:var(--gold)}
 .typing{align-self:flex-end;color:var(--muted);font-size:12px;padding:8px 4px}
-.input-bar{display:flex;align-items:center;gap:8px;padding:10px;border-radius:14px;background:var(--bg3);border:1px solid #2c2c2c;margin-top:10px}
-.input-bar .send-btn{margin-inline-start:auto}
-.input-bar input{flex:1;background:transparent;padding:8px;font-size:14px}
+.input-bar{display:flex;align-items:center;gap:5px;padding:8px;border-radius:14px;background:var(--bg3);border:1px solid #2c2c2c;margin-top:10px}
+.input-bar .send-btn{margin-inline-start:auto;padding:9px 14px;font-size:12px;flex-shrink:0}
+.input-bar input{flex:1;min-width:0;background:transparent;padding:8px 4px;font-size:13px}
 .icon-btn{width:38px;height:38px;border-radius:10px;background:var(--bg2);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
 .icon-btn:hover{background:#2c2c2c}
 .icon-btn.rec,.rec{background:var(--danger);color:#fff}
 .send-btn{padding:10px 18px;border-radius:10px;background:var(--gold);color:#101010;font-weight:800;font-size:13px}
-.attach-pill{padding:10px 12px;border-radius:10px;background:transparent;border:1px solid #3a3a3a;color:var(--gold);font-size:12px;font-weight:700;flex-shrink:0;white-space:nowrap;display:flex;align-items:center;gap:5px}
+.attach-pill{padding:8px 9px;border-radius:9px;background:transparent;border:1px solid #3a3a3a;color:var(--gold);font-size:11px;font-weight:700;flex-shrink:0;white-space:nowrap;display:flex;align-items:center;gap:4px}
 .attach-pill:active{background:rgba(212,175,55,.1)}
 .quick-actions-row{display:flex;gap:8px;margin-bottom:16px}
 .quick-actions-row .qa-btn{flex:1;padding:11px 4px;border-radius:10px;background:var(--bg3);border:1px solid #333;color:var(--gold);font-size:12px;font-weight:700;text-align:center}
@@ -328,7 +328,7 @@ textarea.ta{width:100%;min-height:130px;padding:14px;background:var(--bg3);borde
  <a class="qa-btn" href="mailto:alphannna@gmail.com" style="text-decoration:none">پشتیبانی</a>
  <button class="qa-btn danger" onclick="app.logout()">خروج</button>
  </div>
- <div class="mode-select" id="aiModes"></div>
+ <div class="mode-select hidden" id="aiModes"></div>
  <div class="chat-area" id="chatArea"></div>
  <div class="input-bar">
  <button class="attach-pill" onclick="document.getElementById('imageInput').click()">عکس</button>
