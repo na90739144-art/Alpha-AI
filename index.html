@@ -47,15 +47,9 @@ input,textarea,select{font-family:inherit;color:var(--txt);outline:none}
 .divider{display:flex;align-items:center;gap:10px;margin:16px 0;color:var(--muted);font-size:11px}
 .divider::before,.divider::after{content:"";flex:1;height:1px;background:#333}
 .auth-note{font-size:11px;color:var(--muted);margin-top:16px;line-height:1.8}
-.auth-tabs{display:flex;gap:8px;margin-bottom:18px}
-.auth-tab{flex:1;padding:10px;border-radius:10px;background:var(--bg3);color:#999;font-size:12.5px;border:1px solid #333}
-.auth-tab.active{background:var(--gold);color:#101010;font-weight:700;border-color:var(--gold)}
-.assist-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:20px}
-.assist-card{padding:18px 14px;text-align:center;cursor:pointer;transition:.2s}
-.assist-card:hover{transform:translateY(-3px);border-color:var(--gold)}
-.assist-card .ic{width:34px;height:34px;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;border-radius:10px;background:rgba(212,175,55,.12);color:var(--gold)}
-.assist-card b{font-size:12.5px;display:block;margin-bottom:4px}
-.assist-card span{font-size:10px;color:var(--muted);line-height:1.6;display:block}
+.auth-tabs{display:flex;gap:10px;margin-bottom:20px}
+.auth-tab{flex:1;padding:15px 8px;border-radius:12px;background:transparent;color:var(--gold);font-size:14px;font-weight:700;border:1.5px solid #3a3a3a}
+.auth-tab.active{background:var(--gold);color:#101010;font-weight:800;border-color:var(--gold)}
 
 /* ---------- APP SHELL ---------- */
 #appShell{display:flex;height:100vh}
@@ -122,8 +116,20 @@ input,textarea,select{font-family:inherit;color:var(--txt);outline:none}
 .input-bar input{flex:1;background:transparent;padding:8px;font-size:14px}
 .icon-btn{width:38px;height:38px;border-radius:10px;background:var(--bg2);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
 .icon-btn:hover{background:#2c2c2c}
-.icon-btn.rec{background:var(--danger);color:#fff}
+.icon-btn.rec,.rec{background:var(--danger);color:#fff}
 .send-btn{padding:10px 18px;border-radius:10px;background:var(--gold);color:#101010;font-weight:800;font-size:13px}
+.attach-pill{padding:10px 12px;border-radius:10px;background:transparent;border:1px solid #3a3a3a;color:var(--gold);font-size:12px;font-weight:700;flex-shrink:0;white-space:nowrap;display:flex;align-items:center;gap:5px}
+.attach-pill:active{background:rgba(212,175,55,.1)}
+.quick-actions-row{display:flex;gap:8px;margin-bottom:16px}
+.quick-actions-row .qa-btn{flex:1;padding:11px 4px;border-radius:10px;background:var(--bg3);border:1px solid #333;color:var(--gold);font-size:12px;font-weight:700;text-align:center}
+.quick-actions-row .qa-btn.danger{color:var(--danger);border-color:rgba(255,90,90,.35)}
+.assist-list{display:flex;flex-direction:column;gap:10px;margin-bottom:20px}
+.assist-row{display:flex;align-items:center;gap:14px;padding:16px 18px;cursor:pointer;transition:.2s}
+.assist-row:active{transform:scale(.99);border-color:var(--gold)}
+.assist-row .ic{width:38px;height:38px;flex-shrink:0;display:flex;align-items:center;justify-content:center;border-radius:10px;background:rgba(212,175,55,.12);color:var(--gold)}
+.assist-row .txt{text-align:right;flex:1}
+.assist-row b{font-size:14px;display:block;margin-bottom:2px}
+.assist-row span{font-size:11.5px;color:var(--muted);line-height:1.6}
 
 /* ---------- TRANSLATE ---------- */
 .lang-row{display:flex;align-items:center;gap:10px;margin-bottom:16px}
@@ -271,7 +277,7 @@ textarea.ta{width:100%;min-height:130px;padding:14px;background:var(--bg3);borde
  <section id="view-assistants">
  <div class="home-hi" id="assistGreeting">سلام</div>
  <div class="home-sub">یک دستیار هوش مصنوعی را برای شروع انتخاب کنید</div>
- <div class="assist-grid" id="assistGrid"></div>
+ <div class="assist-list" id="assistGrid"></div>
  </section>
 
  <!-- HOME -->
@@ -313,13 +319,21 @@ textarea.ta{width:100%;min-height:130px;padding:14px;background:var(--bg3);borde
  <!-- CHAT -->
  <section id="view-chat" class="hidden">
  <div class="chat-wrap">
+ <div class="quick-actions-row">
+ <button class="qa-btn" onclick="app.nav('history')">تاریخچه</button>
+ <button class="qa-btn" onclick="app.nav('settings')">تنظیمات</button>
+ <a class="qa-btn" href="mailto:alphannna@gmail.com" style="text-decoration:none">پشتیبانی</a>
+ <button class="qa-btn danger" onclick="app.logout()">خروج</button>
+ </div>
  <div class="mode-select" id="aiModes"></div>
  <div class="chat-area" id="chatArea"></div>
  <div class="input-bar">
- <button class="icon-btn" title="پیوست فایل" onclick="document.getElementById('fileInput').click()"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a5.5 5.5 0 01-7.78-7.78l9.19-9.19a3.5 3.5 0 014.95 4.95l-9.2 9.19a1.5 1.5 0 01-2.12-2.12l8.49-8.48"/></svg></button>
+ <button class="attach-pill" onclick="document.getElementById('imageInput').click()">عکس</button>
+ <input type="file" id="imageInput" class="hidden" accept="image/*" onchange="app.handleChatFile(event)">
+ <button class="attach-pill" onclick="document.getElementById('fileInput').click()">فایل</button>
  <input type="file" id="fileInput" class="hidden" accept=".pdf,.txt" onchange="app.handleChatFile(event)">
- <button class="icon-btn" id="micChatBtn" title="ورودی صوتی" onclick="app.toggleMic('chat')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2M12 19v4M8 23h8"/></svg></button>
- <input type="text" id="chatInput" placeholder="پیام خود را بنویسید..." onkeypress="if(event.key==='Enter')app.sendChat()">
+ <input type="text" id="chatInput" placeholder="پیام..." onkeypress="if(event.key==='Enter')app.sendChat()">
+ <button class="attach-pill" id="micChatBtn" title="ورودی صوتی" onclick="app.toggleMic('chat')">صدا</button>
  <button class="send-btn" onclick="app.sendChat()">ارسال</button>
  </div>
  </div>
@@ -619,9 +633,9 @@ const app = {
  wrap.innerHTML = "";
  ASSISTANTS.forEach(a => {
  const c = document.createElement("div");
- c.className = "assist-card glass";
+ c.className = "assist-row glass";
  c.onclick = () => this.openAssistant(a.id);
- c.innerHTML = `<div class="ic">${a.icon}</div><b>${a.title}</b><span>${a.desc}</span>`;
+ c.innerHTML = `<div class="ic">${a.icon}</div><div class="txt"><b>${a.title}</b><span>${a.desc}</span></div>`;
  wrap.appendChild(c);
  });
  },
@@ -786,6 +800,11 @@ const app = {
  async handleChatFile(ev) {
  const file = ev.target.files[0];
  if (!file) return;
+ if (file.type.startsWith("image/")) {
+ this.showModal("عکس", "تحلیل تصویر هنوز در این نسخه فعال نیست. لطفاً فایل PDF یا متنی پیوست کنید.");
+ ev.target.value = "";
+ return;
+ }
  let text = "";
  if (file.type === "application/pdf") {
  text = await this.extractPdfText(file, () => {});
