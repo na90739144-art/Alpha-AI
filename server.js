@@ -14,7 +14,6 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const rateLimit = require("express-rate-limit");
-const { MsEdgeTTS, OUTPUT_FORMAT } = require("msedge-tts");
 
 const app = express();
 // Render پشت یک پروکسی معکوس اجرا می‌شود؛ این تنظیم به Express می‌گوید
@@ -64,11 +63,14 @@ app.get("/api/health", (req, res) => {
 
 /**
  * بدنه درخواست:
- * { messages: [{role, content}, ...], max_tokens?: number, temperature?: number }
+ * { messages: [{role, content}, ...], max_tokens?: number, temperature?: number, stream?: boolean }
+ * وقتی stream=true باشد، پاسخ به‌صورت جریانی (SSE) همانند خودِ OpenAI/OpenRouter
+ * پس‌فرستاده می‌شود تا شروع پاسخ در همان لحظه اول روی گوشی دیده شود، نه بعد از
+ * تمام‌شدن کل تولید متن.
  */
 app.post("/api/chat", async (req, res) => {
   try {
-    const { messages, max_tokens = 800, temperature = 0.6 } = req.body;
+    const { messages, max_tokens = 500, temperature = 0.6, stream = false } = req.body;
 
     if (!Array.isArray(messages) || messages.length === 0) {
       return res.status(400).json({ error: "messages نامعتبر است" });
@@ -89,8 +91,38 @@ app.post("/api/chat", async (req, res) => {
         messages,
         max_tokens,
         temperature,
+        stream: !!stream,
       }),
     });
+
+    if (stream) {
+      if (!aiRes.ok || !aiRes.body) {
+        let msg = "خطا در ارتباط با سرویس هوش مصنوعی";
+        try {
+          const errData = await aiRes.json();
+          msg = errData?.error?.message || msg;
+        } catch (_) {}
+        return res.status(aiRes.status || 500).json({ error: msg });
+      }
+      res.setHeader("Content-Type", "text/event-stream; charset=utf-8");
+      res.setHeader("Cache-Control", "no-cache");
+      res.setHeader("Connection", "keep-alive");
+      res.flushHeaders?.();
+      const reader = aiRes.body.getReader();
+      const decoder = new TextDecoder();
+      try {
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          res.write(decoder.decode(value, { stream: true }));
+        }
+      } catch (streamErr) {
+        console.error("stream relay error:", streamErr?.message || streamErr);
+      } finally {
+        res.end();
+      }
+      return;
+    }
 
     const data = await aiRes.json();
 
@@ -105,35 +137,6 @@ app.post("/api/chat", async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "خطای داخلی سرور" });
-  }
-});
-
-/**
- * بدنه درخواست: { text: string, voice?: string }
- * سرور خودش صدا (فایل mp3) را می‌سازد و برمی‌گرداند — نیازی نیست
- * روی گوشی کاربر صدای فارسی نصب باشه.
- */
-app.post("/api/tts", async (req, res) => {
-  try {
-    const { text, voice } = req.body;
-    if (!text || typeof text !== "string" || !text.trim()) {
-      return res.status(400).json({ error: "text نامعتبر است" });
-    }
-    const tts = new MsEdgeTTS();
-    await tts.setMetadata(
-      voice || "fa-IR-FaridNeural",
-      OUTPUT_FORMAT.AUDIO_24KHZ_48KBITRATE_MONO_MP3
-    );
-    const { audioStream } = await tts.toStream(text.slice(0, 3000));
-    res.setHeader("Content-Type", "audio/mpeg");
-    audioStream.on("error", (e) => {
-      console.error("tts stream error", e);
-      if (!res.headersSent) res.status(500).end();
-    });
-    audioStream.pipe(res);
-  } catch (err) {
-    console.error("tts error:", err?.message || err);
-    res.status(500).json({ error: "خطا در تولید صدا" });
   }
 });
 
