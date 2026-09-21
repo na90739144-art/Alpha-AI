@@ -933,6 +933,47 @@ const app = {
  if (!res.ok) throw new Error(data.error || "خطای ناشناخته");
  return data.answer;
  },
+ /**
+ * مثل callAI ولی به‌صورت جریانی (streaming) — به‌محض رسیدن هر تکه از متن،
+ * onToken صدا زده می‌شود تا جواب کلمه‌به‌کلمه روی صفحه ظاهر شود، نه یک‌جا
+ * بعد از تمام‌شدن کل پاسخ.
+ */
+ async callAIStream(messages, onToken, maxTokens = 500) {
+ if (!API_BASE_URL) throw new Error("آدرس بک‌اند تنظیم نشده است (API_BASE_URL خالی است).");
+ const res = await fetch(`${API_BASE_URL}/chat`, {
+ method: "POST",
+ headers: { "Content-Type": "application/json" },
+ body: JSON.stringify({ messages, max_tokens: maxTokens, stream: true }),
+ });
+ if (!res.ok || !res.body) {
+ let msg = "خطای ناشناخته";
+ try { const data = await res.json(); msg = data.error || msg; } catch (e) {}
+ throw new Error(msg);
+ }
+ const reader = res.body.getReader();
+ const decoder = new TextDecoder();
+ let buffer = "";
+ let full = "";
+ while (true) {
+ const { done, value } = await reader.read();
+ if (done) break;
+ buffer += decoder.decode(value, { stream: true });
+ const lines = buffer.split("\n");
+ buffer = lines.pop();
+ for (const line of lines) {
+ const t = line.trim();
+ if (!t.startsWith("data:")) continue;
+ const payload = t.slice(5).trim();
+ if (payload === "[DONE]") continue;
+ try {
+ const json = JSON.parse(payload);
+ const delta = json?.choices?.[0]?.delta?.content || "";
+ if (delta) { full += delta; onToken(full, delta); }
+ } catch (e) { /* خط ناقص، رد شو */ }
+ }
+ }
+ return full;
+ },
 
  /* ---------------- CHAT ---------------- */
  populateAiModes() {
@@ -1025,9 +1066,17 @@ const app = {
  const payload = [{ role: "system", content: sys }, ...chat.messages.slice(-12)];
 
  try {
- const answer = await this.callAI(payload);
+ let bubble = null;
+ const chatArea = document.getElementById("chatArea");
+ const answer = await this.callAIStream(payload, (full) => {
+ if (!bubble) {
  typing.remove();
- this.addChatBubble(answer, "ai");
+ bubble = this.addChatBubble(" ", "ai");
+ }
+ bubble.firstChild.textContent = full;
+ chatArea.scrollTop = chatArea.scrollHeight;
+ });
+ if (!bubble) { typing.remove(); this.addChatBubble(answer, "ai"); }
  chat.messages.push({ role: "assistant", content: answer });
  } catch (e) {
  typing.remove();
@@ -1377,3 +1426,4 @@ window.addEventListener("load", () =>app.init());
 </script>
 </body>
 </html>
+۷
