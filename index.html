@@ -444,12 +444,6 @@ textarea.ta{width:100%;min-height:130px;padding:14px;background:var(--bg3);borde
  </div>
  </div>
  <div class="settings-group">
- <h4 data-i18n="grpAiLang">زبان پاسخ هوش مصنوعی</h4>
- <div class="setting-row glass"><span data-i18n="rowAiLang">زبان پاسخ‌های چت</span>
- <select id="aiRespLang" class="btn-ghost" onchange="app.setAiRespLang(this.value)"></select>
- </div>
- </div>
- <div class="settings-group">
  <h4 data-i18n="grpVoice">صدا</h4>
  <div class="setting-row glass"><span data-i18n="rowVoiceIn">ورودی صوتی</span><div class="switch on" id="swVoiceIn" onclick="app.toggleSetting('voiceIn')"></div></div>
  </div>
@@ -700,6 +694,7 @@ const TRANSLATIONS = {
  titleHistory: "تاریخچه", subHistory: "گفت‌وگوها و ترجمه‌های قبلی",
  titleProfile: "پروفایل", subProfile: "اطلاعات حساب کاربری",
  titleSettings: "تنظیمات", subSettings: "شخصی‌سازی برنامه",
+ welcomeMsg: "سلام! من Alpha هستم، هوش مصنوعی همه‌کاره. چطور می‌تونم کمکتون کنم؟",
  },
  en: {
  vpnNotice: "Please turn on VPN", brandTitle: "All-in-one AI Alpha",
@@ -755,6 +750,7 @@ const TRANSLATIONS = {
  titleHistory: "History", subHistory: "Past chats and translations",
  titleProfile: "Profile", subProfile: "Account information",
  titleSettings: "Settings", subSettings: "Customize the app",
+ welcomeMsg: "Hi! I'm Alpha, your all-in-one AI. How can I help you today?",
  },
 };
 
@@ -766,8 +762,8 @@ const app = {
 
  state.settings = store.get("pta_settings", state.settings);
  document.getElementById("swVoiceIn").classList.toggle("on", state.settings.voiceIn);
- state.aiRespLang = store.get("pta_ai_lang", "fa");
  state.uiLang = store.get("pta_ui_lang", "fa");
+ state.aiRespLang = state.uiLang;
  document.getElementById("uiFa").classList.toggle("active", state.uiLang === "fa");
  document.getElementById("uiEn").classList.toggle("active", state.uiLang === "en");
  document.documentElement.setAttribute("dir", state.uiLang === "fa" ? "rtl" : "ltr");
@@ -978,7 +974,14 @@ const app = {
  store.set("pta_chats", chats);
  document.getElementById("chatArea").innerHTML = "";
  this.nav("chat");
- this.addChatBubble("سلام! من Alpha هستم، هوش مصنوعی همه‌کاره. چطور می‌تونم کمکتون کنم؟", "ai");
+ this.addChatBubble(this.tt("welcomeMsg"), "ai");
+ const last = document.getElementById("chatArea").lastElementChild;
+ if (last) last.setAttribute("data-welcome", "1");
+ },
+ renderWelcomeIfNeeded() {
+ document.querySelectorAll('.msg.ai[data-welcome="1"]').forEach(el => {
+ el.firstChild.textContent = this.tt("welcomeMsg");
+ });
  },
  addChatBubble(text, who, msgId) {
  const area = document.getElementById("chatArea");
@@ -1066,15 +1069,6 @@ const app = {
  });
  document.getElementById("dstLang").value = "fa";
  document.getElementById("pdfDstLang").value = "fa";
-
- const respSel = document.getElementById("aiRespLang");
- respSel.innerHTML = "";
- LANGS.filter(l =>l.code !== "auto").forEach(l => {
- const o = document.createElement("option");
- o.value = l.code; o.textContent = l.fa;
- respSel.appendChild(o);
- });
- respSel.value = state.aiRespLang;
  },
  swapLangs() {
  const s = document.getElementById("srcLang"), d = document.getElementById("dstLang");
@@ -1322,6 +1316,7 @@ const app = {
  /* ---------------- SETTINGS ---------------- */
  setUiLang(l) {
  state.uiLang = l;
+ state.aiRespLang = l;
  store.set("pta_ui_lang", l);
  document.getElementById("uiFa").classList.toggle("active", l === "fa");
  document.getElementById("uiEn").classList.toggle("active", l === "en");
@@ -1330,6 +1325,7 @@ const app = {
  this.applyUiLang();
  if (state.currentView) this.nav(state.currentView, true);
  if (document.getElementById("assistGrid")) this.populateAssistants();
+ this.renderWelcomeIfNeeded();
  },
  tt(key) {
  const d = TRANSLATIONS[state.uiLang] || TRANSLATIONS.fa;
@@ -1349,7 +1345,6 @@ const app = {
  const ag = document.getElementById("assistGreeting");
  if (ag) ag.textContent = `${this.tt("greeting")} ${state.userName || ""}`;
  },
- setAiRespLang(v) { state.aiRespLang = v; store.set("pta_ai_lang", v); },
  toggleSetting(key) {
  state.settings[key] = !state.settings[key];
  store.set("pta_settings", state.settings);
