@@ -63,14 +63,11 @@ app.get("/api/health", (req, res) => {
 
 /**
  * بدنه درخواست:
- * { messages: [{role, content}, ...], max_tokens?: number, temperature?: number, stream?: boolean }
- * وقتی stream=true باشد، پاسخ به‌صورت جریانی (SSE) همانند خودِ OpenAI/OpenRouter
- * پس‌فرستاده می‌شود تا شروع پاسخ در همان لحظه اول روی گوشی دیده شود، نه بعد از
- * تمام‌شدن کل تولید متن.
+ * { messages: [{role, content}, ...], max_tokens?: number, temperature?: number }
  */
 app.post("/api/chat", async (req, res) => {
   try {
-    const { messages, max_tokens = 500, temperature = 0.6, stream = false } = req.body;
+    const { messages, max_tokens = 800, temperature = 0.6 } = req.body;
 
     if (!Array.isArray(messages) || messages.length === 0) {
       return res.status(400).json({ error: "messages نامعتبر است" });
@@ -91,38 +88,8 @@ app.post("/api/chat", async (req, res) => {
         messages,
         max_tokens,
         temperature,
-        stream: !!stream,
       }),
     });
-
-    if (stream) {
-      if (!aiRes.ok || !aiRes.body) {
-        let msg = "خطا در ارتباط با سرویس هوش مصنوعی";
-        try {
-          const errData = await aiRes.json();
-          msg = errData?.error?.message || msg;
-        } catch (_) {}
-        return res.status(aiRes.status || 500).json({ error: msg });
-      }
-      res.setHeader("Content-Type", "text/event-stream; charset=utf-8");
-      res.setHeader("Cache-Control", "no-cache");
-      res.setHeader("Connection", "keep-alive");
-      res.flushHeaders?.();
-      const reader = aiRes.body.getReader();
-      const decoder = new TextDecoder();
-      try {
-        while (true) {
-          const { done, value } = await reader.read();
-          if (done) break;
-          res.write(decoder.decode(value, { stream: true }));
-        }
-      } catch (streamErr) {
-        console.error("stream relay error:", streamErr?.message || streamErr);
-      } finally {
-        res.end();
-      }
-      return;
-    }
 
     const data = await aiRes.json();
 
