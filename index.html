@@ -213,31 +213,31 @@ textarea.ta{width:100%;min-height:130px;padding:14px;background:var(--bg3);borde
 <!-- ================= AUTH SCREEN ================= -->
 <div id="authScreen">
  <div class="auth-card glass">
- <div class="vpn-notice">لطفاً VPN را روشن کنید</div>
+ <div class="vpn-notice" data-i18n="vpnNotice">لطفاً VPN را روشن کنید</div>
  <div class="brand-logo">A</div>
- <div class="brand-title">هوش مصنوعی همه‌کاره Alpha</div>
+ <div class="brand-title" data-i18n="brandTitle">هوش مصنوعی همه‌کاره Alpha</div>
  <div class="brand-sub">Alpha AI</div>
 
  <div class="auth-tabs">
- <button class="auth-tab active" id="tabLoginBtn" onclick="app.switchAuthTab('login')">ورود</button>
- <button class="auth-tab" id="tabRegisterBtn" onclick="app.switchAuthTab('register')">ثبت‌نام</button>
+ <button class="auth-tab active" id="tabLoginBtn" onclick="app.switchAuthTab('login')" data-i18n="tabLogin">ورود</button>
+ <button class="auth-tab" id="tabRegisterBtn" onclick="app.switchAuthTab('register')" data-i18n="tabRegister">ثبت‌نام</button>
  </div>
 
  <div id="formLogin">
- <div class="field"><label>ایمیل</label><input type="email" id="loginEmail" placeholder="example@mail.com"></div>
- <div class="field"><label>رمز عبور</label><input type="password" id="loginPass" placeholder="••••••••"></div>
- <button class="btn-primary" onclick="app.login()">ورود</button>
+ <div class="field"><label data-i18n="lblEmail">ایمیل</label><input type="email" id="loginEmail" placeholder="example@mail.com"></div>
+ <div class="field"><label data-i18n="lblPass">رمز عبور</label><input type="password" id="loginPass" placeholder="••••••••"></div>
+ <button class="btn-primary" onclick="app.login()" data-i18n="btnLoginSubmit">ورود</button>
  </div>
 
  <div id="formRegister" class="hidden">
- <div class="field"><label>نام</label><input type="text" id="regName" placeholder="نام شما"></div>
- <div class="field"><label>ایمیل</label><input type="email" id="regEmail" placeholder="example@mail.com"></div>
- <div class="field"><label>رمز عبور</label><input type="password" id="regPass" placeholder="حداقل ۶ کاراکتر"></div>
- <button class="btn-primary" onclick="app.register()">ساخت حساب</button>
+ <div class="field"><label data-i18n="lblName">نام</label><input type="text" id="regName" placeholder="نام شما" data-i18n-ph="phName"></div>
+ <div class="field"><label data-i18n="lblEmail">ایمیل</label><input type="email" id="regEmail" placeholder="example@mail.com"></div>
+ <div class="field"><label data-i18n="lblPass">رمز عبور</label><input type="password" id="regPass" placeholder="حداقل ۶ کاراکتر" data-i18n-ph="phMinPass"></div>
+ <button class="btn-primary" onclick="app.register()" data-i18n="btnRegisterSubmit">ساخت حساب</button>
  </div>
 
  <div id="authMsg" style="color:var(--danger);font-size:12px;margin-top:12px;min-height:14px"></div>
- <div style="font-size:10px;color:var(--muted);margin-top:14px;letter-spacing:.3px">سازنده: نیما حجتی</div>
+ <div style="font-size:10px;color:var(--muted);margin-top:14px;letter-spacing:.3px" data-i18n="creatorLine">سازنده: نیما حجتی</div>
  </div>
 </div>
 
@@ -246,24 +246,24 @@ textarea.ta{width:100%;min-height:130px;padding:14px;background:var(--bg3);borde
  <aside class="sidebar" id="sidebar">
  <div class="sb-logo">
  <div class="ic">A</div>
- <div><h1>Alpha</h1><p>هوش مصنوعی همه‌کاره</p></div>
+ <div><h1>Alpha</h1><p data-i18n="sbTagline">هوش مصنوعی همه‌کاره</p></div>
  </div>
- <button class="nav-item active" data-nav="assistants" onclick="app.nav('assistants')">دستیارها</button>
- <button class="nav-item" data-nav="home" onclick="app.nav('home')">خانه</button>
- <button class="nav-item" data-nav="chat" onclick="app.nav('chat')">چت هوش مصنوعی</button>
- <button class="nav-item" data-nav="translate" onclick="app.nav('translate')">ترجمه‌گر</button>
- <button class="nav-item" data-nav="pdf" onclick="app.nav('pdf')">ترجمه PDF</button>
- <button class="nav-item" data-nav="voice" onclick="app.nav('voice')">دستیار صوتی</button>
- <button class="nav-item" data-nav="history" onclick="app.nav('history')">تاریخچه</button>
+ <button class="nav-item active" data-nav="assistants" onclick="app.nav('assistants')" data-i18n="navAssistants">دستیارها</button>
+ <button class="nav-item" data-nav="home" onclick="app.nav('home')" data-i18n="navHome">خانه</button>
+ <button class="nav-item" data-nav="chat" onclick="app.nav('chat')" data-i18n="navChat">چت هوش مصنوعی</button>
+ <button class="nav-item" data-nav="translate" onclick="app.nav('translate')" data-i18n="navTranslate">ترجمه‌گر</button>
+ <button class="nav-item" data-nav="pdf" onclick="app.nav('pdf')" data-i18n="navPdf">ترجمه PDF</button>
+ <button class="nav-item" data-nav="voice" onclick="app.nav('voice')" data-i18n="navVoice">دستیار صوتی</button>
+ <button class="nav-item" data-nav="history" onclick="app.nav('history')" data-i18n="navHistory">تاریخچه</button>
 
- <div class="sb-section-title">فعالیت‌های اخیر</div>
+ <div class="sb-section-title" data-i18n="sbRecentTitle">فعالیت‌های اخیر</div>
  <div class="sb-history" id="sbHistory"></div>
 
  <div class="sb-user" onclick="app.nav('profile')">
  <div class="av" id="sbAvatar">؟</div>
  <div class="info"><b id="sbName">کاربر</b><span id="sbEmail"></span></div>
  </div>
- <button class="nav-item" style="margin-top:6px" onclick="app.nav('settings')">تنظیمات</button>
+ <button class="nav-item" style="margin-top:6px" onclick="app.nav('settings')" data-i18n="navSettings">تنظیمات</button>
  </aside>
 
  <main class="main">
@@ -271,12 +271,12 @@ textarea.ta{width:100%;min-height:130px;padding:14px;background:var(--bg3);borde
  <div style="position:relative">
  <button class="menu-toggle icon-btn" onclick="app.toggleTopMenu()" aria-label="منو"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
  <div class="top-menu hidden" id="topMenu">
- <button onclick="app.showModal('سازنده','سازنده: نیما حجتی'); app.toggleTopMenu(false)">سازنده</button>
- <a href="mailto:alphannna@gmail.com" onclick="app.toggleTopMenu(false)">پشتیبانی</a>
- <button onclick="app.nav('settings'); app.toggleTopMenu(false)">تنظیمات</button>
- <button onclick="app.nav('history'); app.toggleTopMenu(false)">تاریخچه</button>
- <button onclick="app.nav('profile'); app.toggleTopMenu(false)">پروفایل</button>
- <button class="danger" onclick="app.logout()">خروج</button>
+ <button onclick="app.showModal(app.tt('creatorTitle'),app.tt('creatorLine')); app.toggleTopMenu(false)" data-i18n="tmCreator">سازنده</button>
+ <a href="mailto:alphannna@gmail.com" onclick="app.toggleTopMenu(false)" data-i18n="tmSupport">پشتیبانی</a>
+ <button onclick="app.nav('settings'); app.toggleTopMenu(false)" data-i18n="tmSettings">تنظیمات</button>
+ <button onclick="app.nav('history'); app.toggleTopMenu(false)" data-i18n="tmHistory">تاریخچه</button>
+ <button onclick="app.nav('profile'); app.toggleTopMenu(false)" data-i18n="tmProfile">پروفایل</button>
+ <button class="danger" onclick="app.logout()" data-i18n="tmLogout">خروج</button>
  </div>
  </div>
  <div style="text-align:center;flex:1">
@@ -291,7 +291,7 @@ textarea.ta{width:100%;min-height:130px;padding:14px;background:var(--bg3);borde
  <!-- ASSISTANTS -->
  <section id="view-assistants">
  <div class="home-hi" id="assistGreeting">سلام</div>
- <div class="home-sub">یک دستیار هوش مصنوعی را برای شروع انتخاب کنید</div>
+ <div class="home-sub" data-i18n="assistSub">یک دستیار هوش مصنوعی را برای شروع انتخاب کنید</div>
  <div class="assist-list" id="assistGrid"></div>
  </section>
 
@@ -300,17 +300,17 @@ textarea.ta{width:100%;min-height:130px;padding:14px;background:var(--bg3);borde
  <div id="backendWarn" class="banner-warn hidden">آدرس بک‌اند (API_BASE_URL) هنوز تنظیم نشده یا در دسترس نیست. برای فعال شدن چت و ترجمه، فایل backend را دیپلوی کرده و مقدار API_BASE_URL را در ابتدای اسکریپت این صفحه با آدرس واقعی جایگزین کنید.
  </div>
  <div class="home-hi" id="homeGreeting">سلام</div>
- <div class="home-sub">امروز چه کمکی از Alpha می‌خواهید؟</div>
+ <div class="home-sub" data-i18n="homeSub">امروز چه کمکی از Alpha می‌خواهید؟</div>
 
  <div class="quick-chips">
- <button class="chip-pill" onclick="app.nav('translate')">ترجمه متن</button>
- <button class="chip-pill" onclick="app.nav('pdf')">ترجمه PDF</button>
- <button class="chip-pill" onclick="app.nav('voice')">دستیار صوتی</button>
- <button class="chip-pill" onclick="app.nav('history')">تاریخچه</button>
+ <button class="chip-pill" onclick="app.nav('translate')" data-i18n="chipTranslate">ترجمه متن</button>
+ <button class="chip-pill" onclick="app.nav('pdf')" data-i18n="chipPdf">ترجمه PDF</button>
+ <button class="chip-pill" onclick="app.nav('voice')" data-i18n="chipVoice">دستیار صوتی</button>
+ <button class="chip-pill" onclick="app.nav('history')" data-i18n="chipHistory">تاریخچه</button>
  </div>
 
  <div class="quick-bar glass">
- <input type="text" id="quickAskInput" placeholder="سوال خود را بپرسید..." onkeypress="if(event.key==='Enter')app.quickAsk()">
+ <input type="text" id="quickAskInput" placeholder="سوال خود را بپرسید..." data-i18n-ph="phAskQuestion" onkeypress="if(event.key==='Enter')app.quickAsk()">
  <div class="quick-bar-controls">
  <button class="icon-btn" title="پیوست فایل" onclick="document.getElementById('fileInput').click()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
  <select id="quickModeSelect" class="quick-mode-select"></select>
@@ -321,13 +321,13 @@ textarea.ta{width:100%;min-height:130px;padding:14px;background:var(--bg3);borde
  </div>
 
  <div class="grid-cards">
- <div class="card glass" onclick="app.newChat()"><b>گفت‌وگوی جدید</b><span>شروع چت تازه</span></div>
- <div class="card glass" onclick="app.nav('chat')"><b>چت هوش مصنوعی</b><span>پرسش و پاسخ هوشمند</span></div>
- <div class="card glass" onclick="app.nav('translate')"><b>ترجمه‌گر</b><span>ترجمه فوری متن</span></div>
- <div class="card glass" onclick="app.nav('pdf')"><b>ترجمه PDF</b><span>ترجمه کامل فایل</span></div>
- <div class="card glass" onclick="app.nav('voice')"><b>دستیار صوتی</b><span>گفت‌وگوی صوتی</span></div>
+ <div class="card glass" onclick="app.newChat()"><b data-i18n="cardNewChat">گفت‌وگوی جدید</b><span data-i18n="cardNewChatSub">شروع چت تازه</span></div>
+ <div class="card glass" onclick="app.nav('chat')"><b data-i18n="cardChat">چت هوش مصنوعی</b><span data-i18n="cardChatSub">پرسش و پاسخ هوشمند</span></div>
+ <div class="card glass" onclick="app.nav('translate')"><b data-i18n="cardTranslate">ترجمه‌گر</b><span data-i18n="cardTranslateSub">ترجمه فوری متن</span></div>
+ <div class="card glass" onclick="app.nav('pdf')"><b data-i18n="cardPdf">ترجمه PDF</b><span data-i18n="cardPdfSub">ترجمه کامل فایل</span></div>
+ <div class="card glass" onclick="app.nav('voice')"><b data-i18n="cardVoice">دستیار صوتی</b><span data-i18n="cardVoiceSub">گفت‌وگوی صوتی</span></div>
  </div>
- <div class="sb-section-title" style="margin-bottom:10px">آخرین فعالیت‌ها</div>
+ <div class="sb-section-title" style="margin-bottom:10px" data-i18n="recentActivity">آخرین فعالیت‌ها</div>
  <div id="homeRecent"></div>
  </section>
 
@@ -335,21 +335,21 @@ textarea.ta{width:100%;min-height:130px;padding:14px;background:var(--bg3);borde
  <section id="view-chat" class="hidden">
  <div class="chat-wrap">
  <div class="quick-actions-row">
- <button class="qa-btn" onclick="app.nav('history')">تاریخچه</button>
- <button class="qa-btn" onclick="app.nav('settings')">تنظیمات</button>
- <a class="qa-btn" href="mailto:alphannna@gmail.com" style="text-decoration:none">پشتیبانی</a>
- <button class="qa-btn danger" onclick="app.logout()">خروج</button>
+ <button class="qa-btn" onclick="app.nav('history')" data-i18n="navHistory">تاریخچه</button>
+ <button class="qa-btn" onclick="app.nav('settings')" data-i18n="navSettings">تنظیمات</button>
+ <a class="qa-btn" href="mailto:alphannna@gmail.com" style="text-decoration:none" data-i18n="tmSupport">پشتیبانی</a>
+ <button class="qa-btn danger" onclick="app.logout()" data-i18n="tmLogout">خروج</button>
  </div>
  <div class="mode-select hidden" id="aiModes"></div>
  <div class="chat-area" id="chatArea"></div>
  <div class="input-bar">
- <button class="attach-pill" onclick="document.getElementById('imageInput').click()">عکس</button>
+ <button class="attach-pill" onclick="document.getElementById('imageInput').click()" data-i18n="btnPhoto">عکس</button>
  <input type="file" id="imageInput" class="hidden" accept="image/*" onchange="app.handleChatFile(event)">
- <button class="attach-pill" onclick="document.getElementById('fileInput').click()">فایل</button>
+ <button class="attach-pill" onclick="document.getElementById('fileInput').click()" data-i18n="btnFile">فایل</button>
  <input type="file" id="fileInput" class="hidden" accept=".pdf,.txt" onchange="app.handleChatFile(event)">
- <input type="text" id="chatInput" placeholder="پیام..." onkeypress="if(event.key==='Enter')app.sendChat()">
- <button class="attach-pill" id="micChatBtn" title="ورودی صوتی" onclick="app.toggleMic('chat')">صدا</button>
- <button class="send-btn" onclick="app.sendChat()">ارسال</button>
+ <input type="text" id="chatInput" placeholder="پیام..." data-i18n-ph="phMessage" onkeypress="if(event.key==='Enter')app.sendChat()">
+ <button class="attach-pill" id="micChatBtn" title="ورودی صوتی" onclick="app.toggleMic('chat')" data-i18n="btnMic">صدا</button>
+ <button class="send-btn" onclick="app.sendChat()" data-i18n="btnSend">ارسال</button>
  </div>
  </div>
  </section>
@@ -361,40 +361,40 @@ textarea.ta{width:100%;min-height:130px;padding:14px;background:var(--bg3);borde
  <button class="swap-btn" onclick="app.swapLangs()" aria-label="جابجایی زبان‌ها"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 1l4 4-4 4M3 11V9a4 4 0 014-4h14M7 23l-4-4 4-4M21 13v2a4 4 0 01-4 4H3"/></svg></button>
  <select id="dstLang"></select>
  </div>
- <div style="font-size:12px;color:var(--muted);margin-bottom:8px">متن اصلی</div>
- <textarea class="ta" id="srcText" placeholder="متن خود را وارد کنید..."></textarea>
- <div style="font-size:12px;color:var(--muted);margin-bottom:8px">نتیجه ترجمه</div>
- <textarea class="ta" id="dstText" readonly placeholder="ترجمه اینجا نمایش داده می‌شود..."></textarea>
+ <div style="font-size:12px;color:var(--muted);margin-bottom:8px" data-i18n="srcTextLabel">متن اصلی</div>
+ <textarea class="ta" id="srcText" placeholder="متن خود را وارد کنید..." data-i18n-ph="phEnterText"></textarea>
+ <div style="font-size:12px;color:var(--muted);margin-bottom:8px" data-i18n="dstTextLabel">نتیجه ترجمه</div>
+ <textarea class="ta" id="dstText" readonly placeholder="ترجمه اینجا نمایش داده می‌شود..." data-i18n-ph="phTranslateResult"></textarea>
  <div class="btn-row">
- <button class="btn-gold" onclick="app.translateText()">ترجمه کن</button>
- <button class="btn-ghost" onclick="app.copyText('dstText')">کپی</button>
- <button class="btn-ghost" onclick="app.shareText('dstText')">اشتراک‌گذاری</button>
+ <button class="btn-gold" onclick="app.translateText()" data-i18n="btnTranslate">ترجمه کن</button>
+ <button class="btn-ghost" onclick="app.copyText('dstText')" data-i18n="btnCopy">کپی</button>
+ <button class="btn-ghost" onclick="app.shareText('dstText')" data-i18n="btnShare">اشتراک‌گذاری</button>
  </div>
  </section>
 
  <!-- PDF -->
  <section id="view-pdf" class="hidden">
  <div class="dropzone" onclick="document.getElementById('pdfInput').click()">
- <b>برای انتخاب فایل PDF کلیک کنید</b>
- <div style="font-size:11px;color:var(--muted);margin-top:6px" id="pdfFileName">هیچ فایلی انتخاب نشده</div>
+ <b data-i18n="pdfClickSelect">برای انتخاب فایل PDF کلیک کنید</b>
+ <div style="font-size:11px;color:var(--muted);margin-top:6px" id="pdfFileName" data-i18n="pdfNoFile">هیچ فایلی انتخاب نشده</div>
  </div>
  <input type="file" id="pdfInput" class="hidden" accept="application/pdf" onchange="app.pdfSelected(event)">
  <div class="lang-row">
  <select id="pdfSrcLang"></select>
- <div style="color:var(--muted)">به</div>
+ <div style="color:var(--muted)" data-i18n="toWord">به</div>
  <select id="pdfDstLang"></select>
  </div>
- <div class="opt-row">حفظ ترتیب صفحات و پاراگراف‌بندی · پردازش مرحله‌ای فایل‌های بزرگ</div>
- <button class="btn-gold" id="pdfStartBtn" onclick="app.startPdfTranslate()" disabled>شروع ترجمه</button>
+ <div class="opt-row" data-i18n="pdfOptRow">حفظ ترتیب صفحات و پاراگراف‌بندی · پردازش مرحله‌ای فایل‌های بزرگ</div>
+ <button class="btn-gold" id="pdfStartBtn" onclick="app.startPdfTranslate()" disabled data-i18n="btnStartTranslate">شروع ترجمه</button>
  <div id="pdfProgressWrap" class="hidden">
- <div style="font-size:12px;color:var(--muted);margin-top:14px" id="pdfProgressLabel">در حال ترجمه...</div>
+ <div style="font-size:12px;color:var(--muted);margin-top:14px" id="pdfProgressLabel" data-i18n="translating">در حال ترجمه...</div>
  <div class="progress-wrap"><div class="progress-bar" id="pdfProgressBar"></div></div>
  </div>
  <div id="pdfResultWrap" class="hidden" style="margin-top:16px">
  <textarea class="ta" id="pdfResultText" style="min-height:260px" readonly></textarea>
  <div class="btn-row">
- <button class="btn-gold" onclick="app.downloadPdfResult()">دانلود متن ترجمه</button>
- <button class="btn-ghost" onclick="app.copyText('pdfResultText')">کپی</button>
+ <button class="btn-gold" onclick="app.downloadPdfResult()" data-i18n="btnDownloadResult">دانلود متن ترجمه</button>
+ <button class="btn-ghost" onclick="app.copyText('pdfResultText')" data-i18n="btnCopy">کپی</button>
  </div>
  </div>
  </section>
@@ -403,7 +403,7 @@ textarea.ta{width:100%;min-height:130px;padding:14px;background:var(--bg3);borde
  <section id="view-voice" class="hidden">
  <div class="voice-wrap">
  <div class="mic-btn" id="micVoiceBtn" onclick="app.toggleMic('voice')"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#101010" stroke-width="2"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2M12 19v4M8 23h8"/></svg></div>
- <div style="color:var(--muted);font-size:13px" id="voiceStatus">برای شروع مکالمهٔ صوتی لمس کنید</div>
+ <div style="color:var(--muted);font-size:13px" id="voiceStatus" data-i18n="voiceStatusIdle">برای شروع مکالمهٔ صوتی لمس کنید</div>
  <div class="voice-transcript hidden glass" id="voiceTranscript"></div>
  <div class="voice-answer hidden glass" id="voiceAnswer"></div>
  </div>
@@ -411,7 +411,7 @@ textarea.ta{width:100%;min-height:130px;padding:14px;background:var(--bg3);borde
 
  <!-- HISTORY -->
  <section id="view-history" class="hidden">
- <input type="text" class="hist-search" id="histSearch" placeholder=" جستجو در تاریخچه..." oninput="app.renderHistory()">
+ <input type="text" class="hist-search" id="histSearch" placeholder=" جستجو در تاریخچه..." data-i18n-ph="phSearchHistory" oninput="app.renderHistory()">
  <div id="histList"></div>
  </section>
 
@@ -422,47 +422,47 @@ textarea.ta{width:100%;min-height:130px;padding:14px;background:var(--bg3);borde
  <b id="profName" style="font-size:16px"></b>
  <div style="color:var(--muted);font-size:12px;margin-top:4px" id="profEmail"></div>
  <div class="stat-row">
- <div class="stat"><b id="statChats">0</b><span>گفت‌وگو</span></div>
- <div class="stat"><b id="statTrans">0</b><span>ترجمه</span></div>
- <div class="stat"><b id="statFiles">0</b><span>فایل</span></div>
+ <div class="stat"><b id="statChats">0</b><span data-i18n="statChatsLabel">گفت‌وگو</span></div>
+ <div class="stat"><b id="statTrans">0</b><span data-i18n="statTransLabel">ترجمه</span></div>
+ <div class="stat"><b id="statFiles">0</b><span data-i18n="statFilesLabel">فایل</span></div>
  </div>
- <button class="btn-ghost" style="margin-top:18px;width:100%" onclick="app.editProfile()">ویرایش پروفایل</button>
+ <button class="btn-ghost" style="margin-top:18px;width:100%" onclick="app.editProfile()" data-i18n="btnEditProfile">ویرایش پروفایل</button>
  </div>
  </section>
 
  <!-- SETTINGS -->
  <section id="view-settings" class="hidden">
  <div class="settings-group">
- <h4>حساب کاربری</h4>
- <div class="setting-row glass"><span>پروفایل</span><button class="btn-ghost" onclick="app.nav('profile')">مشاهده</button></div>
- <div class="setting-row glass"><span>خروج از حساب</span><button class="btn-ghost danger-btn" onclick="app.logout()">خروج</button></div>
+ <h4 data-i18n="grpAccount">حساب کاربری</h4>
+ <div class="setting-row glass"><span data-i18n="rowProfile">پروفایل</span><button class="btn-ghost" onclick="app.nav('profile')" data-i18n="btnView">مشاهده</button></div>
+ <div class="setting-row glass"><span data-i18n="rowLogout">خروج از حساب</span><button class="btn-ghost danger-btn" onclick="app.logout()" data-i18n="tmLogout">خروج</button></div>
  </div>
  <div class="settings-group">
- <h4>زبان رابط برنامه</h4>
- <div class="setting-row glass"><span>زبان نمایش برنامه</span>
- <div class="seg"><button id="uiFa" class="active" onclick="app.setUiLang('fa')">فارسی</button><button id="uiEn" onclick="app.setUiLang('en')">English</button></div>
+ <h4 data-i18n="grpUiLang">زبان رابط برنامه</h4>
+ <div class="setting-row glass"><span data-i18n="rowUiLang">زبان نمایش برنامه</span>
+ <div class="seg"><button id="uiFa" class="active" onclick="app.setUiLang('fa')" data-i18n="langFa">فارسی</button><button id="uiEn" onclick="app.setUiLang('en')" data-i18n="langEn">English</button></div>
  </div>
  </div>
  <div class="settings-group">
- <h4>زبان پاسخ هوش مصنوعی</h4>
- <div class="setting-row glass"><span>زبان پاسخ‌های چت</span>
+ <h4 data-i18n="grpAiLang">زبان پاسخ هوش مصنوعی</h4>
+ <div class="setting-row glass"><span data-i18n="rowAiLang">زبان پاسخ‌های چت</span>
  <select id="aiRespLang" class="btn-ghost" onchange="app.setAiRespLang(this.value)"></select>
  </div>
  </div>
  <div class="settings-group">
- <h4>صدا</h4>
- <div class="setting-row glass"><span>ورودی صوتی</span><div class="switch on" id="swVoiceIn" onclick="app.toggleSetting('voiceIn')"></div></div>
+ <h4 data-i18n="grpVoice">صدا</h4>
+ <div class="setting-row glass"><span data-i18n="rowVoiceIn">ورودی صوتی</span><div class="switch on" id="swVoiceIn" onclick="app.toggleSetting('voiceIn')"></div></div>
  </div>
  <div class="settings-group">
- <h4>ظاهر</h4>
- <div class="setting-row glass"><span>حالت تیره + طلایی (Glassmorphism)</span><div class="switch on" style="opacity:.5;pointer-events:none"></div></div>
+ <h4 data-i18n="grpAppearance">ظاهر</h4>
+ <div class="setting-row glass"><span data-i18n="rowGlass">حالت تیره + طلایی (Glassmorphism)</span><div class="switch on" style="opacity:.5;pointer-events:none"></div></div>
  </div>
  <div class="settings-group">
- <h4>درباره</h4>
- <div class="setting-row glass"><span>درباره Alpha</span><button class="btn-ghost" onclick="app.showModal('درباره ما','هوش مصنوعی همه‌کاره Alpha یک دستیار هوش مصنوعی برای چت، ترجمه متن، ترجمه اسناد PDF و بسیاری از کارهای دیگر است.')">مشاهده</button></div>
- <div class="setting-row glass"><span>حریم خصوصی</span><button class="btn-ghost" onclick="app.showModal('حریم خصوصی','پیام‌ها برای پردازش به سرور ارسال می‌شوند و کلید API هرگز در برنامه ذخیره نمی‌شود. تاریخچه به‌صورت محلی روی همین دستگاه نگه‌داری می‌شود.')">مشاهده</button></div>
- <div class="setting-row glass"><span>پشتیبانی</span><a class="btn-ghost" href="mailto:alphannna@gmail.com" style="text-decoration:none">alphannna@gmail.com</a></div>
- <div class="setting-row glass"><span>سازنده</span><span style="color:var(--gold);font-weight:700;font-size:12.5px">نیما حجتی</span></div>
+ <h4 data-i18n="grpAbout">درباره</h4>
+ <div class="setting-row glass"><span data-i18n="rowAboutAlpha">درباره Alpha</span><button class="btn-ghost" onclick="app.showModal(app.tt('modalAboutTitle'),app.tt('modalAboutBody'))" data-i18n="btnView">مشاهده</button></div>
+ <div class="setting-row glass"><span data-i18n="rowPrivacy">حریم خصوصی</span><button class="btn-ghost" onclick="app.showModal(app.tt('modalPrivacyTitle'),app.tt('modalPrivacyBody'))" data-i18n="btnView">مشاهده</button></div>
+ <div class="setting-row glass"><span data-i18n="tmSupport">پشتیبانی</span><a class="btn-ghost" href="mailto:alphannna@gmail.com" style="text-decoration:none">alphannna@gmail.com</a></div>
+ <div class="setting-row glass"><span data-i18n="tmCreator">سازنده</span><span style="color:var(--gold);font-weight:700;font-size:12.5px">نیما حجتی</span></div>
  </div>
  </section>
 
@@ -609,6 +609,23 @@ const ASSISTANTS = [
  { id: "girlfriend", title: "دوست‌دختر AI", desc: "گفت‌وگوی دوستانه و همراهی روزانه", nav: "chat", mode: "girlfriend", icon: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.8 4.6a5.5 5.5 0 00-7.8 0L12 5.6l-1-1a5.5 5.5 0 00-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 000-7.8z"/></svg>' },
 ];
 
+const ASSISTANTS_EN = {
+ voice: { title: "Voice Assistant", desc: "Talk with the AI by voice" },
+ chat: { title: "AI Chat", desc: "Smart questions & answers" },
+ translate: { title: "AI Translator", desc: "Translate text, PDF & documents" },
+ doctor: { title: "AI Doctor", desc: "Symptom review & initial guidance, not a diagnosis" },
+ lawyer: { title: "AI Lawyer", desc: "Explains laws & reviews documents" },
+ teacher: { title: "AI Teacher", desc: "Personalized lessons & help with exercises" },
+ architect: { title: "Architect & Home Designer", desc: "Floor plans, decor & facade ideas" },
+ electrical: { title: "AI Electrical Engineer", desc: "Basic circuit design & calculations" },
+ compeng: { title: "AI Computer Engineer", desc: "System design, networking & troubleshooting" },
+ programmer: { title: "AI Programmer", desc: "Writes, explains & fixes code" },
+ agri: { title: "AI Agriculture Advisor", desc: "Cultivation, irrigation & plant issues" },
+ social: { title: "AI Social Media Designer", desc: "Posts, banners, captions & branding" },
+ boyfriend: { title: "AI Boyfriend", desc: "Friendly daily conversation & companionship" },
+ girlfriend: { title: "AI Girlfriend", desc: "Friendly daily conversation & companionship" },
+};
+
 const state = {
  user: null,
  currentMode: "general",
@@ -628,6 +645,119 @@ const store = {
  set(k, v) { localStorage.setItem(k, JSON.stringify(v)); },
 };
 
+const TRANSLATIONS = {
+ fa: {
+ vpnNotice: "لطفاً VPN را روشن کنید", brandTitle: "هوش مصنوعی همه‌کاره Alpha",
+ tabLogin: "ورود", tabRegister: "ثبت‌نام", lblEmail: "ایمیل", lblPass: "رمز عبور",
+ btnLoginSubmit: "ورود", lblName: "نام", phName: "نام شما", phMinPass: "حداقل ۶ کاراکتر",
+ btnRegisterSubmit: "ساخت حساب", creatorLine: "سازنده: نیما حجتی",
+ sbTagline: "هوش مصنوعی همه‌کاره",
+ navAssistants: "دستیارها", navHome: "خانه", navChat: "چت هوش مصنوعی", navTranslate: "ترجمه‌گر",
+ navPdf: "ترجمه PDF", navVoice: "دستیار صوتی", navHistory: "تاریخچه", sbRecentTitle: "فعالیت‌های اخیر",
+ navSettings: "تنظیمات",
+ tmCreator: "سازنده", tmSupport: "پشتیبانی", tmSettings: "تنظیمات", tmHistory: "تاریخچه",
+ tmProfile: "پروفایل", tmLogout: "خروج",
+ assistSub: "یک دستیار هوش مصنوعی را برای شروع انتخاب کنید",
+ homeSub: "امروز چه کمکی از Alpha می‌خواهید؟",
+ chipTranslate: "ترجمه متن", chipPdf: "ترجمه PDF", chipVoice: "دستیار صوتی", chipHistory: "تاریخچه",
+ phAskQuestion: "سوال خود را بپرسید...",
+ cardNewChat: "گفت‌وگوی جدید", cardNewChatSub: "شروع چت تازه",
+ cardChat: "چت هوش مصنوعی", cardChatSub: "پرسش و پاسخ هوشمند",
+ cardTranslate: "ترجمه‌گر", cardTranslateSub: "ترجمه فوری متن",
+ cardPdf: "ترجمه PDF", cardPdfSub: "ترجمه کامل فایل",
+ cardVoice: "دستیار صوتی", cardVoiceSub: "گفت‌وگوی صوتی",
+ recentActivity: "آخرین فعالیت‌ها",
+ btnPhoto: "عکس", btnFile: "فایل", phMessage: "پیام...", btnMic: "صدا", btnSend: "ارسال",
+ srcTextLabel: "متن اصلی", phEnterText: "متن خود را وارد کنید...",
+ dstTextLabel: "نتیجه ترجمه", phTranslateResult: "ترجمه اینجا نمایش داده می‌شود...",
+ btnTranslate: "ترجمه کن", btnCopy: "کپی", btnShare: "اشتراک‌گذاری",
+ pdfClickSelect: "برای انتخاب فایل PDF کلیک کنید", pdfNoFile: "هیچ فایلی انتخاب نشده", toWord: "به",
+ pdfOptRow: "حفظ ترتیب صفحات و پاراگراف‌بندی · پردازش مرحله‌ای فایل‌های بزرگ",
+ btnStartTranslate: "شروع ترجمه", translating: "در حال ترجمه...", btnDownloadResult: "دانلود متن ترجمه",
+ voiceStatusIdle: "برای شروع مکالمهٔ صوتی لمس کنید",
+ phSearchHistory: " جستجو در تاریخچه...",
+ statChatsLabel: "گفت‌وگو", statTransLabel: "ترجمه", statFilesLabel: "فایل",
+ btnEditProfile: "ویرایش پروفایل",
+ grpAccount: "حساب کاربری", rowProfile: "پروفایل", btnView: "مشاهده", rowLogout: "خروج از حساب",
+ grpUiLang: "زبان رابط برنامه", rowUiLang: "زبان نمایش برنامه",
+ langFa: "فارسی", langEn: "English",
+ grpAiLang: "زبان پاسخ هوش مصنوعی", rowAiLang: "زبان پاسخ‌های چت",
+ grpVoice: "صدا", rowVoiceIn: "ورودی صوتی",
+ grpAppearance: "ظاهر", rowGlass: "حالت تیره + طلایی (Glassmorphism)",
+ grpAbout: "درباره", rowAboutAlpha: "درباره Alpha", rowPrivacy: "حریم خصوصی",
+ modalAboutTitle: "درباره ما",
+ modalAboutBody: "هوش مصنوعی همه‌کاره Alpha یک دستیار هوش مصنوعی برای چت، ترجمه متن، ترجمه اسناد PDF و بسیاری از کارهای دیگر است.",
+ modalPrivacyTitle: "حریم خصوصی",
+ modalPrivacyBody: "پیام‌ها برای پردازش به سرور ارسال می‌شوند و کلید API هرگز در برنامه ذخیره نمی‌شود. تاریخچه به‌صورت محلی روی همین دستگاه نگه‌داری می‌شود.",
+ creatorTitle: "سازنده",
+ greeting: "سلام",
+ titleAssistants: "دستیارها", subAssistants: "انتخاب دستیار هوش مصنوعی",
+ titleHome: "خانه", subHome: "داشبورد Alpha",
+ titleChat: "چت هوش مصنوعی", subChat: "گفت‌وگو با دستیار هوشمند",
+ titleTranslate: "ترجمه‌گر", subTranslate: "ترجمه فوری و دقیق متن",
+ titlePdf: "ترجمه PDF", subPdf: "ترجمه کامل اسناد",
+ titleVoice: "دستیار صوتی", subVoice: "گفت‌وگوی صوتی با هوش مصنوعی",
+ titleHistory: "تاریخچه", subHistory: "گفت‌وگوها و ترجمه‌های قبلی",
+ titleProfile: "پروفایل", subProfile: "اطلاعات حساب کاربری",
+ titleSettings: "تنظیمات", subSettings: "شخصی‌سازی برنامه",
+ },
+ en: {
+ vpnNotice: "Please turn on VPN", brandTitle: "All-in-one AI Alpha",
+ tabLogin: "Login", tabRegister: "Register", lblEmail: "Email", lblPass: "Password",
+ btnLoginSubmit: "Login", lblName: "Name", phName: "Your name", phMinPass: "At least 6 characters",
+ btnRegisterSubmit: "Create Account", creatorLine: "Creator: Nima Hojjati",
+ sbTagline: "All-in-one AI",
+ navAssistants: "Assistants", navHome: "Home", navChat: "AI Chat", navTranslate: "Translator",
+ navPdf: "PDF Translate", navVoice: "Voice Assistant", navHistory: "History", sbRecentTitle: "Recent Activity",
+ navSettings: "Settings",
+ tmCreator: "Creator", tmSupport: "Support", tmSettings: "Settings", tmHistory: "History",
+ tmProfile: "Profile", tmLogout: "Log out",
+ assistSub: "Choose an AI assistant to get started",
+ homeSub: "How can Alpha help you today?",
+ chipTranslate: "Translate Text", chipPdf: "Translate PDF", chipVoice: "Voice Assistant", chipHistory: "History",
+ phAskQuestion: "Ask your question...",
+ cardNewChat: "New Chat", cardNewChatSub: "Start a fresh chat",
+ cardChat: "AI Chat", cardChatSub: "Smart Q&A",
+ cardTranslate: "Translator", cardTranslateSub: "Instant text translation",
+ cardPdf: "PDF Translate", cardPdfSub: "Translate full documents",
+ cardVoice: "Voice Assistant", cardVoiceSub: "Voice conversation",
+ recentActivity: "Recent Activity",
+ btnPhoto: "Photo", btnFile: "File", phMessage: "Message...", btnMic: "Voice", btnSend: "Send",
+ srcTextLabel: "Source Text", phEnterText: "Enter your text...",
+ dstTextLabel: "Translation Result", phTranslateResult: "Translation will appear here...",
+ btnTranslate: "Translate", btnCopy: "Copy", btnShare: "Share",
+ pdfClickSelect: "Click to select a PDF file", pdfNoFile: "No file selected", toWord: "to",
+ pdfOptRow: "Preserves page order & paragraphs · processes large files in stages",
+ btnStartTranslate: "Start Translation", translating: "Translating...", btnDownloadResult: "Download Translation",
+ voiceStatusIdle: "Tap to start a voice conversation",
+ phSearchHistory: " Search history...",
+ statChatsLabel: "Chats", statTransLabel: "Translations", statFilesLabel: "Files",
+ btnEditProfile: "Edit Profile",
+ grpAccount: "Account", rowProfile: "Profile", btnView: "View", rowLogout: "Log out of account",
+ grpUiLang: "App Interface Language", rowUiLang: "Display Language",
+ langFa: "فارسی", langEn: "English",
+ grpAiLang: "AI Response Language", rowAiLang: "Chat Reply Language",
+ grpVoice: "Voice", rowVoiceIn: "Voice Input",
+ grpAppearance: "Appearance", rowGlass: "Dark + Gold Mode (Glassmorphism)",
+ grpAbout: "About", rowAboutAlpha: "About Alpha", rowPrivacy: "Privacy",
+ modalAboutTitle: "About Us",
+ modalAboutBody: "Alpha is an all-in-one AI assistant for chat, text translation, PDF document translation and many other tasks.",
+ modalPrivacyTitle: "Privacy",
+ modalPrivacyBody: "Messages are sent to the server for processing and the API key is never stored in the app. History is kept locally on this device only.",
+ creatorTitle: "Creator",
+ greeting: "Hello",
+ titleAssistants: "Assistants", subAssistants: "Choose an AI assistant",
+ titleHome: "Home", subHome: "Alpha Dashboard",
+ titleChat: "AI Chat", subChat: "Chat with a smart assistant",
+ titleTranslate: "Translator", subTranslate: "Fast, accurate text translation",
+ titlePdf: "PDF Translate", subPdf: "Translate full documents",
+ titleVoice: "Voice Assistant", subVoice: "Voice conversation with AI",
+ titleHistory: "History", subHistory: "Past chats and translations",
+ titleProfile: "Profile", subProfile: "Account information",
+ titleSettings: "Settings", subSettings: "Customize the app",
+ },
+};
+
 const app = {
  /* ---------------- INIT ---------------- */
  init() {
@@ -637,6 +767,12 @@ const app = {
  state.settings = store.get("pta_settings", state.settings);
  document.getElementById("swVoiceIn").classList.toggle("on", state.settings.voiceIn);
  state.aiRespLang = store.get("pta_ai_lang", "fa");
+ state.uiLang = store.get("pta_ui_lang", "fa");
+ document.getElementById("uiFa").classList.toggle("active", state.uiLang === "fa");
+ document.getElementById("uiEn").classList.toggle("active", state.uiLang === "en");
+ document.documentElement.setAttribute("dir", state.uiLang === "fa" ? "rtl" : "ltr");
+ document.documentElement.setAttribute("lang", state.uiLang);
+ this.applyUiLang();
 
  this.populateLangSelects();
  this.populateAiModes();
@@ -696,9 +832,10 @@ const app = {
  document.getElementById("profAv").textContent = initial;
  document.getElementById("profName").textContent = user.name || user.email;
  document.getElementById("profEmail").textContent = user.email || "";
- document.getElementById("homeGreeting").textContent = `سلام ${user.name || ""}`;
+ state.userName = user.name || "";
+ document.getElementById("homeGreeting").textContent = `${this.tt("greeting")} ${user.name || ""}`;
  const ag = document.getElementById("assistGreeting");
- if (ag) ag.textContent = `سلام ${user.name || ""}`;
+ if (ag) ag.textContent = `${this.tt("greeting")} ${user.name || ""}`;
  this.renderSidebarHistory();
  this.renderHome();
  this.updateStats();
@@ -725,7 +862,8 @@ const app = {
  const c = document.createElement("div");
  c.className = "assist-row glass";
  c.onclick = () => this.openAssistant(a.id);
- c.innerHTML = `<div class="ic">${a.icon}</div><div class="txt"><b>${a.title}</b><span>${a.desc}</span></div>`;
+ const tr = state.uiLang === "en" && ASSISTANTS_EN[a.id] ? ASSISTANTS_EN[a.id] : a;
+ c.innerHTML = `<div class="ic">${a.icon}</div><div class="txt"><b>${tr.title}</b><span>${tr.desc}</span></div>`;
  wrap.appendChild(c);
  });
  },
@@ -757,11 +895,11 @@ const app = {
  const btn = document.querySelector(`.nav-item[data-nav="${view}"]`);
  if (btn) btn.classList.add("active");
  const titles = {
- assistants: ["دستیارها", "انتخاب دستیار هوش مصنوعی"],
- home: ["خانه", "داشبورد Alpha"], chat: ["چت هوش مصنوعی", "گفت‌وگو با دستیار هوشمند"],
- translate: ["ترجمه‌گر", "ترجمه فوری و دقیق متن"], pdf: ["ترجمه PDF", "ترجمه کامل اسناد"],
- voice: ["دستیار صوتی", "گفت‌وگوی صوتی با هوش مصنوعی"], history: ["تاریخچه", "گفت‌وگوها و ترجمه‌های قبلی"],
- profile: ["پروفایل", "اطلاعات حساب کاربری"], settings: ["تنظیمات", "شخصی‌سازی برنامه"],
+ assistants: [this.tt("titleAssistants"), this.tt("subAssistants")],
+ home: [this.tt("titleHome"), this.tt("subHome")], chat: [this.tt("titleChat"), this.tt("subChat")],
+ translate: [this.tt("titleTranslate"), this.tt("subTranslate")], pdf: [this.tt("titlePdf"), this.tt("subPdf")],
+ voice: [this.tt("titleVoice"), this.tt("subVoice")], history: [this.tt("titleHistory"), this.tt("subHistory")],
+ profile: [this.tt("titleProfile"), this.tt("subProfile")], settings: [this.tt("titleSettings"), this.tt("subSettings")],
  };
  document.getElementById("topTitle").textContent = titles[view][0];
  document.getElementById("topSub").textContent = titles[view][1];
@@ -1184,10 +1322,32 @@ const app = {
  /* ---------------- SETTINGS ---------------- */
  setUiLang(l) {
  state.uiLang = l;
+ store.set("pta_ui_lang", l);
  document.getElementById("uiFa").classList.toggle("active", l === "fa");
  document.getElementById("uiEn").classList.toggle("active", l === "en");
  document.documentElement.setAttribute("dir", l === "fa" ? "rtl" : "ltr");
  document.documentElement.setAttribute("lang", l);
+ this.applyUiLang();
+ if (state.currentView) this.nav(state.currentView, true);
+ if (document.getElementById("assistGrid")) this.populateAssistants();
+ },
+ tt(key) {
+ const d = TRANSLATIONS[state.uiLang] || TRANSLATIONS.fa;
+ return d[key] !== undefined ? d[key] : (TRANSLATIONS.fa[key] || key);
+ },
+ applyUiLang() {
+ document.querySelectorAll("[data-i18n]").forEach(el => {
+ const key = el.getAttribute("data-i18n");
+ el.textContent = this.tt(key);
+ });
+ document.querySelectorAll("[data-i18n-ph]").forEach(el => {
+ const key = el.getAttribute("data-i18n-ph");
+ el.setAttribute("placeholder", this.tt(key));
+ });
+ const hg = document.getElementById("homeGreeting");
+ if (hg) hg.textContent = `${this.tt("greeting")} ${state.userName || ""}`;
+ const ag = document.getElementById("assistGreeting");
+ if (ag) ag.textContent = `${this.tt("greeting")} ${state.userName || ""}`;
  },
  setAiRespLang(v) { state.aiRespLang = v; store.set("pta_ai_lang", v); },
  toggleSetting(key) {
