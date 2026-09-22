@@ -4,10 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#0e0e0e">
-<meta name="description" content="هوش مصنوعی همه‌کاره Alpha - چت هوش مصنوعی، ترجمه متن، ترجمه PDF و دستیار صوتی">
-<title>هوش مصنوعی همه‌کاره Alpha</title>
+<meta name="description" content="هوش مصنوعی Alpha - چت هوش مصنوعی، ترجمه متن، ترجمه PDF و دستیار صوتی">
+<title>هوش مصنوعی Alpha</title>
 <link rel="manifest" href="manifest.json">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect fill='%23101010' width='192' height='192' rx='28'/><text x='96' y='128' font-size='70' font-weight='800' fill='%23d4af37' text-anchor='middle' font-family='Tahoma'>A</text></svg>">
+<link rel="icon" type="image/png" href="favicon-32.png">
+<link rel="apple-touch-icon" href="icon-180.png">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 
 <style>
@@ -32,7 +33,8 @@ input,textarea,select{font-family:inherit;color:var(--txt);outline:none}
 .auth-card{width:100%;max-width:420px;padding:36px 28px;text-align:center;animation:fadeUp .5s ease}
 .vpn-notice{background:rgba(212,175,55,.12);border:1px solid var(--gold);color:var(--gold);font-size:12.5px;font-weight:700;border-radius:10px;padding:10px 12px;margin-bottom:20px}
 @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
-.brand-logo{width:64px;height:64px;border-radius:14px;margin:0 auto 16px;background:var(--gold);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:22px;letter-spacing:1px;color:#101010}
+.brand-logo{width:64px;height:64px;border-radius:14px;margin:0 auto 16px;overflow:hidden;background:#101010}
+.brand-logo img{width:100%;height:100%;object-fit:cover}
 .brand-title{font-size:19px;font-weight:600;color:var(--txt);letter-spacing:.2px}
 .brand-sub{font-size:11px;color:var(--muted);margin-top:4px;margin-bottom:28px;letter-spacing:.5px;text-transform:uppercase}
 .tabbar{display:flex;background:var(--bg3);border-radius:10px;padding:4px;margin-bottom:20px}
@@ -56,7 +58,8 @@ input,textarea,select{font-family:inherit;color:var(--txt);outline:none}
 #appShell{display:flex;height:100vh}
 .sidebar{width:270px;flex-shrink:0;background:linear-gradient(180deg,#141414,#1c1c1c);border-inline-start:2px solid var(--gold);display:flex;flex-direction:column;padding:18px;overflow-y:auto}
 .sb-logo{display:flex;align-items:center;gap:10px;padding-bottom:16px;margin-bottom:16px;border-bottom:1px solid #2a2a2a}
-.sb-logo .ic{width:42px;height:42px;border-radius:10px;background:linear-gradient(135deg,var(--gold),var(--gold-light));display:flex;align-items:center;justify-content:center;font-weight:800;color:#101010}
+.sb-logo .ic{width:42px;height:42px;border-radius:10px;overflow:hidden;background:#101010}
+.sb-logo .ic img{width:100%;height:100%;object-fit:cover}
 .sb-logo h1{font-size:16px;color:var(--gold);font-weight:800}
 .sb-logo p{font-size:10px;color:var(--muted)}
 .nav-item{display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:10px;font-size:13px;color:#ccc;margin-bottom:4px;transition:.2s;text-align:right;width:100%}
@@ -214,8 +217,8 @@ textarea.ta{width:100%;min-height:130px;padding:14px;background:var(--bg3);borde
 <div id="authScreen">
  <div class="auth-card glass">
  <div class="vpn-notice" data-i18n="vpnNotice">لطفاً VPN را روشن کنید</div>
- <div class="brand-logo">A</div>
- <div class="brand-title" data-i18n="brandTitle">هوش مصنوعی همه‌کاره Alpha</div>
+ <div class="brand-logo"><img src="icon-192.png" alt="Alpha"></div>
+ <div class="brand-title" data-i18n="brandTitle">هوش مصنوعی Alpha</div>
  <div class="brand-sub">Alpha AI</div>
 
  <div class="auth-tabs">
@@ -245,7 +248,7 @@ textarea.ta{width:100%;min-height:130px;padding:14px;background:var(--bg3);borde
 <div id="appShell" class="hidden">
  <aside class="sidebar" id="sidebar">
  <div class="sb-logo">
- <div class="ic">A</div>
+ <div class="ic"><img src="icon-192.png" alt="Alpha"></div>
  <div><h1>Alpha</h1><p data-i18n="sbTagline">هوش مصنوعی همه‌کاره</p></div>
  </div>
  <button class="nav-item active" data-nav="assistants" onclick="app.nav('assistants')" data-i18n="navAssistants">دستیارها</button>
@@ -474,7 +477,7 @@ textarea.ta{width:100%;min-height:130px;padding:14px;background:var(--bg3);borde
 
 <script>
 /* =====================================================================
- هوش مصنوعی همه‌کاره Alpha
+ هوش مصنوعی Alpha
  نکته مهم امنیتی: هیچ کلید API‌ای در این فایل وجود ندارد و نباید اضافه شود.
  تمام درخواست‌های هوش مصنوعی از طریق بک‌اند (backend/server.js) انجام
  می‌شود که کلید Groq را به‌صورت GitHub Secret / متغیر محیطی نگه می‌دارد.
@@ -641,7 +644,7 @@ const store = {
 
 const TRANSLATIONS = {
  fa: {
- vpnNotice: "لطفاً VPN را روشن کنید", brandTitle: "هوش مصنوعی همه‌کاره Alpha",
+ vpnNotice: "لطفاً VPN را روشن کنید", brandTitle: "هوش مصنوعی Alpha",
  tabLogin: "ورود", tabRegister: "ثبت‌نام", lblEmail: "ایمیل", lblPass: "رمز عبور",
  btnLoginSubmit: "ورود", lblName: "نام", phName: "نام شما", phMinPass: "حداقل ۶ کاراکتر",
  btnRegisterSubmit: "ساخت حساب", creatorLine: "سازنده: نیما حجتی",
@@ -680,7 +683,7 @@ const TRANSLATIONS = {
  grpAppearance: "ظاهر", rowGlass: "حالت تیره + طلایی (Glassmorphism)",
  grpAbout: "درباره", rowAboutAlpha: "درباره Alpha", rowPrivacy: "حریم خصوصی",
  modalAboutTitle: "درباره ما",
- modalAboutBody: "هوش مصنوعی همه‌کاره Alpha یک دستیار هوش مصنوعی برای چت، ترجمه متن، ترجمه اسناد PDF و بسیاری از کارهای دیگر است.",
+ modalAboutBody: "هوش مصنوعی Alpha یک دستیار هوش مصنوعی برای چت، ترجمه متن، ترجمه اسناد PDF و بسیاری از کارهای دیگر است.",
  modalPrivacyTitle: "حریم خصوصی",
  modalPrivacyBody: "پیام‌ها برای پردازش به سرور ارسال می‌شوند و کلید API هرگز در برنامه ذخیره نمی‌شود. تاریخچه به‌صورت محلی روی همین دستگاه نگه‌داری می‌شود.",
  creatorTitle: "سازنده",
@@ -697,7 +700,7 @@ const TRANSLATIONS = {
  welcomeMsg: "سلام! من Alpha هستم، هوش مصنوعی همه‌کاره. چطور می‌تونم کمکتون کنم؟",
  },
  en: {
- vpnNotice: "Please turn on VPN", brandTitle: "All-in-one AI Alpha",
+ vpnNotice: "Please turn on VPN", brandTitle: "AI Alpha",
  tabLogin: "Login", tabRegister: "Register", lblEmail: "Email", lblPass: "Password",
  btnLoginSubmit: "Login", lblName: "Name", phName: "Your name", phMinPass: "At least 6 characters",
  btnRegisterSubmit: "Create Account", creatorLine: "Creator: Nima Hojjati",
