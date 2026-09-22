@@ -794,7 +794,6 @@ const app = {
  const u = store.get("pta_currentUser", null);
  if (u) { this.enterApp(u); }
  },
-
  /* ---------------- AUTH (email + password) ---------------- */
  switchAuthTab(tab) {
  document.getElementById("tabLoginBtn").classList.toggle("active", tab === "login");
@@ -810,7 +809,7 @@ const app = {
  const pass2 = document.getElementById("regPass2").value;
  const msg = document.getElementById("authMsg");
  if (!name || !email || !pass || !pass2) { msg.textContent = "همه فیلدها را پر کنید."; return; }
- if (!email.endsWith("@gmail.com")) { msg.textContent = "ایمیل باید با gmail.com@ باشد."; return; }
+ if (!email.endsWith("@gmail.com")) { msg.textContent = "ایمیل اشتباه است."; return; }
  if (pass.length < 6) { msg.textContent = "رمز عبور باید حداقل ۶ کاراکتر باشد."; return; }
  if (pass !== pass2) { msg.textContent = "رمز اشتباه است."; return; }
  const users = store.get("pta_users", {});
@@ -823,10 +822,11 @@ const app = {
  const email = document.getElementById("loginEmail").value.trim().toLowerCase();
  const pass = document.getElementById("loginPass").value;
  const msg = document.getElementById("authMsg");
- if (!email.endsWith("@gmail.com")) { msg.textContent = "ایمیل باید با gmail.com@ باشد."; return; }
+ if (!email.endsWith("@gmail.com")) { msg.textContent = "ایمیل اشتباه است."; return; }
  const users = store.get("pta_users", {});
  const u = users[email];
- if (!u || u.pass !== pass) { msg.textContent = "ایمیل یا رمز عبور اشتباه است."; return; }
+ if (!u) { msg.textContent = "ایمیل اشتباه است."; return; }
+ if (u.pass !== pass) { msg.textContent = "رمز عبور اشتباه است."; return; }
  this.enterApp({ name: u.name, email: u.email });
  },
  enterApp(user) {
