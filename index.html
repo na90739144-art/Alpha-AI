@@ -227,15 +227,16 @@ textarea.ta{width:100%;min-height:130px;padding:14px;background:var(--bg3);borde
  </div>
 
  <div id="formLogin">
- <div class="field"><label data-i18n="lblEmail">ایمیل</label><input type="email" id="loginEmail" placeholder="example@mail.com"></div>
+ <div class="field"><label data-i18n="lblEmail">ایمیل</label><input type="email" id="loginEmail" placeholder="example@gmail.com"></div>
  <div class="field"><label data-i18n="lblPass">رمز عبور</label><input type="password" id="loginPass" placeholder="••••••••"></div>
  <button class="btn-primary" onclick="app.login()" data-i18n="btnLoginSubmit">ورود</button>
  </div>
 
  <div id="formRegister" class="hidden">
  <div class="field"><label data-i18n="lblName">نام</label><input type="text" id="regName" placeholder="نام شما" data-i18n-ph="phName"></div>
- <div class="field"><label data-i18n="lblEmail">ایمیل</label><input type="email" id="regEmail" placeholder="example@mail.com"></div>
- <div class="field"><label data-i18n="lblPass">رمز عبور</label><input type="password" id="regPass" placeholder="حداقل ۶ کاراکتر" data-i18n-ph="phMinPass"></div>
+ <div class="field"><label data-i18n="lblEmail">ایمیل</label><input type="email" id="regEmail" placeholder="example@gmail.com"></div>
+ <div class="field"><label>رمز ورود جدید</label><input type="password" id="regPass" placeholder="حداقل ۶ کاراکتر" data-i18n-ph="phMinPass"></div>
+ <div class="field"><label>تکرار رمز ورود</label><input type="password" id="regPass2" placeholder="حداقل ۶ کاراکتر" data-i18n-ph="phMinPass"></div>
  <button class="btn-primary" onclick="app.register()" data-i18n="btnRegisterSubmit">ساخت حساب</button>
  </div>
 
@@ -641,6 +642,11 @@ const store = {
  get(k, d) { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch { return d; } },
  set(k, v) { localStorage.setItem(k, JSON.stringify(v)); },
 };
+// کلید ذخیره‌سازی مخصوص هر کاربر (تاریخچه هر ایمیل جدا از بقیه ذخیره می‌شود)
+function uk(base) {
+ const email = (state.user && state.user.email) || "guest";
+ return base + "__" + email;
+}
 
 const TRANSLATIONS = {
  fa: {
@@ -801,9 +807,12 @@ const app = {
  const name = document.getElementById("regName").value.trim();
  const email = document.getElementById("regEmail").value.trim().toLowerCase();
  const pass = document.getElementById("regPass").value;
+ const pass2 = document.getElementById("regPass2").value;
  const msg = document.getElementById("authMsg");
- if (!name || !email || !pass) { msg.textContent = "همه فیلدها را پر کنید."; return; }
+ if (!name || !email || !pass || !pass2) { msg.textContent = "همه فیلدها را پر کنید."; return; }
+ if (!email.endsWith("@gmail.com")) { msg.textContent = "ایمیل باید با gmail.com@ باشد."; return; }
  if (pass.length < 6) { msg.textContent = "رمز عبور باید حداقل ۶ کاراکتر باشد."; return; }
+ if (pass !== pass2) { msg.textContent = "رمز اشتباه است."; return; }
  const users = store.get("pta_users", {});
  if (users[email]) { msg.textContent = "این ایمیل قبلاً ثبت‌نام کرده است."; return; }
  users[email] = { name, email, pass };
@@ -814,6 +823,7 @@ const app = {
  const email = document.getElementById("loginEmail").value.trim().toLowerCase();
  const pass = document.getElementById("loginPass").value;
  const msg = document.getElementById("authMsg");
+ if (!email.endsWith("@gmail.com")) { msg.textContent = "ایمیل باید با gmail.com@ باشد."; return; }
  const users = store.get("pta_users", {});
  const u = users[email];
  if (!u || u.pass !== pass) { msg.textContent = "ایمیل یا رمز عبور اشتباه است."; return; }
@@ -972,9 +982,9 @@ const app = {
  },
  newChat() {
  state.currentChatId = "c_" + Date.now();
- const chats = store.get("pta_chats", {});
+ const chats = store.get(uk("pta_chats"), {});
  chats[state.currentChatId] = { id: state.currentChatId, title: "گفت‌وگوی جدید", messages: [], ts: Date.now() };
- store.set("pta_chats", chats);
+ store.set(uk("pta_chats"), chats);
  document.getElementById("chatArea").innerHTML = "";
  this.nav("chat");
  this.addChatBubble(this.tt("welcomeMsg"), "ai");
@@ -1012,7 +1022,7 @@ const app = {
  input.value = "";
  this.addChatBubble(text, "user");
 
- const chats = store.get("pta_chats", {});
+ const chats = store.get(uk("pta_chats"), {});
  const chat = chats[state.currentChatId];
  chat.messages.push({ role: "user", content: text });
  if (chat.messages.length === 1) chat.title = text.slice(0, 40);
@@ -1037,7 +1047,7 @@ const app = {
  this.addChatBubble("خطا: " + e.message, "ai");
  }
  chats[state.currentChatId] = chat;
- store.set("pta_chats", chats);
+ store.set(uk("pta_chats"), chats);
  this.renderSidebarHistory();
  },
  async handleChatFile(ev) {
@@ -1093,9 +1103,9 @@ const app = {
  { role: "user", content: `Translate the following text from ${srcLangName} to ${dstLangName}:\n\n${src}` },
  ]);
  dstBox.value = answer.trim();
- const list = store.get("pta_translations", []);
+ const list = store.get(uk("pta_translations"), []);
  list.unshift({ id: "t_" + Date.now(), src, dst: answer.trim(), from: srcLangName, to: dstLangName, ts: Date.now() });
- store.set("pta_translations", list.slice(0, 200));
+ store.set(uk("pta_translations"), list.slice(0, 200));
  this.renderSidebarHistory();
  } catch (e) {
  dstBox.value = "خطا: " + e.message;
@@ -1169,9 +1179,9 @@ const app = {
  document.getElementById("pdfResultWrap").classList.remove("hidden");
  btn.disabled = false;
 
- const list = store.get("pta_pdfs", []);
+ const list = store.get(uk("pta_pdfs"), []);
  list.unshift({ id: "p_" + Date.now(), name: this.pdfFile.name, ts: Date.now() });
- store.set("pta_pdfs", list.slice(0, 100));
+ store.set(uk("pta_pdfs"), list.slice(0, 100));
  this.renderSidebarHistory();
  },
  downloadPdfResult() {
@@ -1260,7 +1270,7 @@ const app = {
  },
  /* ---------------- HISTORY ---------------- */
  renderSidebarHistory() {
- const chats = Object.values(store.get("pta_chats", {})).sort((a, b) =>b.ts - a.ts).slice(0, 5);
+ const chats = Object.values(store.get(uk("pta_chats"), {})).sort((a, b) =>b.ts - a.ts).slice(0, 5);
  const wrap = document.getElementById("sbHistory");
  wrap.innerHTML = "";
  chats.forEach(c => {
@@ -1273,16 +1283,16 @@ const app = {
  this.renderHome();
  },
  renderHome() {
- const chats = Object.values(store.get("pta_chats", {})).sort((a, b) =>b.ts - a.ts).slice(0, 4);
+ const chats = Object.values(store.get(uk("pta_chats"), {})).sort((a, b) =>b.ts - a.ts).slice(0, 4);
  const wrap = document.getElementById("homeRecent");
  if (!wrap) return;
  wrap.innerHTML = chats.map(c => `<div class="hist-row glass"><div class="l"> <b>${this.esc(c.title)}</b></div></div>`).join("") || `<p style="color:var(--muted);font-size:12px">هنوز فعالیتی ثبت نشده است.</p>`;
  },
  renderHistory() {
  const q = (document.getElementById("histSearch").value || "").toLowerCase();
- const chats = Object.values(store.get("pta_chats", {}));
- const trans = store.get("pta_translations", []);
- const pdfs = store.get("pta_pdfs", []);
+ const chats = Object.values(store.get(uk("pta_chats"), {}));
+ const trans = store.get(uk("pta_translations"), []);
+ const pdfs = store.get(uk("pta_pdfs"), []);
  let rows = [];
  chats.forEach(c =>rows.push({ type: "chat", id: c.id, title: c.title, ts: c.ts, icon: "" }));
  trans.forEach(t =>rows.push({ type: "trans", id: t.id, title: `${t.src.slice(0, 30)}...`, ts: t.ts, icon: "" }));
@@ -1301,7 +1311,7 @@ const app = {
  },
  openChat(id) {
  state.currentChatId = id;
- const chats = store.get("pta_chats", {});
+ const chats = store.get(uk("pta_chats"), {});
  const chat = chats[id];
  document.getElementById("chatArea").innerHTML = "";
  chat.messages.forEach(m =>this.addChatBubble(m.content, m.role === "user" ? "user" : "ai"));
@@ -1309,9 +1319,9 @@ const app = {
  },
  deleteHistory(type, id) {
  if (!confirm("حذف شود؟")) return;
- if (type === "chat") { const c = store.get("pta_chats", {}); delete c[id]; store.set("pta_chats", c); }
- if (type === "trans") { store.set("pta_translations", store.get("pta_translations", []).filter(t =>t.id !== id)); }
- if (type === "pdf") { store.set("pta_pdfs", store.get("pta_pdfs", []).filter(p =>p.id !== id)); }
+ if (type === "chat") { const c = store.get(uk("pta_chats"), {}); delete c[id]; store.set(uk("pta_chats"), c); }
+ if (type === "trans") { store.set(uk("pta_translations"), store.get(uk("pta_translations"), []).filter(t =>t.id !== id)); }
+ if (type === "pdf") { store.set(uk("pta_pdfs"), store.get(uk("pta_pdfs"), []).filter(p =>p.id !== id)); }
  this.renderHistory();
  this.renderSidebarHistory();
  },
@@ -1358,9 +1368,9 @@ const app = {
 
  /* ---------------- HELPERS ---------------- */
  updateStats() {
- document.getElementById("statChats").textContent = Object.keys(store.get("pta_chats", {})).length;
- document.getElementById("statTrans").textContent = store.get("pta_translations", []).length;
- document.getElementById("statFiles").textContent = store.get("pta_pdfs", []).length;
+ document.getElementById("statChats").textContent = Object.keys(store.get(uk("pta_chats"), {})).length;
+ document.getElementById("statTrans").textContent = store.get(uk("pta_translations"), []).length;
+ document.getElementById("statFiles").textContent = store.get(uk("pta_pdfs"), []).length;
  },
  copyText(id) { navigator.clipboard.writeText(document.getElementById(id).value); },
  shareText(id) { this.shareRaw(document.getElementById(id).value); },
