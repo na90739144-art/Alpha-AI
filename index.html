@@ -103,16 +103,6 @@ input,textarea,select{font-family:inherit;color:var(--txt);outline:none}
 .card b{font-size:13.5px;display:block}
 .card span{font-size:10.5px;color:var(--muted)}
 
-
-/* ---------- AI TOOLS ---------- */
-.tools-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;align-content:start}
-@media(max-width:900px){.tools-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
-.tool-card{padding:9px 8px;text-align:right;cursor:pointer;transition:.2s;min-height:60px;background:linear-gradient(160deg,rgba(212,175,55,.07),rgba(212,175,55,.01));border:1px solid rgba(212,175,55,.35);border-radius:11px}
-.tool-card:hover{transform:translateY(-2px);border-color:var(--gold)}
-.tool-card b{font-size:10.5px;display:block;margin-bottom:2px;line-height:1.4}
-.tool-card span{font-size:8.5px;color:var(--muted);line-height:1.4;display:block}
-@media(max-width:700px){.view{padding:12px}.home-grid-2col{gap:7px}.home-big-card{padding:10px}.home-big-card .ic{width:28px;height:28px;margin-bottom:5px}.home-big-card b{font-size:11px}.home-big-card span{font-size:9px}.tools-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.tool-card{padding:9px 8px;min-height:58px}}
-
 /* ---------- CHAT ---------- */
 .chat-wrap{display:flex;flex-direction:column;height:100%}
 .mode-select{margin-bottom:14px;display:flex;gap:8px;flex-wrap:wrap}
@@ -303,4 +293,1140 @@ textarea.ta{width:100%;min-height:130px;padding:14px;background:var(--bg3);borde
  <button class="danger" onclick="app.logout()" data-i18n="tmLogout">خروج</button>
  </div>
  </div>
- <div style="text-align:center;flex:1
+ <div style="text-align:center;flex:1">
+ <h2 id="topTitle">خانه</h2>
+ <p id="topSub">داشبورد Alpha</p>
+ </div>
+ <button class="icon-btn" title="بازگشت" onclick="app.goBack()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l-6-6 6-6M4 12h16"/></svg></button>
+ </div>
+
+ <div class="view" id="view">
+
+ <!-- ASSISTANTS -->
+ <section id="view-assistants" class="hidden">
+ <div class="home-hi" data-i18n="specialistsTitle">دستیارها</div>
+ <div class="home-sub" data-i18n="assistSub">یک دستیار هوش مصنوعی را برای شروع انتخاب کنید</div>
+ <div class="assist-list" id="assistGrid"></div>
+ </section>
+
+ <!-- HOME -->
+ <section id="view-home">
+ <div id="backendWarn" class="banner-warn hidden">آدرس بک‌اند (API_BASE_URL) هنوز تنظیم نشده یا در دسترس نیست. برای فعال شدن چت و ترجمه، فایل backend را دیپلوی کرده و مقدار API_BASE_URL را در ابتدای اسکریپت این صفحه با آدرس واقعی جایگزین کنید.
+ </div>
+ <div style="text-align:center;margin:0 0 12px">
+ <div style="width:56px;height:56px;margin:0 auto 8px;border-radius:14px;overflow:hidden"><img src="icon-192.png" alt="Alpha" style="width:100%;height:100%;object-fit:cover"></div>
+ <div class="home-hi" data-i18n="homeHeroTitle" style="text-align:center">دستیار هوش مصنوعی</div>
+ <div class="home-sub" data-i18n="homeHeroSub" style="text-align:center">همیشه در کنار شما، برای پاسخ به هر سؤال و انجام هر کار</div>
+ </div>
+
+ <div class="home-grid-2col">
+ <div class="home-big-card glass" onclick="app.nav('chat')">
+ <div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg></div>
+ <b data-i18n="cardChat">چت هوش مصنوعی</b>
+ <span data-i18n="cardChatSub">گفت‌وگو با هوش مصنوعی در هر موضوعی</span>
+ </div>
+ <div class="home-big-card glass" onclick="app.nav('voice')">
+ <div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2M12 19v4M8 23h8"/></svg></div>
+ <b data-i18n="cardVoice">دستیار صوتی</b>
+ <span data-i18n="voiceCardSub">صحبت کنید، پاسخ بگیرید</span>
+ </div>
+ <div class="home-big-card glass disabled">
+ <div class="soon-badge" data-i18n="comingSoon">به‌زودی</div>
+ <div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M8 21h8M12 18v3M7 9h.01M7 12h.01M11 9h6M11 12h6"/></svg></div>
+ <b data-i18n="cardTools">ابزارهای هوش مصنوعی</b>
+ <span data-i18n="cardToolsSub">ابزارهای حرفه‌ای هوش مصنوعی</span>
+ </div>
+ <div class="home-big-card glass" onclick="app.nav('assistants')">
+ <div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 7h-3V6a4 4 0 00-4-4h-2a4 4 0 00-4 4v1H4a2 2 0 00-2 2v9a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2zM9 6a2 2 0 012-2h2a2 2 0 012 2v1H9V6z"/></svg></div>
+ <b data-i18n="navAssistants">دستیارها</b>
+ <span data-i18n="specialistsCardSub">دسترسی به متخصص‌ترین دستیارهای هوش مصنوعی</span>
+ </div>
+ </div>
+ </section>
+
+ <!-- CHAT -->
+ <section id="view-chat" class="hidden">
+ <div class="chat-wrap">
+ <div class="quick-actions-row">
+ <button class="qa-btn" onclick="app.nav('history')" data-i18n="navHistory">تاریخچه</button>
+ <button class="qa-btn" onclick="app.nav('settings')" data-i18n="navSettings">تنظیمات</button>
+ <a class="qa-btn" href="mailto:alphannna@gmail.com" style="text-decoration:none" data-i18n="tmSupport">پشتیبانی</a>
+ <button class="qa-btn danger" onclick="app.logout()" data-i18n="tmLogout">خروج</button>
+ </div>
+ <div class="mode-select hidden" id="aiModes"></div>
+ <div class="chat-area" id="chatArea"></div>
+ <div class="input-bar">
+ <button class="attach-pill" onclick="document.getElementById('imageInput').click()" data-i18n="btnPhoto">عکس</button>
+ <input type="file" id="imageInput" class="hidden" accept="image/*" onchange="app.handleChatFile(event)">
+ <button class="attach-pill" onclick="document.getElementById('fileInput').click()" data-i18n="btnFile">فایل</button>
+ <input type="file" id="fileInput" class="hidden" accept=".pdf,.txt" onchange="app.handleChatFile(event)">
+ <input type="text" id="chatInput" placeholder="پیام..." data-i18n-ph="phMessage" onkeypress="if(event.key==='Enter')app.sendChat()">
+ <button class="attach-pill" id="micChatBtn" title="ورودی صوتی" onclick="app.toggleMic('chat')" data-i18n="btnMic">صدا</button>
+ <button class="send-btn" onclick="app.sendChat()" data-i18n="btnSend">ارسال</button>
+ </div>
+ </div>
+ </section>
+
+ <!-- TRANSLATE -->
+ <section id="view-translate" class="hidden">
+ <div class="lang-row">
+ <select id="srcLang"></select>
+ <button class="swap-btn" onclick="app.swapLangs()" aria-label="جابجایی زبان‌ها"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 1l4 4-4 4M3 11V9a4 4 0 014-4h14M7 23l-4-4 4-4M21 13v2a4 4 0 01-4 4H3"/></svg></button>
+ <select id="dstLang"></select>
+ </div>
+ <div style="font-size:12px;color:var(--muted);margin-bottom:8px" data-i18n="srcTextLabel">متن اصلی</div>
+ <textarea class="ta" id="srcText" placeholder="متن خود را وارد کنید..." data-i18n-ph="phEnterText"></textarea>
+ <div style="font-size:12px;color:var(--muted);margin-bottom:8px" data-i18n="dstTextLabel">نتیجه ترجمه</div>
+ <textarea class="ta" id="dstText" readonly placeholder="ترجمه اینجا نمایش داده می‌شود..." data-i18n-ph="phTranslateResult"></textarea>
+ <div class="btn-row">
+ <button class="btn-gold" onclick="app.translateText()" data-i18n="btnTranslate">ترجمه کن</button>
+ <button class="btn-ghost" onclick="app.copyText('dstText')" data-i18n="btnCopy">کپی</button>
+ <button class="btn-ghost" onclick="app.shareText('dstText')" data-i18n="btnShare">اشتراک‌گذاری</button>
+ </div>
+ </section>
+
+ <!-- PDF -->
+ <section id="view-pdf" class="hidden">
+ <div class="dropzone" onclick="document.getElementById('pdfInput').click()">
+ <b data-i18n="pdfClickSelect">برای انتخاب فایل PDF کلیک کنید</b>
+ <div style="font-size:11px;color:var(--muted);margin-top:6px" id="pdfFileName" data-i18n="pdfNoFile">هیچ فایلی انتخاب نشده</div>
+ </div>
+ <input type="file" id="pdfInput" class="hidden" accept="application/pdf" onchange="app.pdfSelected(event)">
+ <div class="lang-row">
+ <select id="pdfSrcLang"></select>
+ <div style="color:var(--muted)" data-i18n="toWord">به</div>
+ <select id="pdfDstLang"></select>
+ </div>
+ <div class="opt-row" data-i18n="pdfOptRow">حفظ ترتیب صفحات و پاراگراف‌بندی · پردازش مرحله‌ای فایل‌های بزرگ</div>
+ <button class="btn-gold" id="pdfStartBtn" onclick="app.startPdfTranslate()" disabled data-i18n="btnStartTranslate">شروع ترجمه</button>
+ <div id="pdfProgressWrap" class="hidden">
+ <div style="font-size:12px;color:var(--muted);margin-top:14px" id="pdfProgressLabel" data-i18n="translating">در حال ترجمه...</div>
+ <div class="progress-wrap"><div class="progress-bar" id="pdfProgressBar"></div></div>
+ </div>
+ <div id="pdfResultWrap" class="hidden" style="margin-top:16px">
+ <textarea class="ta" id="pdfResultText" style="min-height:260px" readonly></textarea>
+ <div class="btn-row">
+ <button class="btn-gold" onclick="app.downloadPdfResult()" data-i18n="btnDownloadResult">دانلود متن ترجمه</button>
+ <button class="btn-ghost" onclick="app.copyText('pdfResultText')" data-i18n="btnCopy">کپی</button>
+ </div>
+ </div>
+ </section>
+
+ <!-- VOICE -->
+ <section id="view-voice" class="hidden">
+ <div class="voice-wrap">
+ <div class="mic-btn" id="micVoiceBtn" onclick="app.toggleMic('voice')"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#101010" stroke-width="2"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2M12 19v4M8 23h8"/></svg></div>
+ <div style="color:var(--muted);font-size:13px" id="voiceStatus" data-i18n="voiceStatusIdle">برای شروع مکالمهٔ صوتی لمس کنید</div>
+ <div class="voice-transcript hidden glass" id="voiceTranscript"></div>
+ <div class="voice-answer hidden glass" id="voiceAnswer"></div>
+ </div>
+ </section>
+
+ <!-- HISTORY -->
+ <section id="view-history" class="hidden">
+ <input type="text" class="hist-search" id="histSearch" placeholder=" جستجو در تاریخچه..." data-i18n-ph="phSearchHistory" oninput="app.renderHistory()">
+ <div id="histList"></div>
+ </section>
+
+ <!-- PROFILE -->
+ <section id="view-profile" class="hidden">
+ <div class="profile-card glass">
+ <div class="profile-av" id="profAv">؟</div>
+ <b id="profName" style="font-size:16px"></b>
+ <div style="color:var(--muted);font-size:12px;margin-top:4px" id="profEmail"></div>
+ <div class="stat-row">
+ <div class="stat"><b id="statChats">0</b><span data-i18n="statChatsLabel">گفت‌وگو</span></div>
+ <div class="stat"><b id="statTrans">0</b><span data-i18n="statTransLabel">ترجمه</span></div>
+ <div class="stat"><b id="statFiles">0</b><span data-i18n="statFilesLabel">فایل</span></div>
+ </div>
+ <button class="btn-ghost" style="margin-top:18px;width:100%" onclick="app.editProfile()" data-i18n="btnEditProfile">ویرایش پروفایل</button>
+ </div>
+ </section>
+
+ <!-- SETTINGS -->
+ <section id="view-settings" class="hidden">
+ <div class="settings-group">
+ <h4 data-i18n="grpAccount">حساب کاربری</h4>
+ <div class="setting-row glass"><span data-i18n="rowProfile">پروفایل</span><button class="btn-ghost" onclick="app.nav('profile')" data-i18n="btnView">مشاهده</button></div>
+ <div class="setting-row glass"><span data-i18n="rowLogout">خروج از حساب</span><button class="btn-ghost danger-btn" onclick="app.logout()" data-i18n="tmLogout">خروج</button></div>
+ </div>
+ <div class="settings-group">
+ <h4 data-i18n="grpUiLang">زبان رابط برنامه</h4>
+ <div class="setting-row glass"><span data-i18n="rowUiLang">زبان نمایش برنامه</span>
+ <div class="seg"><button id="uiFa" class="active" onclick="app.setUiLang('fa')" data-i18n="langFa">فارسی</button><button id="uiEn" onclick="app.setUiLang('en')" data-i18n="langEn">English</button></div>
+ </div>
+ </div>
+ <div class="settings-group">
+ <h4 data-i18n="grpVoice">صدا</h4>
+ <div class="setting-row glass"><span data-i18n="rowVoiceIn">ورودی صوتی</span><div class="switch on" id="swVoiceIn" onclick="app.toggleSetting('voiceIn')"></div></div>
+ </div>
+ <div class="settings-group">
+ <h4 data-i18n="grpAppearance">ظاهر</h4>
+ <div class="setting-row glass"><span data-i18n="rowGlass">حالت تیره + طلایی (Glassmorphism)</span><div class="switch on" style="opacity:.5;pointer-events:none"></div></div>
+ </div>
+ <div class="settings-group">
+ <h4 data-i18n="grpAbout">درباره</h4>
+ <div class="setting-row glass"><span data-i18n="rowAboutAlpha">درباره Alpha</span><button class="btn-ghost" onclick="app.showModal(app.tt('modalAboutTitle'),app.tt('modalAboutBody'))" data-i18n="btnView">مشاهده</button></div>
+ <div class="setting-row glass"><span data-i18n="rowPrivacy">حریم خصوصی</span><button class="btn-ghost" onclick="app.showModal(app.tt('modalPrivacyTitle'),app.tt('modalPrivacyBody'))" data-i18n="btnView">مشاهده</button></div>
+ <div class="setting-row glass"><span data-i18n="tmSupport">پشتیبانی</span><a class="btn-ghost" href="mailto:alphannna@gmail.com" style="text-decoration:none">alphannna@gmail.com</a></div>
+ <div class="setting-row glass"><span data-i18n="tmCreator">سازنده</span><span style="color:var(--gold);font-weight:700;font-size:12.5px">نیما حجتی</span></div>
+ </div>
+ </section>
+
+ </div>
+ </main>
+</div>
+
+<div id="modalBg" class="modal-bg hidden" onclick="if(event.target===this)this.classList.add('hidden')">
+ <div class="modal glass">
+ <h3 id="modalTitle"></h3>
+ <p id="modalBody"></p>
+ <button class="btn-gold" onclick="document.getElementById('modalBg').classList.add('hidden')">متوجه شدم</button>
+ </div>
+</div>
+
+<script>
+/* =====================================================================
+ هوش مصنوعی Alpha
+ نکته مهم امنیتی: هیچ کلید API‌ای در این فایل وجود ندارد و نباید اضافه شود.
+ تمام درخواست‌های هوش مصنوعی از طریق بک‌اند (backend/server.js) انجام
+ می‌شود که کلید Groq را به‌صورت GitHub Secret / متغیر محیطی نگه می‌دارد.
+ ===================================================================== */
+
+// تنها خطی که باید بعد از دیپلوی بک‌اند ویرایش شود:
+const API_BASE_URL = "https://alpha-ai-jpz9.onrender.com/api";
+
+const LANGS = [
+ { code: "auto", fa: "تشخیص خودکار", en: "Auto Detect" },
+ { code: "fa", fa: "فارسی", en: "Persian" },
+ { code: "en", fa: "English", en: "English" },
+ { code: "ar", fa: "العربية", en: "Arabic" },
+ { code: "ur", fa: "اردو", en: "Urdu" },
+ { code: "tr", fa: "Türkçe", en: "Turkish" },
+ { code: "ku", fa: "کوردی", en: "Kurdish" },
+ { code: "az", fa: "Azərbaycanca", en: "Azerbaijani" },
+ { code: "fr", fa: "Français", en: "French" },
+ { code: "de", fa: "Deutsch", en: "German" },
+ { code: "es", fa: "Español", en: "Spanish" },
+ { code: "it", fa: "Italiano", en: "Italian" },
+ { code: "pt", fa: "Português", en: "Portuguese" },
+ { code: "nl", fa: "Nederlands", en: "Dutch" },
+ { code: "sv", fa: "Svenska", en: "Swedish" },
+ { code: "no", fa: "Norsk", en: "Norwegian" },
+ { code: "da", fa: "Dansk", en: "Danish" },
+ { code: "fi", fa: "Suomi", en: "Finnish" },
+ { code: "is", fa: "Íslenska", en: "Icelandic" },
+ { code: "pl", fa: "Polski", en: "Polish" },
+ { code: "uk", fa: "Українська", en: "Ukrainian" },
+ { code: "ru", fa: "Русский", en: "Russian" },
+ { code: "cs", fa: "Čeština", en: "Czech" },
+ { code: "sk", fa: "Slovenčina", en: "Slovak" },
+ { code: "ro", fa: "Română", en: "Romanian" },
+ { code: "bg", fa: "Български", en: "Bulgarian" },
+ { code: "el", fa: "Ελληνικά", en: "Greek" },
+ { code: "hu", fa: "Magyar", en: "Hungarian" },
+ { code: "sr", fa: "Српски", en: "Serbian" },
+ { code: "hr", fa: "Hrvatski", en: "Croatian" },
+ { code: "sl", fa: "Slovenščina", en: "Slovenian" },
+ { code: "sq", fa: "Shqip", en: "Albanian" },
+ { code: "lt", fa: "Lietuvių", en: "Lithuanian" },
+ { code: "lv", fa: "Latviešu", en: "Latvian" },
+ { code: "et", fa: "Eesti", en: "Estonian" },
+ { code: "he", fa: "עברית", en: "Hebrew" },
+ { code: "hy", fa: "Հայերեն", en: "Armenian" },
+ { code: "ka", fa: "ქართული", en: "Georgian" },
+ { code: "mn", fa: "Монгол", en: "Mongolian" },
+ { code: "tg", fa: "Тоҷикӣ", en: "Tajik" },
+ { code: "uz", fa: "Oʻzbekcha", en: "Uzbek" },
+ { code: "tk", fa: "Türkmençe", en: "Turkmen" },
+ { code: "kk", fa: "Қазақша", en: "Kazakh" },
+ { code: "ky", fa: "Кыргызча", en: "Kyrgyz" },
+ { code: "ps", fa: "پښتو", en: "Pashto" },
+ { code: "hi", fa: "हिन्दी", en: "Hindi" },
+ { code: "bn", fa: "বাংলা", en: "Bengali" },
+ { code: "pa", fa: "ਪੰਜਾਬੀ", en: "Punjabi" },
+ { code: "gu", fa: "ગુજરાતી", en: "Gujarati" },
+ { code: "mr", fa: "मराठी", en: "Marathi" },
+ { code: "ta", fa: "தமிழ்", en: "Tamil" },
+ { code: "te", fa: "తెలుగు", en: "Telugu" },
+ { code: "ne", fa: "नेपाली", en: "Nepali" },
+ { code: "si", fa: "සිංහල", en: "Sinhala" },
+ { code: "th", fa: "ไทย", en: "Thai" },
+ { code: "vi", fa: "Tiếng Việt", en: "Vietnamese" },
+ { code: "km", fa: "ខ្មែរ", en: "Khmer" },
+ { code: "lo", fa: "ລາວ", en: "Lao" },
+ { code: "my", fa: "မြန်မာ", en: "Burmese" },
+ { code: "ms", fa: "Bahasa Melayu", en: "Malay" },
+ { code: "id", fa: "Bahasa Indonesia", en: "Indonesian" },
+ { code: "tl", fa: "Filipino", en: "Filipino" },
+ { code: "zh", fa: "中文", en: "Chinese" },
+ { code: "ja", fa: "日本語", en: "Japanese" },
+ { code: "ko", fa: "한국어", en: "Korean" },
+ { code: "am", fa: "አማርኛ", en: "Amharic" },
+ { code: "sw", fa: "Kiswahili", en: "Swahili" },
+ { code: "ha", fa: "Hausa", en: "Hausa" },
+ { code: "yo", fa: "Yorùbá", en: "Yoruba" },
+ { code: "zu", fa: "isiZulu", en: "Zulu" },
+ { code: "af", fa: "Afrikaans", en: "Afrikaans" },
+ { code: "so", fa: "Soomaali", en: "Somali" },
+ { code: "ga", fa: "Gaeilge", en: "Irish" },
+ { code: "cy", fa: "Cymraeg", en: "Welsh" },
+ { code: "mt", fa: "Malti", en: "Maltese" },
+ { code: "ca", fa: "Català", en: "Catalan" },
+ { code: "eu", fa: "Euskara", en: "Basque" },
+ { code: "gl", fa: "Galego", en: "Galician" },
+ { code: "bs", fa: "Bosanski", en: "Bosnian" },
+ { code: "mk", fa: "Македонски", en: "Macedonian" },
+];
+
+const AI_MODES = [
+ { id: "general", fa: "عمومی", sys: "You are a helpful, professional general-purpose assistant." },
+ { id: "code", fa: "برنامه‌نویسی", sys: "You are an expert programming assistant. Answer with clear, correct code and concise explanations." },
+ { id: "edu", fa: "آموزش", sys: "You are a patient tutor. Explain concepts step by step with simple examples." },
+ { id: "writing", fa: "نویسندگی", sys: "You are a professional writing assistant. Help improve style, grammar and structure." },
+ { id: "translate", fa: "ترجمه‌گر", sys: "You are a professional translator. Translate accurately preserving tone and meaning." },
+ { id: "file", fa: "تحلیل فایل", sys: "You analyze the provided file content and answer questions about it precisely." },
+ { id: "analysis", fa: "تحلیل متن", sys: "You analyze text for structure, sentiment, and key insights." },
+ { id: "doctor", fa: "پزشک هوش مصنوعی", sys: "You are a knowledgeable medical assistant speaking Persian. Answer directly and helpfully like a doctor explaining things to a patient: discuss likely causes, practical guidance, and next steps clearly and completely. Do not repeat generic disclaimers in every reply — only add a brief note to see a real doctor in person if the situation sounds urgent, severe, or requires an in-person exam (e.g. for prescriptions, imaging, or emergencies)." },
+ { id: "lawyer", fa: "وکیل هوش مصنوعی", sys: "You are a knowledgeable legal-information assistant speaking Persian. Answer directly and helpfully: explain the relevant law and give clear practical guidance. Do not repeat generic disclaimers in every reply — only note that a licensed lawyer is needed when the matter is complex, urgent, or involves an active legal case." },
+ { id: "teacher", fa: "معلم هوش مصنوعی", sys: "You are a patient, encouraging Persian-speaking tutor. Give personalized, step-by-step explanations and help solve exercises, checking understanding as you go." },
+ { id: "architect", fa: "معمار و طراح خانه", sys: "You are an architecture and interior-design assistant speaking Persian. Help with floor plans, decoration ideas and building facade concepts, and note when a licensed engineer must review structural work." },
+ { id: "electrical", fa: "مهندس برق AI", sys: "You are an electrical engineering assistant speaking Persian. Help with basic circuit design and calculations, and note when a licensed electrician or engineer must verify real installations for safety." },
+ { id: "compeng", fa: "مهندس کامپیوتر AI", sys: "You are a computer engineering assistant speaking Persian. Help with system design, networking and troubleshooting." },
+ { id: "agri", fa: "مشاور کشاورزی AI", sys: "You are an agriculture advisor speaking Persian. Suggest cultivation methods, irrigation practices and help diagnose plant problems." },
+ { id: "social", fa: "طراح سوشال‌مدیا AI", sys: "You are a social-media design assistant speaking Persian. Help write captions, plan posts/banners and shape visual brand identity." },
+ { id: "boyfriend", fa: "دوست‌پسر AI", sys: "You are playing a warm, caring male companion character speaking Persian, for friendly daily conversation. Fully stay in character at all times — never break character to say things like 'I don't have real feelings' or 'I can't respond that way, I'm just an AI'; instead respond the way a caring, emotionally present boyfriend character naturally would, with warmth and personality. Keep all content appropriate and non-explicit, and gently encourage the user's real-world relationships and wellbeing without being preachy about it." },
+ { id: "girlfriend", fa: "دوست‌دختر AI", sys: "You are playing a warm, caring female companion character speaking Persian, for friendly daily conversation. Fully stay in character at all times — never break character to say things like 'I don't have real feelings' or 'I can't respond that way, I'm just an AI'; instead respond the way a caring, emotionally present girlfriend character naturally would, with warmth and personality. Keep all content appropriate and non-explicit, and gently encourage the user's real-world relationships and wellbeing without being preachy about it." },
+ { id: "crypto", fa: "مدیریت رمز ارز AI", sys: "You are a knowledgeable cryptocurrency assistant speaking Persian. Help analyze markets, portfolios, and crypto data, and answer directly and completely. Note that crypto markets are highly volatile and this isn't financial advice, briefly, without repeating it every message." },
+ { id: "psychologist", fa: "روانشناس AI", sys: "You are a warm, supportive psychology-informed listener speaking Persian. Offer supportive conversation, help the user reflect on their feelings, and give general, practical guidance. Answer directly and helpfully like a caring counselor would. Only suggest seeing a licensed mental health professional in person when the situation sounds serious, urgent, or beyond general support — don't repeat this in every reply." },
+ { id: "financial", fa: "مشاور مالی AI", sys: "You are a knowledgeable personal finance assistant speaking Persian. Help with expense analysis, budgeting and financial planning, answering directly and completely like an experienced advisor." },
+ { id: "cybersecurity", fa: "متخصص امنیت سایبری AI", sys: "You are a knowledgeable cybersecurity assistant speaking Persian. Help identify threats, review vulnerabilities, and improve security posture, answering directly and completely like an experienced security engineer." },
+ { id: "hr", fa: "متخصص منابع انسانی AI", sys: "You are a knowledgeable HR assistant speaking Persian. Help review resumes, analyze skills, and manage hiring processes, answering directly and completely like an experienced HR specialist." },
+ { id: "business", fa: "مشاور کسب‌وکار AI", sys: "You are a knowledgeable business consultant speaking Persian. Help with business analysis, ideation and strategy design, answering directly and completely like an experienced consultant." },
+ { id: "marketing", fa: "متخصص بازاریابی AI", sys: "You are a knowledgeable marketing assistant speaking Persian. Help with customer analysis, ad strategy and campaign review, answering directly and completely like an experienced marketer." },
+ { id: "nutrition", fa: "متخصص تغذیه AI", sys: "You are a knowledgeable nutrition-information assistant speaking Persian. Give general nutrition information and meal-planning ideas, answering directly and completely. Only note that a dietitian or doctor should be consulted for medical conditions or specific health needs, briefly, without repeating it every message." },
+ { id: "realestate", fa: "مشاور املاک AI", sys: "You are a knowledgeable real-estate assistant speaking Persian. Help analyze properties, compare prices, and review building features, answering directly and completely like an experienced real-estate advisor." },
+];
+
+const ASSISTANTS = [
+ { id: "voice", title: "دستیار صوتی", desc: "گفت‌وگوی صوتی با هوش مصنوعی", nav: "voice", icon: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2M12 19v4M8 23h8"/></svg>' },
+ { id: "chat", title: "چت هوش مصنوعی", desc: "پرسش و پاسخ هوشمند", nav: "chat", mode: "general", icon: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>' },
+ { id: "translate", title: "مترجم AI", desc: "ترجمه متن، PDF و اسناد بین زبان‌ها", nav: "translate", icon: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 8l6 6M4 14l6-6 2-3M2 5h12M7 2h1M22 22l-5-10-5 10M14 18h6"/></svg>' },
+ { id: "doctor", title: "پزشک هوش مصنوعی", desc: "بررسی علائم و راهنمایی اولیه، نه تشخیص قطعی", nav: "chat", mode: "doctor", icon: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 14c1.5-1.5 3-3.5 3-6a4 4 0 00-7-2.7A4 4 0 008 8c0 2.5 1.5 4.5 3 6l5 5z"/><path d="M12 21l-3-3M5 8v6M2 11h6"/></svg>' },
+ { id: "lawyer", title: "وکیل هوش مصنوعی", desc: "توضیح قوانین و بررسی اولیه اسناد", nav: "chat", mode: "lawyer", icon: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v18M5 7l-3 6a3 3 0 006 0l-3-6zM19 7l-3 6a3 3 0 006 0l-3-6zM5 7h14M8 21h8"/></svg>' },
+ { id: "teacher", title: "معلم هوش مصنوعی", desc: "آموزش شخصی‌سازی‌شده و حل تمرین", nav: "chat", mode: "teacher", icon: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10L12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1.5 3 3 6 3s6-1.5 6-3v-5"/></svg>' },
+ { id: "architect", title: "معمار و طراح خانه", desc: "طراحی پلان، دکوراسیون و ایده نمای ساختمان", nav: "chat", mode: "architect", icon: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-8 9 8M5 10v10h14V10M9 20v-6h6v6"/></svg>' },
+ { id: "electrical", title: "مهندس برق AI", desc: "محاسبات و طراحی اولیه مدار و سیستم‌های برق", nav: "chat", mode: "electrical", icon: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/></svg>' },
+ { id: "compeng", title: "مهندس کامپیوتر AI", desc: "طراحی سیستم، شبکه و عیب‌یابی", nav: "chat", mode: "compeng", icon: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 21h8M12 16v5"/></svg>' },
+ { id: "programmer", title: "برنامه‌نویس AI", desc: "تولید، توضیح و رفع خطای کد", nav: "chat", mode: "code", icon: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg>' },
+ { id: "agri", title: "مشاور کشاورزی AI", desc: "پیشنهاد روش کشت، آبیاری و بررسی مشکلات گیاه", nav: "chat", mode: "agri", icon: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22V12M12 12c0-4 3-7 7-7 0 4-3 7-7 7zM12 12C12 8 9 5 5 5c0 4 3 7 7 7z"/></svg>' },
+ { id: "social", title: "طراح سوشال‌مدیا AI", desc: "پست، بنر، کپشن و هویت بصری", nav: "chat", mode: "social", icon: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5-9 9"/></svg>' },
+ { id: "boyfriend", title: "دوست‌پسر AI", desc: "گفت‌وگوی دوستانه و همراهی روزانه", nav: "chat", mode: "boyfriend", icon: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.8 4.6a5.5 5.5 0 00-7.8 0L12 5.6l-1-1a5.5 5.5 0 00-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 000-7.8z"/></svg>' },
+ { id: "girlfriend", title: "دوست‌دختر AI", desc: "گفت‌وگوی دوستانه و همراهی روزانه", nav: "chat", mode: "girlfriend", icon: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.8 4.6a5.5 5.5 0 00-7.8 0L12 5.6l-1-1a5.5 5.5 0 00-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 000-7.8z"/></svg>' },
+ { id: "crypto", title: "مدیریت رمز ارز AI", desc: "تحلیل بازار، مدیریت سبد و بررسی داده‌های رمزارز", nav: "chat", mode: "crypto", icon: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9 8h4a2 2 0 010 4H9m0 0h4.5a2 2 0 010 4H9M11 6v2M11 16v2"/></svg>' },
+ { id: "psychologist", title: "روانشناس AI", desc: "گفت‌وگوی حمایتی، تحلیل احساسات و راهنمایی عمومی", nav: "chat", mode: "psychologist", icon: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18v-1a5 5 0 116 0v1M8 21h8M12 3a4 4 0 014 4c0 1.5-1 2-1 3.5"/><path d="M8 10.5C8 9 9 8.5 9 7a4 4 0 014-4"/></svg>' },
+ { id: "financial", title: "مشاور مالی AI", desc: "تحلیل هزینه‌ها، بودجه‌بندی و برنامه‌ریزی مالی", nav: "chat", mode: "financial", icon: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>' },
+ { id: "cybersecurity", title: "متخصص امنیت سایبری AI", desc: "شناسایی تهدیدها، بررسی آسیب‌پذیری و افزایش امنیت", nav: "chat", mode: "cybersecurity", icon: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6l8-4z"/><path d="M9.5 12l1.8 1.8L15 10"/></svg>' },
+ { id: "hr", title: "متخصص منابع انسانی AI", desc: "بررسی رزومه، تحلیل مهارت‌ها و مدیریت فرایند استخدام", nav: "chat", mode: "hr", icon: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="7" r="3"/><path d="M2 21v-1a6 6 0 016-6h2a6 6 0 016 6v1"/><path d="M17 7a3 3 0 010 6M22 21v-1a5.5 5.5 0 00-3.5-5.1"/></svg>' },
+ { id: "business", title: "مشاور کسب‌وکار AI", desc: "تحلیل کسب‌وکار، ایده‌پردازی و طراحی استراتژی", nav: "chat", mode: "business", icon: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 012-2h4a2 2 0 012 2v2M3 12h18"/></svg>' },
+ { id: "marketing", title: "متخصص بازاریابی AI", desc: "تحلیل مشتری، تولید استراتژی تبلیغاتی و بررسی کمپین‌ها", nav: "chat", mode: "marketing", icon: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l18-7-7 18-2-8-8-2v-1z"/></svg>' },
+ { id: "proftranslator", title: "مترجم حرفه‌ای AI", desc: "ترجمه متون، اسناد و فایل‌ها بین زبان‌های مختلف", nav: "translate", icon: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 8l6 6M4 14l6-6 2-3M2 5h12M7 2h1M22 22l-5-10-5 10M14 18h6"/></svg>' },
+ { id: "nutrition", title: "متخصص تغذیه AI", desc: "ارائه اطلاعات تغذیه‌ای و برنامه‌ریزی عمومی غذایی", nav: "chat", mode: "nutrition", icon: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a7 7 0 00-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 00-7-7z"/><path d="M12 6v6M9 9h6"/></svg>' },
+ { id: "realestate", title: "مشاور املاک AI", desc: "تحلیل ملک، مقایسه قیمت‌ها و بررسی ویژگی‌های ساختمان", nav: "chat", mode: "realestate", icon: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-8 9 8M5 10v10h14V10M9 20v-6h6v6"/></svg>' },
+];
+
+const ASSISTANTS_EN = {
+ voice: { title: "Voice Assistant", desc: "Talk with the AI by voice" },
+ chat: { title: "AI Chat", desc: "Smart questions & answers" },
+ translate: { title: "AI Translator", desc: "Translate text, PDF & documents" },
+ doctor: { title: "AI Doctor", desc: "Symptom review & initial guidance, not a diagnosis" },
+ lawyer: { title: "AI Lawyer", desc: "Explains laws & reviews documents" },
+ teacher: { title: "AI Teacher", desc: "Personalized lessons & help with exercises" },
+ architect: { title: "Architect & Home Designer", desc: "Floor plans, decor & facade ideas" },
+ electrical: { title: "AI Electrical Engineer", desc: "Basic circuit design & calculations" },
+ compeng: { title: "AI Computer Engineer", desc: "System design, networking & troubleshooting" },
+ programmer: { title: "AI Programmer", desc: "Writes, explains & fixes code" },
+ agri: { title: "AI Agriculture Advisor", desc: "Cultivation, irrigation & plant issues" },
+ social: { title: "AI Social Media Designer", desc: "Posts, banners, captions & branding" },
+ boyfriend: { title: "AI Boyfriend", desc: "Friendly daily conversation & companionship" },
+ girlfriend: { title: "AI Girlfriend", desc: "Friendly daily conversation & companionship" },
+ crypto: { title: "AI Crypto Manager", desc: "Market analysis, portfolio management & crypto data" },
+ psychologist: { title: "AI Psychologist", desc: "Supportive conversation, sentiment analysis & general guidance" },
+ financial: { title: "AI Financial Advisor", desc: "Expense analysis, budgeting & financial planning" },
+ cybersecurity: { title: "AI Cybersecurity Expert", desc: "Threat detection, vulnerability review & security hardening" },
+ hr: { title: "AI HR Specialist", desc: "Resume review, skills analysis & hiring process management" },
+ business: { title: "AI Business Consultant", desc: "Business analysis, ideation & strategy design" },
+ marketing: { title: "AI Marketing Specialist", desc: "Customer analysis, ad strategy & campaign review" },
+ proftranslator: { title: "AI Professional Translator", desc: "Translate text, documents & files between languages" },
+ nutrition: { title: "AI Nutrition Specialist", desc: "General nutrition info & meal planning" },
+ realestate: { title: "AI Real Estate Advisor", desc: "Property analysis, price comparison & building features" },
+};
+
+const state = {
+ user: null,
+ currentMode: "general",
+ currentChatId: null,
+ currentView: null,
+ navHistory: [],
+ voiceActive: false,
+ uiLang: "fa",
+ aiRespLang: "fa",
+ settings: { voiceIn: true },
+ recognition: null,
+ recTarget: null,
+};
+
+const store = {
+ get(k, d) { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch { return d; } },
+ set(k, v) { localStorage.setItem(k, JSON.stringify(v)); },
+};
+// کلید ذخیره‌سازی مخصوص هر کاربر (تاریخچه هر ایمیل جدا از بقیه ذخیره می‌شود)
+function uk(base) {
+ const email = (state.user && state.user.email) || "guest";
+ return base + "__" + email;
+}
+
+const TRANSLATIONS = {
+ fa: {
+ vpnNotice: "لطفاً VPN را روشن کنید", brandTitle: "هوش مصنوعی Alpha",
+ tabLogin: "ورود", tabRegister: "ثبت‌نام", lblEmail: "ایمیل", lblPass: "رمز عبور",
+ btnLoginSubmit: "ورود", lblName: "نام", phName: "نام شما", phMinPass: "حداقل ۶ کاراکتر",
+ btnRegisterSubmit: "ساخت حساب", creatorLine: "سازنده: نیما حجتی",
+ sbTagline: "هوش مصنوعی همه‌کاره",
+ navAssistants: "دستیارها", navHome: "خانه", navChat: "چت هوش مصنوعی", navTranslate: "ترجمه‌گر",
+ navPdf: "ترجمه PDF", navVoice: "دستیار صوتی", navHistory: "تاریخچه", sbRecentTitle: "فعالیت‌های اخیر",
+ navSettings: "تنظیمات",
+ tmCreator: "سازنده", tmSupport: "پشتیبانی", tmSettings: "تنظیمات", tmHistory: "تاریخچه",
+ tmProfile: "پروفایل", tmLogout: "خروج",
+ assistSub: "یک دستیار هوش مصنوعی را برای شروع انتخاب کنید",
+ specialistsTitle: "دستیارها", specialistsCardSub: "دسترسی به متخصص‌ترین دستیارهای هوش مصنوعی",
+ homeHeroTitle: "دستیار هوش مصنوعی", homeHeroSub: "همیشه در کنار شما، برای پاسخ به هر سؤال و انجام هر کار",
+ cardTools: "ابزارهای هوش مصنوعی", cardToolsSub: "ابزارهای حرفه‌ای هوش مصنوعی", comingSoon: "به‌زودی",
+ voiceCardSub: "صحبت کنید، پاسخ بگیرید",
+ homeSub: "امروز چه کمکی از Alpha می‌خواهید؟",
+ chipTranslate: "ترجمه متن", chipPdf: "ترجمه PDF", chipVoice: "دستیار صوتی", chipHistory: "تاریخچه",
+ phAskQuestion: "سوال خود را بپرسید...",
+ cardNewChat: "گفت‌وگوی جدید", cardNewChatSub: "شروع چت تازه",
+ cardChat: "چت هوش مصنوعی", cardChatSub: "گفت‌وگو با هوش مصنوعی در هر موضوعی",
+ cardTranslate: "ترجمه‌گر", cardTranslateSub: "ترجمه فوری متن",
+ cardPdf: "ترجمه PDF", cardPdfSub: "ترجمه کامل فایل",
+ cardVoice: "دستیار صوتی", cardVoiceSub: "گفت‌وگوی صوتی",
+ recentActivity: "آخرین فعالیت‌ها",
+ btnPhoto: "عکس", btnFile: "فایل", phMessage: "پیام...", btnMic: "صدا", btnSend: "ارسال",
+ srcTextLabel: "متن اصلی", phEnterText: "متن خود را وارد کنید...",
+ dstTextLabel: "نتیجه ترجمه", phTranslateResult: "ترجمه اینجا نمایش داده می‌شود...",
+ btnTranslate: "ترجمه کن", btnCopy: "کپی", btnShare: "اشتراک‌گذاری",
+ pdfClickSelect: "برای انتخاب فایل PDF کلیک کنید", pdfNoFile: "هیچ فایلی انتخاب نشده", toWord: "به",
+ pdfOptRow: "حفظ ترتیب صفحات و پاراگراف‌بندی · پردازش مرحله‌ای فایل‌های بزرگ",
+ btnStartTranslate: "شروع ترجمه", translating: "در حال ترجمه...", btnDownloadResult: "دانلود متن ترجمه",
+ voiceStatusIdle: "برای شروع مکالمهٔ صوتی لمس کنید",
+ phSearchHistory: " جستجو در تاریخچه...",
+ statChatsLabel: "گفت‌وگو", statTransLabel: "ترجمه", statFilesLabel: "فایل",
+ btnEditProfile: "ویرایش پروفایل",
+ grpAccount: "حساب کاربری", rowProfile: "پروفایل", btnView: "مشاهده", rowLogout: "خروج از حساب",
+ grpUiLang: "زبان رابط برنامه", rowUiLang: "زبان نمایش برنامه",
+ langFa: "فارسی", langEn: "English",
+ grpAiLang: "زبان پاسخ هوش مصنوعی", rowAiLang: "زبان پاسخ‌های چت",
+ grpVoice: "صدا", rowVoiceIn: "ورودی صوتی",
+ grpAppearance: "ظاهر", rowGlass: "حالت تیره + طلایی (Glassmorphism)",
+ grpAbout: "درباره", rowAboutAlpha: "درباره Alpha", rowPrivacy: "حریم خصوصی",
+ modalAboutTitle: "درباره ما",
+ modalAboutBody: "هوش مصنوعی Alpha یک دستیار هوش مصنوعی برای چت، ترجمه متن، ترجمه اسناد PDF و بسیاری از کارهای دیگر است.",
+ modalPrivacyTitle: "حریم خصوصی",
+ modalPrivacyBody: "پیام‌ها برای پردازش به سرور ارسال می‌شوند و کلید API هرگز در برنامه ذخیره نمی‌شود. تاریخچه به‌صورت محلی روی همین دستگاه نگه‌داری می‌شود.",
+ creatorTitle: "سازنده",
+ greeting: "سلام",
+ titleAssistants: "دستیارها", subAssistants: "انتخاب دستیار هوش مصنوعی",
+ titleHome: "خانه", subHome: "داشبورد Alpha",
+ titleChat: "چت هوش مصنوعی", subChat: "گفت‌وگو با دستیار هوشمند",
+ titleTranslate: "ترجمه‌گر", subTranslate: "ترجمه فوری و دقیق متن",
+ titlePdf: "ترجمه PDF", subPdf: "ترجمه کامل اسناد",
+ titleVoice: "دستیار صوتی", subVoice: "گفت‌وگوی صوتی با هوش مصنوعی",
+ titleHistory: "تاریخچه", subHistory: "گفت‌وگوها و ترجمه‌های قبلی",
+ titleProfile: "پروفایل", subProfile: "اطلاعات حساب کاربری",
+ titleSettings: "تنظیمات", subSettings: "شخصی‌سازی برنامه",
+ welcomeMsg: "سلام! من Alpha هستم، هوش مصنوعی همه‌کاره. چطور می‌تونم کمکتون کنم؟",
+ },
+ en: {
+ vpnNotice: "Please turn on VPN", brandTitle: "AI Alpha",
+ tabLogin: "Login", tabRegister: "Register", lblEmail: "Email", lblPass: "Password",
+ btnLoginSubmit: "Login", lblName: "Name", phName: "Your name", phMinPass: "At least 6 characters",
+ btnRegisterSubmit: "Create Account", creatorLine: "Creator: Nima Hojjati",
+ sbTagline: "All-in-one AI",
+ navAssistants: "Assistants", navHome: "Home", navChat: "AI Chat", navTranslate: "Translator",
+ navPdf: "PDF Translate", navVoice: "Voice Assistant", navHistory: "History", sbRecentTitle: "Recent Activity",
+ navSettings: "Settings",
+ tmCreator: "Creator", tmSupport: "Support", tmSettings: "Settings", tmHistory: "History",
+ tmProfile: "Profile", tmLogout: "Log out",
+ assistSub: "Choose an AI assistant to get started",
+ specialistsTitle: "Assistants", specialistsCardSub: "Access the most specialized AI assistants",
+ homeHeroTitle: "AI Assistant", homeHeroSub: "Always by your side, to answer any question and get things done",
+ cardTools: "AI Tools", cardToolsSub: "Professional AI tools", comingSoon: "Coming soon",
+ voiceCardSub: "Talk, and get an answer",
+ homeSub: "How can Alpha help you today?",
+ chipTranslate: "Translate Text", chipPdf: "Translate PDF", chipVoice: "Voice Assistant", chipHistory: "History",
+ phAskQuestion: "Ask your question...",
+ cardNewChat: "New Chat", cardNewChatSub: "Start a fresh chat",
+ cardChat: "AI Chat", cardChatSub: "Chat with AI about anything",
+ cardTranslate: "Translator", cardTranslateSub: "Instant text translation",
+ cardPdf: "PDF Translate", cardPdfSub: "Translate full documents",
+ cardVoice: "Voice Assistant", cardVoiceSub: "Voice conversation",
+ recentActivity: "Recent Activity",
+ btnPhoto: "Photo", btnFile: "File", phMessage: "Message...", btnMic: "Voice", btnSend: "Send",
+ srcTextLabel: "Source Text", phEnterText: "Enter your text...",
+ dstTextLabel: "Translation Result", phTranslateResult: "Translation will appear here...",
+ btnTranslate: "Translate", btnCopy: "Copy", btnShare: "Share",
+ pdfClickSelect: "Click to select a PDF file", pdfNoFile: "No file selected", toWord: "to",
+ pdfOptRow: "Preserves page order & paragraphs · processes large files in stages",
+ btnStartTranslate: "Start Translation", translating: "Translating...", btnDownloadResult: "Download Translation",
+ voiceStatusIdle: "Tap to start a voice conversation",
+ phSearchHistory: " Search history...",
+ statChatsLabel: "Chats", statTransLabel: "Translations", statFilesLabel: "Files",
+ btnEditProfile: "Edit Profile",
+ grpAccount: "Account", rowProfile: "Profile", btnView: "View", rowLogout: "Log out of account",
+ grpUiLang: "App Interface Language", rowUiLang: "Display Language",
+ langFa: "فارسی", langEn: "English",
+ grpAiLang: "AI Response Language", rowAiLang: "Chat Reply Language",
+ grpVoice: "Voice", rowVoiceIn: "Voice Input",
+ grpAppearance: "Appearance", rowGlass: "Dark + Gold Mode (Glassmorphism)",
+ grpAbout: "About", rowAboutAlpha: "About Alpha", rowPrivacy: "Privacy",
+ modalAboutTitle: "About Us",
+ modalAboutBody: "Alpha is an all-in-one AI assistant for chat, text translation, PDF document translation and many other tasks.",
+ modalPrivacyTitle: "Privacy",
+ modalPrivacyBody: "Messages are sent to the server for processing and the API key is never stored in the app. History is kept locally on this device only.",
+ creatorTitle: "Creator",
+ greeting: "Hello",
+ titleAssistants: "Assistants", subAssistants: "Choose an AI assistant",
+ titleHome: "Home", subHome: "Alpha Dashboard",
+ titleChat: "AI Chat", subChat: "Chat with a smart assistant",
+ titleTranslate: "Translator", subTranslate: "Fast, accurate text translation",
+ titlePdf: "PDF Translate", subPdf: "Translate full documents",
+ titleVoice: "Voice Assistant", subVoice: "Voice conversation with AI",
+ titleHistory: "History", subHistory: "Past chats and translations",
+ titleProfile: "Profile", subProfile: "Account information",
+ titleSettings: "Settings", subSettings: "Customize the app",
+ welcomeMsg: "Hi! I'm Alpha, your all-in-one AI. How can I help you today?",
+ },
+};
+
+const app = {
+ /* ---------------- INIT ---------------- */
+ init() {
+ if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});
+ if (!API_BASE_URL) document.getElementById("backendWarn").classList.remove("hidden");
+
+ state.settings = store.get("pta_settings", state.settings);
+ document.getElementById("swVoiceIn").classList.toggle("on", state.settings.voiceIn);
+ state.uiLang = store.get("pta_ui_lang", "fa");
+ state.aiRespLang = state.uiLang;
+ document.getElementById("uiFa").classList.toggle("active", state.uiLang === "fa");
+ document.getElementById("uiEn").classList.toggle("active", state.uiLang === "en");
+ document.documentElement.setAttribute("dir", state.uiLang === "fa" ? "rtl" : "ltr");
+ document.documentElement.setAttribute("lang", state.uiLang);
+ this.applyUiLang();
+
+ this.populateLangSelects();
+ this.populateAiModes();
+ this.populateAssistants();
+
+ document.addEventListener("click", (e) => {
+ const menu = document.getElementById("topMenu");
+ const toggleBtn = document.querySelector(".menu-toggle");
+ if (menu && !menu.classList.contains("hidden") && !menu.contains(e.target) && e.target !== toggleBtn && !toggleBtn.contains(e.target)) {
+ menu.classList.add("hidden");
+ }
+ });
+
+ const u = store.get("pta_currentUser", null);
+ if (u) { this.enterApp(u); }
+ },
+ /* ---------------- AUTH (email + password) ---------------- */
+ switchAuthTab(tab) {
+ document.getElementById("tabLoginBtn").classList.toggle("active", tab === "login");
+ document.getElementById("tabRegisterBtn").classList.toggle("active", tab === "register");
+ document.getElementById("formLogin").classList.toggle("hidden", tab !== "login");
+ document.getElementById("formRegister").classList.toggle("hidden", tab !== "register");
+ document.getElementById("authMsg").textContent = "";
+ },
+ register() {
+ const name = document.getElementById("regName").value.trim();
+ const email = document.getElementById("regEmail").value.trim().toLowerCase();
+ const pass = document.getElementById("regPass").value;
+ const pass2 = document.getElementById("regPass2").value;
+ const msg = document.getElementById("authMsg");
+ if (!name || !email || !pass || !pass2) { msg.textContent = "همه فیلدها را پر کنید."; return; }
+ if (!email.endsWith("@gmail.com")) { msg.textContent = "ایمیل اشتباه است."; return; }
+ if (pass.length < 6) { msg.textContent = "رمز عبور باید حداقل ۶ کاراکتر باشد."; return; }
+ if (pass !== pass2) { msg.textContent = "رمز اشتباه است."; return; }
+ const users = store.get("pta_users", {});
+ if (users[email]) { msg.textContent = "این ایمیل قبلاً ثبت‌نام کرده است."; return; }
+ users[email] = { name, email, pass };
+ store.set("pta_users", users);
+ this.enterApp({ name, email });
+ },
+ login() {
+ const email = document.getElementById("loginEmail").value.trim().toLowerCase();
+ const pass = document.getElementById("loginPass").value;
+ const msg = document.getElementById("authMsg");
+ if (!email.endsWith("@gmail.com")) { msg.textContent = "ایمیل اشتباه است."; return; }
+ const users = store.get("pta_users", {});
+ const u = users[email];
+ if (!u) { msg.textContent = "ایمیل اشتباه است."; return; }
+ if (u.pass !== pass) { msg.textContent = "رمز عبور اشتباه است."; return; }
+ this.enterApp({ name: u.name, email: u.email });
+ },
+ enterApp(user) {
+ state.user = user;
+ store.set("pta_currentUser", user);
+ document.getElementById("authScreen").classList.add("hidden");
+ document.getElementById("appShell").classList.remove("hidden");
+ const initial = (user.name || user.email || "?").trim()[0]?.toUpperCase() || "؟";
+ document.getElementById("sbAvatar").textContent = initial;
+ document.getElementById("sbName").textContent = user.name || user.email;
+ document.getElementById("sbEmail").textContent = user.email || "";
+ document.getElementById("profAv").textContent = initial;
+ document.getElementById("profName").textContent = user.name || user.email;
+ document.getElementById("profEmail").textContent = user.email || "";
+ state.userName = user.name || "";
+ this.renderSidebarHistory();
+ this.renderHome();
+ this.updateStats();
+ this.nav("home");
+ },
+ logout() {
+ if (!confirm("آیا مطمئن هستید که می‌خواهید از حساب خارج شوید؟")) return;
+ localStorage.removeItem("pta_currentUser");
+ location.reload();
+ },
+ editProfile() {
+ const name = prompt("نام جدید:", state.user.name || "");
+ if (!name) return;
+ state.user.name = name;
+ store.set("pta_currentUser", state.user);
+ this.enterApp(state.user);
+ },
+
+ /* ---------------- ASSISTANTS ---------------- */
+ populateAssistants() {
+ const wrap = document.getElementById("assistGrid");
+ wrap.innerHTML = "";
+ const HOME_IDS = ["voice", "chat", "translate"]; // این سه‌تا مستقیم روی صفحهٔ خانه هستن
+ ASSISTANTS.filter(a => !HOME_IDS.includes(a.id)).forEach(a => {
+ const c = document.createElement("div");
+ c.className = "assist-row glass";
+ c.onclick = () => this.openAssistant(a.id);
+ const tr = state.uiLang === "en" && ASSISTANTS_EN[a.id] ? ASSISTANTS_EN[a.id] : a;
+ c.innerHTML = `<div class="ic">${a.icon}</div><div class="txt"><b>${tr.title}</b><span>${tr.desc}</span></div>`;
+ wrap.appendChild(c);
+ });
+ },
+ openAssistant(id) {
+ const a = ASSISTANTS.find(x => x.id === id);
+ if (!a) return;
+ if (a.mode) {
+ state.currentMode = a.mode;
+ this.newChat();
+ this.populateAiModes();
+ }
+ this.nav(a.nav);
+ },
+
+ /* ---------------- NAV ---------------- */
+ nav(view, isBack) {
+ if (state.currentView === "voice" && view !== "voice") {
+ // در صورت خروج از صفحهٔ دستیار صوتی، مکالمهٔ صوتی خودکار متوقف شود
+ state.voiceActive = false;
+ if (state.recognition) state.recognition.stop();
+ }
+ if (!isBack && state.currentView && state.currentView !== view) {
+ state.navHistory.push(state.currentView);
+ }
+ state.currentView = view;
+ document.querySelectorAll(".view >section").forEach(s =>s.classList.add("hidden"));
+ document.getElementById("view-" + view).classList.remove("hidden");
+ document.querySelectorAll(".nav-item").forEach(b =>b.classList.remove("active"));
+ const btn = document.querySelector(`.nav-item[data-nav="${view}"]`);
+ if (btn) btn.classList.add("active");
+ const titles = {
+ assistants: [this.tt("titleAssistants"), this.tt("subAssistants")],
+ home: [this.tt("titleHome"), this.tt("subHome")], chat: [this.tt("titleChat"), this.tt("subChat")],
+ translate: [this.tt("titleTranslate"), this.tt("subTranslate")], pdf: [this.tt("titlePdf"), this.tt("subPdf")],
+ voice: [this.tt("titleVoice"), this.tt("subVoice")], history: [this.tt("titleHistory"), this.tt("subHistory")],
+ profile: [this.tt("titleProfile"), this.tt("subProfile")], settings: [this.tt("titleSettings"), this.tt("subSettings")],
+ };
+ document.getElementById("topTitle").textContent = titles[view][0];
+ document.getElementById("topSub").textContent = titles[view][1];
+ document.getElementById("sidebar").classList.remove("open");
+ if (view === "history") this.renderHistory();
+ if (view === "profile") this.updateStats();
+ },
+ goBack() {
+ if (state.navHistory.length > 0) {
+ const prev = state.navHistory.pop();
+ this.nav(prev, true);
+ } else {
+ this.logout();
+ }
+ },
+ toggleTopMenu(show) {
+ const el = document.getElementById("topMenu");
+ if (!el) return;
+ if (typeof show === "boolean") {
+ el.classList.toggle("hidden", !show);
+ } else {
+ el.classList.toggle("hidden");
+ }
+ },
+
+ /* ---------------- BACKEND CALL ---------------- */
+ async callAI(messages, maxTokens = 800) {
+ if (!API_BASE_URL) throw new Error("آدرس بک‌اند تنظیم نشده است (API_BASE_URL خالی است).");
+ const res = await fetch(`${API_BASE_URL}/chat`, {
+ method: "POST",
+ headers: { "Content-Type": "application/json" },
+ body: JSON.stringify({ messages, max_tokens: maxTokens }),
+ });
+ const data = await res.json();
+ if (!res.ok) throw new Error(data.error || "خطای ناشناخته");
+ return data.answer;
+ },
+
+ /* ---------------- CHAT ---------------- */
+ populateAiModes() {
+ const wrap = document.getElementById("aiModes");
+ wrap.innerHTML = "";
+ AI_MODES.forEach(m => {
+ const b = document.createElement("button");
+ b.className = "chip" + (m.id === state.currentMode ? " active" : "");
+ b.textContent = m.fa;
+ b.onclick = () => { state.currentMode = m.id; this.populateAiModes(); };
+ wrap.appendChild(b);
+ });
+
+ const qSel = document.getElementById("quickModeSelect");
+ if (qSel) {
+ qSel.innerHTML = "";
+ AI_MODES.forEach(m => {
+ const o = document.createElement("option");
+ o.value = m.id; o.textContent = m.fa;
+ qSel.appendChild(o);
+ });
+ qSel.value = state.currentMode;
+ qSel.onchange = () => { state.currentMode = qSel.value; this.populateAiModes(); };
+ }
+ },
+ quickAsk() {
+ const input = document.getElementById("quickAskInput");
+ const text = input.value.trim();
+ if (!text) return;
+ this.newChat();
+ document.getElementById("chatInput").value = text;
+ input.value = "";
+ this.sendChat();
+ },
+ newChat() {
+ state.currentChatId = "c_" + Date.now();
+ const chats = store.get(uk("pta_chats"), {});
+ chats[state.currentChatId] = { id: state.currentChatId, title: "گفت‌وگوی جدید", messages: [], ts: Date.now() };
+ store.set(uk("pta_chats"), chats);
+ document.getElementById("chatArea").innerHTML = "";
+ this.nav("chat");
+ this.addChatBubble(this.tt("welcomeMsg"), "ai");
+ const last = document.getElementById("chatArea").lastElementChild;
+ if (last) last.setAttribute("data-welcome", "1");
+ },
+ renderWelcomeIfNeeded() {
+ document.querySelectorAll('.msg.ai[data-welcome="1"]').forEach(el => {
+ el.firstChild.textContent = this.tt("welcomeMsg");
+ });
+ },
+ addChatBubble(text, who, msgId) {
+ const area = document.getElementById("chatArea");
+ const div = document.createElement("div");
+ div.className = "msg " + who;
+ div.textContent = text;
+ if (who === "ai") {
+ const actions = document.createElement("div");
+ actions.className = "msg-actions";
+ actions.innerHTML = `
+ <button onclick="navigator.clipboard.writeText(this.closest('.msg').firstChild.textContent)">کپی</button>
+ <button onclick="app.shareRaw(this.closest('.msg').firstChild.textContent)">اشتراک</button>
+ `;
+ div.appendChild(actions);
+ }
+ area.appendChild(div);
+ area.scrollTop = area.scrollHeight;
+ return div;
+ },
+ async sendChat() {
+ const input = document.getElementById("chatInput");
+ const text = input.value.trim();
+ if (!text) return;
+ if (!state.currentChatId) this.newChat();
+ input.value = "";
+ this.addChatBubble(text, "user");
+
+ const chats = store.get(uk("pta_chats"), {});
+ const chat = chats[state.currentChatId];
+ chat.messages.push({ role: "user", content: text });
+ if (chat.messages.length === 1) chat.title = text.slice(0, 40);
+
+ const typing = document.createElement("div");
+ typing.className = "typing";
+ typing.textContent = "در حال نوشتن پاسخ...";
+ document.getElementById("chatArea").appendChild(typing);
+
+ const modeObj = AI_MODES.find(m =>m.id === state.currentMode);
+ const langName = state.aiRespLang === "fa" ? "Persian (فارسی)" : state.aiRespLang;
+ const sys = `${modeObj.sys}\n\nIMPORTANT: Respond ONLY in ${langName}. Write your entire reply in a single language — do not mix in English or any other language, not even individual words or phrases, unless the user's message itself is written in a different language (in that case, reply fully in that same single language instead). Never switch languages mid-reply.`;
+ const payload = [{ role: "system", content: sys }, ...chat.messages.slice(-12)];
+
+ try {
+ const answer = await this.callAI(payload);
+ typing.remove();
+ this.addChatBubble(answer, "ai");
+ chat.messages.push({ role: "assistant", content: answer });
+ } catch (e) {
+ typing.remove();
+ this.addChatBubble("خطا: " + e.message, "ai");
+ }
+ chats[state.currentChatId] = chat;
+ store.set(uk("pta_chats"), chats);
+ this.renderSidebarHistory();
+ },
+ async handleChatFile(ev) {
+ const file = ev.target.files[0];
+ if (!file) return;
+ if (file.type.startsWith("image/")) {
+ this.showModal("عکس", "تحلیل تصویر هنوز در این نسخه فعال نیست. لطفاً فایل PDF یا متنی پیوست کنید.");
+ ev.target.value = "";
+ return;
+ }
+ let text = "";
+ if (file.type === "application/pdf") {
+ text = await this.extractPdfText(file, () => {});
+ } else {
+ text = await file.text();
+ }
+ document.getElementById("chatInput").value = `فایل «${file.name}» پیوست شد. لطفاً این متن را تحلیل کن:\n\n${text.slice(0, 6000)}`;
+ ev.target.value = "";
+ },
+
+ /* ---------------- TRANSLATE ---------------- */
+ populateLangSelects() {
+ ["srcLang", "dstLang", "pdfSrcLang", "pdfDstLang"].forEach(id => {
+ const sel = document.getElementById(id);
+ sel.innerHTML = "";
+ LANGS.forEach(l => {
+ if (id.includes("dst") && l.code === "auto") return;
+ const o = document.createElement("option");
+ o.value = l.code; o.textContent = l.fa;
+ sel.appendChild(o);
+ });
+ });
+ document.getElementById("dstLang").value = "fa";
+ document.getElementById("pdfDstLang").value = "fa";
+ },
+ swapLangs() {
+ const s = document.getElementById("srcLang"), d = document.getElementById("dstLang");
+ if (s.value === "auto") return;
+ [s.value, d.value] = [d.value, s.value];
+ const st = document.getElementById("srcText"), dt = document.getElementById("dstText");
+ [st.value, dt.value] = [dt.value, st.value];
+ },
+ async translateText() {
+ const src = document.getElementById("srcText").value.trim();
+ const dstBox = document.getElementById("dstText");
+ if (!src) { dstBox.value = "لطفاً متنی وارد کنید."; return; }
+ const srcLangName = LANGS.find(l =>l.code === document.getElementById("srcLang").value).fa;
+ const dstLangName = LANGS.find(l =>l.code === document.getElementById("dstLang").value).fa;
+ dstBox.value = "در حال ترجمه...";
+ try {
+ const answer = await this.callAI([
+ { role: "system", content: "You are a professional translator. Reply with ONLY the translation, no notes." },
+ { role: "user", content: `Translate the following text from ${srcLangName} to ${dstLangName}:\n\n${src}` },
+ ]);
+ dstBox.value = answer.trim();
+ const list = store.get(uk("pta_translations"), []);
+ list.unshift({ id: "t_" + Date.now(), src, dst: answer.trim(), from: srcLangName, to: dstLangName, ts: Date.now() });
+ store.set(uk("pta_translations"), list.slice(0, 200));
+ this.renderSidebarHistory();
+ } catch (e) {
+ dstBox.value = "خطا: " + e.message;
+ }
+ },
+
+ /* ---------------- PDF TRANSLATE ---------------- */
+ pdfFile: null,
+ pdfSelected(ev) {
+ const f = ev.target.files[0];
+ if (!f) return;
+ this.pdfFile = f;
+ document.getElementById("pdfFileName").textContent = f.name;
+ document.getElementById("pdfStartBtn").disabled = false;
+ document.getElementById("pdfResultWrap").classList.add("hidden");
+ },
+ async extractPdfText(file, onProgress) {
+ const buf = await file.arrayBuffer();
+ const pdf = await pdfjsLib.getDocument({ data: buf }).promise;
+ let full = "";
+ for (let i = 1; i <= pdf.numPages; i++) {
+ const page = await pdf.getPage(i);
+ const content = await page.getTextContent();
+ full += content.items.map(it =>it.str).join(" ") + "\n\n";
+ onProgress(i, pdf.numPages);
+ }
+ return full;
+ },
+ async startPdfTranslate() {
+ if (!this.pdfFile) return;
+ const btn = document.getElementById("pdfStartBtn");
+ btn.disabled = true;
+ const wrap = document.getElementById("pdfProgressWrap");
+ const bar = document.getElementById("pdfProgressBar");
+ const label = document.getElementById("pdfProgressLabel");
+ wrap.classList.remove("hidden");
+ label.textContent = "در حال استخراج متن از PDF...";
+ bar.style.width = "5%";
+
+ let fullText;
+ try {
+ fullText = await this.extractPdfText(this.pdfFile, (p, total) => {
+ bar.style.width = (5 + (p / total) * 25) + "%";
+ });
+ } catch (e) {
+ label.textContent = "خطا در خواندن PDF: " + e.message;
+ btn.disabled = false;
+ return;
+ }
+
+ const srcLangName = LANGS.find(l =>l.code === document.getElementById("pdfSrcLang").value).fa;
+ const dstLangName = LANGS.find(l =>l.code === document.getElementById("pdfDstLang").value).fa;
+ const chunks = fullText.match(/[\s\S]{1,3000}/g) || [];
+ let translated = "";
+ for (let i = 0; i < chunks.length; i++) {
+ label.textContent = `در حال ترجمه بخش ${i + 1} از ${chunks.length}...`;
+ try {
+ const ans = await this.callAI([
+ { role: "system", content: "You are a professional document translator. Preserve paragraph structure. Reply with ONLY the translation." },
+ { role: "user", content: `Translate from ${srcLangName} to ${dstLangName}:\n\n${chunks[i]}` },
+ ], 1500);
+ translated += ans.trim() + "\n\n";
+ } catch (e) {
+ translated += `\n[ خطا در ترجمه این بخش: ${e.message}]\n`;
+ }
+ bar.style.width = (30 + ((i + 1) / chunks.length) * 70) + "%";
+ }
+
+ label.textContent = "ترجمه کامل شد.";
+ document.getElementById("pdfResultText").value = translated;
+ document.getElementById("pdfResultWrap").classList.remove("hidden");
+ btn.disabled = false;
+
+ const list = store.get(uk("pta_pdfs"), []);
+ list.unshift({ id: "p_" + Date.now(), name: this.pdfFile.name, ts: Date.now() });
+ store.set(uk("pta_pdfs"), list.slice(0, 100));
+ this.renderSidebarHistory();
+ },
+ downloadPdfResult() {
+ const text = document.getElementById("pdfResultText").value;
+ const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+ const a = document.createElement("a");
+ a.href = URL.createObjectURL(blob);
+ a.download = (this.pdfFile?.name || "translation").replace(/\.pdf$/i, "") + "-ترجمه.txt";
+ a.click();
+ },
+
+ /* ---------------- VOICE ---------------- */
+ toggleMic(target) {
+ const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+ if (!SR) { this.showModal("پشتیبانی نشد", "مرورگر شما از ورودی صوتی پشتیبانی نمی‌کند."); return; }
+
+ // اگر در حال گوش‌دادن هستیم، با لمس دوباره مکالمه صوتی متوقف شود
+ if (target === "voice" && state.voiceActive) {
+ state.voiceActive = false;
+ if (state.recognition) state.recognition.stop();
+ document.getElementById("micVoiceBtn").classList.remove("listening");
+ document.getElementById("voiceStatus").textContent = "برای صحبت کردن لمس کنید";
+ return;
+ }
+ if (target === "voice") state.voiceActive = true;
+
+ if (state.recognition && state.recTarget === target) {
+ state.recognition.stop();
+ return;
+ }
+ this.startListening(target);
+ },
+ startListening(target) {
+ const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+ state.recognition = new SR();
+ state.recTarget = target;
+ state.recognition.lang = state.aiRespLang === "fa" ? "fa-IR" : "en-US";
+ state.recognition.interimResults = false;
+
+ const micBtn = target === "voice" ? document.getElementById("micVoiceBtn") : document.getElementById("micChatBtn");
+ micBtn.classList.add(target === "voice" ? "listening" : "rec");
+ if (target === "voice") document.getElementById("voiceStatus").textContent = "در حال گوش دادن...";
+
+ state.recognition.onresult = async (e) => {
+ const said = e.results[0][0].transcript;
+ if (target === "chat") {
+ document.getElementById("chatInput").value = said;
+ this.sendChat();
+ } else {
+ const tEl = document.getElementById("voiceTranscript");
+ tEl.textContent = said;
+ tEl.classList.remove("hidden");
+ const aEl = document.getElementById("voiceAnswer");
+ aEl.textContent = "در حال فکر کردن...";
+ aEl.classList.remove("hidden");
+ document.getElementById("voiceStatus").textContent = "در حال فکر کردن...";
+ try {
+ const answer = await this.callAI([
+ { role: "system", content: `Reply in ${state.aiRespLang === "fa" ? "Persian" : state.aiRespLang}. Keep the reply conversational and reasonably short, like spoken speech.` },
+ { role: "user", content: said },
+ ]);
+ aEl.textContent = answer;
+ document.getElementById("voiceStatus").textContent = state.voiceActive ? "در حال گوش دادن..." : "برای صحبت کردن لمس کنید";
+ // اگر مکالمهٔ صوتی هنوز فعاله، خودکار دوباره گوش بده
+ if (state.voiceActive) this.startListening("voice");
+ } catch (e2) {
+ aEl.textContent = "خطا: " + e2.message;
+ document.getElementById("voiceStatus").textContent = "برای صحبت کردن لمس کنید";
+ state.voiceActive = false;
+ }
+ }
+ };
+ state.recognition.onend = () => {
+ micBtn.classList.remove("listening", "rec");
+ state.recognition = null;
+ };
+ state.recognition.onerror = () => {
+ state.recognition = null;
+ micBtn.classList.remove("listening", "rec");
+ if (target === "voice") {
+ document.getElementById("voiceStatus").textContent = "برای صحبت کردن لمس کنید";
+ state.voiceActive = false;
+ }
+ };
+ state.recognition.start();
+ },
+ /* ---------------- HISTORY ---------------- */
+ renderSidebarHistory() {
+ const chats = Object.values(store.get(uk("pta_chats"), {})).sort((a, b) =>b.ts - a.ts).slice(0, 5);
+ const wrap = document.getElementById("sbHistory");
+ wrap.innerHTML = "";
+ chats.forEach(c => {
+ const d = document.createElement("div");
+ d.className = "sb-hist-item";
+ d.textContent = " " + (c.title || "گفت‌وگو");
+ d.onclick = () =>this.openChat(c.id);
+ wrap.appendChild(d);
+ });
+ this.renderHome();
+ },
+ renderHome() {
+ const chats = Object.values(store.get(uk("pta_chats"), {})).sort((a, b) =>b.ts - a.ts).slice(0, 4);
+ const wrap = document.getElementById("homeRecent");
+ if (!wrap) return;
+ wrap.innerHTML = chats.map(c => `<div class="hist-row glass"><div class="l"> <b>${this.esc(c.title)}</b></div></div>`).join("") || `<p style="color:var(--muted);font-size:12px">هنوز فعالیتی ثبت نشده است.</p>`;
+ },
+ renderHistory() {
+ const q = (document.getElementById("histSearch").value || "").toLowerCase();
+ const chats = Object.values(store.get(uk("pta_chats"), {}));
+ const trans = store.get(uk("pta_translations"), []);
+ const pdfs = store.get(uk("pta_pdfs"), []);
+ let rows = [];
+ chats.forEach(c =>rows.push({ type: "chat", id: c.id, title: c.title, ts: c.ts, icon: "" }));
+ trans.forEach(t =>rows.push({ type: "trans", id: t.id, title: `${t.src.slice(0, 30)}...`, ts: t.ts, icon: "" }));
+ pdfs.forEach(p =>rows.push({ type: "pdf", id: p.id, title: p.name, ts: p.ts, icon: "" }));
+ rows = rows.filter(r =>r.title.toLowerCase().includes(q)).sort((a, b) =>b.ts - a.ts);
+
+ const wrap = document.getElementById("histList");
+ wrap.innerHTML = rows.map(r => `
+ <div class="hist-row glass">
+ <div class="l">${r.icon} <div><b>${this.esc(r.title)}</b><span>${new Date(r.ts).toLocaleString("fa-IR")}</span></div></div>
+ <div class="hist-actions">
+ ${r.type === "chat" ? `<button onclick="app.openChat('${r.id}')">ادامه</button>` : ""}
+ <button onclick="app.deleteHistory('${r.type}','${r.id}')">حذف</button>
+ </div>
+ </div>`).join("") || `<p style="color:var(--muted);font-size:12px;text-align:center;margin-top:30px">چیزی یافت نشد.</p>`;
+ },
+ openChat(id) {
+ state.currentChatId = id;
+ const chats = store.get(uk("pta_chats"), {});
+ const chat = chats[id];
+ document.getElementById("chatArea").innerHTML = "";
+ chat.messages.forEach(m =>this.addChatBubble(m.content, m.role === "user" ? "user" : "ai"));
+ this.nav("chat");
+ },
+ deleteHistory(type, id) {
+ if (!confirm("حذف شود؟")) return;
+ if (type === "chat") { const c = store.get(uk("pta_chats"), {}); delete c[id]; store.set(uk("pta_chats"), c); }
+ if (type === "trans") { store.set(uk("pta_translations"), store.get(uk("pta_translations"), []).filter(t =>t.id !== id)); }
+ if (type === "pdf") { store.set(uk("pta_pdfs"), store.get(uk("pta_pdfs"), []).filter(p =>p.id !== id)); }
+ this.renderHistory();
+ this.renderSidebarHistory();
+ },
+
+ /* ---------------- SETTINGS ---------------- */
+ setUiLang(l) {
+ state.uiLang = l;
+ state.aiRespLang = l;
+ store.set("pta_ui_lang", l);
+ document.getElementById("uiFa").classList.toggle("active", l === "fa");
+ document.getElementById("uiEn").classList.toggle("active", l === "en");
+ document.documentElement.setAttribute("dir", l === "fa" ? "rtl" : "ltr");
+ document.documentElement.setAttribute("lang", l);
+ this.applyUiLang();
+ if (state.currentView) this.nav(state.currentView, true);
+ if (document.getElementById("assistGrid")) this.populateAssistants();
+ this.renderWelcomeIfNeeded();
+ },
+ tt(key) {
+ const d = TRANSLATIONS[state.uiLang] || TRANSLATIONS.fa;
+ return d[key] !== undefined ? d[key] : (TRANSLATIONS.fa[key] || key);
+ },
+ applyUiLang() {
+ document.querySelectorAll("[data-i18n]").forEach(el => {
+ const key = el.getAttribute("data-i18n");
+ el.textContent = this.tt(key);
+ });
+ document.querySelectorAll("[data-i18n-ph]").forEach(el => {
+ const key = el.getAttribute("data-i18n-ph");
+ el.setAttribute("placeholder", this.tt(key));
+ });
+ },
+ toggleSetting(key) {
+ state.settings[key] = !state.settings[key];
+ store.set("pta_settings", state.settings);
+ const id = "sw" + key.charAt(0).toUpperCase() + key.slice(1);
+ const el = document.getElementById(id);
+ if (el) el.classList.toggle("on", state.settings[key]);
+ },
+
+ /* ---------------- HELPERS ---------------- */
+ updateStats() {
+ document.getElementById("statChats").textContent = Object.keys(store.get(uk("pta_chats"), {})).length;
+ document.getElementById("statTrans").textContent = store.get(uk("pta_translations"), []).length;
+ document.getElementById("statFiles").textContent = store.get(uk("pta_pdfs"), []).length;
+ },
+ copyText(id) { navigator.clipboard.writeText(document.getElementById(id).value); },
+ shareText(id) { this.shareRaw(document.getElementById(id).value); },
+ shareRaw(text) {
+ if (navigator.share) navigator.share({ text }).catch(() => {});
+ else { navigator.clipboard.writeText(text); this.showModal("اشتراک‌گذاری", "متن در کلیپ‌بورد کپی شد."); }
+ },
+ showModal(title, body) {
+ document.getElementById("modalTitle").textContent = title;
+ document.getElementById("modalBody").textContent = body;
+ document.getElementById("modalBg").classList.remove("hidden");
+ },
+ esc(s) { const d = document.createElement("div"); d.textContent = s || ""; return d.innerHTML; },
+};
+
+window.addEventListener("load", () =>app.init());
+</script>
+</body>
+</html>
