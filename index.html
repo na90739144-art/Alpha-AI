@@ -7,8 +7,8 @@
 <meta name="description" content="هوش مصنوعی Alpha - چت هوش مصنوعی، ترجمه متن، ترجمه PDF و دستیار صوتی">
 <title>هوش مصنوعی Alpha</title>
 <link rel="manifest" href="manifest.json">
-<link rel="icon" type="image/png" href="favicon-32.png">
-<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" type="image/png" href="favicon-32-5.png">
+<link rel="apple-touch-icon" href="icon-180-4.png">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 
 <style>
@@ -501,6 +501,11 @@ textarea.ta{width:100%;min-height:130px;padding:14px;background:var(--bg3);borde
 
 // تنها خطی که باید بعد از دیپلوی بک‌اند ویرایش شود:
 const API_BASE_URL = "https://alpha-ai-jpz9.onrender.com/api";
+
+// رفع باگ: بدون تنظیم ورکر pdf.js، استخراج متن از PDF (ترجمه PDF) با خطا مواجه می‌شد
+if (typeof pdfjsLib !== "undefined") {
+ pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+}
 
 const LANGS = [
  { code: "auto", fa: "تشخیص خودکار", en: "Auto Detect" },
@@ -1112,6 +1117,7 @@ const app = {
  },
  quickAsk() {
  const input = document.getElementById("quickAskInput");
+ if (!input) return;
  const text = input.value.trim();
  if (!text) return;
  this.newChat();
@@ -1433,7 +1439,4 @@ const app = {
  const trans = store.get(uk("pta_translations"), []);
  const pdfs = store.get(uk("pta_pdfs"), []);
  let rows = [];
- chats.forEach(c =>rows.push({ type: "chat", id: c.id, title: c.title, ts: c.ts, icon: "" }));
- trans.forEach(t =>rows.push({ type: "trans", id: t.id, title: `${t.src.slice(0, 30)}...`, ts: t.ts, icon: "" }));
- pdfs.forEach(p =>rows.push({ type: "pdf", id: p.id, title: p.name, ts: p.ts, icon: "" }));
- rows = rows.filter(r =>r.title.toLow
+ chats.forEach(c =>rows.push({ type: "chat", id: c.id, title: c.titl
