@@ -149,6 +149,13 @@ input,textarea,select{font-family:inherit;color:var(--txt);outline:none}
 .home-big-card b{font-size:12.5px;display:block;margin-bottom:2px;color:var(--txt)}
 .home-big-card span{font-size:10px;color:var(--muted);line-height:1.5;display:block}
 .soon-badge{position:absolute;top:10px;left:10px;background:rgba(212,175,55,.15);color:var(--gold);font-size:9px;font-weight:700;padding:3px 8px;border-radius:20px;border:1px solid rgba(212,175,55,.35)}
+.tools-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;padding-bottom:20px}
+.tool-card{min-height:92px;padding:13px 12px;display:flex;align-items:center;gap:10px;cursor:pointer;text-align:right;transition:.2s;background:linear-gradient(160deg,rgba(212,175,55,.08),rgba(212,175,55,.01));border:1px solid rgba(212,175,55,.3);border-radius:14px}
+.tool-card:hover{transform:translateY(-2px);border-color:var(--gold)}
+.tool-card .tool-ic{width:38px;height:38px;min-width:38px;border-radius:10px;background:rgba(212,175,55,.13);display:flex;align-items:center;justify-content:center;font-size:21px}
+.tool-card b{font-size:12px;display:block;margin-bottom:3px;color:var(--txt)}
+.tool-card span{font-size:9.5px;color:var(--muted);line-height:1.5;display:block}
+@media(max-width:520px){.tools-grid{grid-template-columns:1fr 1fr;gap:8px}.tool-card{min-height:84px;padding:10px 8px;gap:7px}.tool-card .tool-ic{width:34px;height:34px;min-width:34px;font-size:18px}.tool-card b{font-size:11px}.tool-card span{font-size:9px}}
 
 /* ---------- TRANSLATE ---------- */
 .lang-row{display:flex;align-items:center;gap:10px;margin-bottom:16px}
@@ -263,6 +270,7 @@ textarea.ta{width:100%;min-height:130px;padding:14px;background:var(--bg3);borde
  <div><h1>Alpha</h1><p data-i18n="sbTagline">هوش مصنوعی همه‌کاره</p></div>
  </div>
  <button class="nav-item" data-nav="assistants" onclick="app.nav('assistants')" data-i18n="navAssistants">دستیارها</button>
+ <button class="nav-item" data-nav="tools" onclick="app.nav('tools')">ابزارهای هوش مصنوعی</button>
  <button class="nav-item active" data-nav="home" onclick="app.nav('home')" data-i18n="navHome">خانه</button>
  <button class="nav-item" data-nav="chat" onclick="app.nav('chat')" data-i18n="navChat">چت هوش مصنوعی</button>
  <button class="nav-item" data-nav="translate" onclick="app.nav('translate')" data-i18n="navTranslate">ترجمه‌گر</button>
@@ -330,8 +338,7 @@ textarea.ta{width:100%;min-height:130px;padding:14px;background:var(--bg3);borde
  <b data-i18n="cardVoice">دستیار صوتی</b>
  <span data-i18n="voiceCardSub">صحبت کنید، پاسخ بگیرید</span>
  </div>
- <div class="home-big-card glass disabled">
- <div class="soon-badge" data-i18n="comingSoon">به‌زودی</div>
+ <div class="home-big-card glass" onclick="app.nav('tools')">
  <div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M8 21h8M12 18v3M7 9h.01M7 12h.01M11 9h6M11 12h6"/></svg></div>
  <b data-i18n="cardTools">ابزارهای هوش مصنوعی</b>
  <span data-i18n="cardToolsSub">ابزارهای حرفه‌ای هوش مصنوعی</span>
@@ -342,6 +349,13 @@ textarea.ta{width:100%;min-height:130px;padding:14px;background:var(--bg3);borde
  <span data-i18n="specialistsCardSub">دسترسی به متخصص‌ترین دستیارهای هوش مصنوعی</span>
  </div>
  </div>
+ </section>
+
+ <!-- AI TOOLS -->
+ <section id="view-tools" class="hidden">
+  <div class="home-hi">ابزارهای هوش مصنوعی</div>
+  <div class="home-sub">ابزارهای متنی برای نوشتن، ویرایش، ترجمه و تولید محتوا</div>
+  <div class="tools-grid" id="toolsGrid"></div>
  </section>
 
  <!-- CHAT -->
@@ -608,6 +622,42 @@ const AI_MODES = [
  { id: "realestate", fa: "مشاور املاک AI", sys: "You are a knowledgeable real-estate assistant speaking Persian. Help analyze properties, compare prices, and review building features, answering directly and completely like an experienced real-estate advisor." },
 ];
 
+/* ============================================================
+   AI_TOOLS — ابزارهای هوش مصنوعی متنی (اضافه‌شده طبق درخواست)
+   ============================================================ */
+const AI_TOOLS = [
+ {id:"write",icon:"✍️",title:"تولید متن",desc:"تولید متن بر اساس موضوع",prompt:"You are a professional text writer. Generate clear, useful text based on the user's topic and requested format."},
+ {id:"improve",icon:"🪄",title:"بهبود متن",desc:"حرفه‌ای‌تر کردن نوشته",prompt:"Improve the user's text professionally while preserving its meaning. Make it clearer, stronger, and more polished."},
+ {id:"rewrite",icon:"🔄",title:"بازنویسی متن",desc:"بازنویسی با لحن جدید",prompt:"Rewrite the user's text in the requested new tone while preserving the original meaning."},
+ {id:"summarize",icon:"📌",title:"خلاصه‌سازی",desc:"کوتاه کردن متن‌های طولانی",prompt:"Summarize the user's text accurately, keeping the most important points and removing unnecessary
+   {id:"expand",icon:"📝",title:"گسترش متن",desc:"تبدیل متن کوتاه به متن کامل",prompt:"Expand the user's short text into a complete, coherent and useful version without inventing unsupported facts."},
+ {id:"proofread",icon:"🧹",title:"اصلاح نگارشی",desc:"رفع غلط‌های املایی و نگارشی",prompt:"Proofread the user's text. Correct spelling, grammar, punctuation and writing errors while preserving the intended meaning."},
+ {id:"translate",icon:"🌍",title:"مترجم متن",desc:"ترجمه بین زبان‌ها",prompt:"Translate accurately between languages while preserving meaning, tone, formatting and context. Ask for the target language if unclear."},
+ {id:"ideas",icon:"💡",title:"ایده‌پرداز",desc:"تولید ایده برای موضوعات مختلف",prompt:"Generate practical, creative and varied ideas for the user's topic. Organize them clearly."},
+ {id:"copywriter",icon:"📢",title:"تبلیغ‌نویس",desc:"ساخت متن تبلیغاتی",prompt:"Write persuasive advertising copy suited to the product, audience and platform described by the user."},
+ {id:"caption",icon:"📱",title:"کپشن‌ساز",desc:"نوشتن کپشن شبکه‌های اجتماعی",prompt:"Create engaging social-media captions appropriate to the platform, audience and topic."},
+ {id:"hashtags",icon:"#️⃣",title:"هشتگ‌ساز",desc:"پیشنهاد هشتگ مرتبط",prompt:"Suggest relevant and useful hashtags for the user's topic, separated clearly and without irrelevant tags."},
+ {id:"script",icon:"🎬",title:"سناریونویس",desc:"نوشتن سناریو",prompt:"Write a structured script with scenes, dialogue or narration as appropriate to the user's requested format."},
+ {id:"titles",icon:"🎯",title:"عنوان‌ساز",desc:"تولید عنوان جذاب",prompt:"Generate multiple compelling, accurate titles for the user's content. Match the requested style and audience."},
+ {id:"story",icon:"📖",title:"داستان‌نویس",desc:"ساخت داستان",prompt:"Write an engaging original story based on the user's characters, setting, genre and constraints."},
+ {id:"song",icon:"🎵",title:"ترانه‌نویس",desc:"کمک به نوشتن متن ترانه",prompt:"Help create original song lyrics based on the user's theme, genre, mood and structure. Do not imitate living artists."},
+ {id:"email",icon:"📧",title:"ایمیل‌نویس",desc:"نوشتن ایمیل رسمی یا دوستانه",prompt:"Write a clear email in the requested formal or friendly tone, with an appropriate subject when useful."},
+ {id:"message",icon:"💬",title:"پیام‌نویس",desc:"ساخت پیام برای چت و شبکه‌های اجتماعی",prompt:"Write a natural, concise message suitable for chat or social media and matching the requested tone."},
+ {id:"resume",icon:"💼",title:"رزومه‌ساز",desc:"نوشتن رزومه",prompt:"Help create a professional resume from the user's information. Organize skills, experience, education and projects clearly."},
+ {id:"official",icon:"📄",title:"نامه رسمی",desc:"نوشتن نامه اداری",prompt:"Write a professional formal administrative letter based on the user's purpose and details."},
+ {id:"article",icon:"🎓",title:"مقاله‌نویس",desc:"کمک به ساخت مقاله",prompt:"Help structure and write an informative article with a clear introduction, sections and conclusion based on the user's topic."},
+ {id:"study",icon:"📚",title:"درس‌یار متنی",desc:"توضیح مطالب درسی",prompt:"Explain the user's educational topic clearly and step by step at the learner's level, using examples when helpful."},
+ {id:"questions",icon:"❓",title:"سؤال‌ساز",desc:"ساخت سؤال از روی متن",prompt:"Generate useful questions from the provided text, including different difficulty levels when appropriate."},
+ {id:"answers",icon:"🧠",title:"پاسخ‌ساز",desc:"کمک به نوشتن پاسخ",prompt:"Help formulate a clear and accurate answer to the user's question or supplied material."},
+ {id:"analyze",icon:"🔍",title:"تحلیل متن",desc:"بررسی و تحلیل نوشته",prompt:"Analyze the user's text for structure, meaning, strengths, weaknesses, tone and key insights."},
+ {id:"compare",icon:"⚖️",title:"مقایسه متن",desc:"مقایسه دو متن",prompt:"Compare the two supplied texts clearly, identifying similarities, differences, strengths and notable changes."},
+ {id:"structure",icon:"🧩",title:"ساختاردهنده متن",desc:"مرتب کردن مطالب پراکنده",prompt:"Organize the user's scattered notes into a logical, readable structure with headings and ordered points."},
+ {id:"outline",icon:"🗂️",title:"تبدیل متن به فهرست",desc:"استخراج نکات و موارد مهم",prompt:"Extract the most important points from the user's text and turn them into a clear organized list."},
+ {id:"tone",icon:"👔",title:"تغییر لحن",desc:"رسمی، دوستانه، حرفه‌ای و...",prompt:"Rewrite the user's text in the requested tone, such as formal, friendly, professional, persuasive or casual."},
+ {id:"persian-tone",icon:"🔤",title:"تبدیل لحن فارسی",desc:"رسمی ↔ محاوره‌ای",prompt:"Convert Persian text between formal and conversational styles while preserving meaning and natural Persian wording."},
+ {id:"prompt",icon:"🤖",title:"پرامپت‌ساز متنی",desc:"ساخت پرامپت حرفه‌ای برای مدل‌های هوش مصنوعی",prompt:"Create a precise, professional prompt for the user's goal. Include role, context, task, constraints, output format and useful variables when appropriate."}
+];
+
 const ASSISTANTS = [
  { id: "voice", title: "دستیار صوتی", desc: "گفت‌وگوی صوتی با هوش مصنوعی", nav: "voice", icon: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2M12 19v4M8 23h8"/></svg>' },
  { id: "chat", title: "چت هوش مصنوعی", desc: "پرسش و پاسخ هوشمند", nav: "chat", mode: "general", icon: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>' },
@@ -665,6 +715,8 @@ const ASSISTANTS_EN = {
 const state = {
  user: null,
  currentMode: "general",
+ currentToolPrompt: null,
+ currentToolName: null,
  currentChatId: null,
  currentView: null,
  navHistory: [],
@@ -737,6 +789,7 @@ const TRANSLATIONS = {
  creatorTitle: "سازنده",
  greeting: "سلام",
  titleAssistants: "دستیارها", subAssistants: "انتخاب دستیار هوش مصنوعی",
+ titleTools: "ابزارهای هوش مصنوعی", subTools: "ابزارهای حرفه‌ای متنی",
  titleHome: "خانه", subHome: "داشبورد Alpha",
  titleChat: "چت هوش مصنوعی", subChat: "گفت‌وگو با دستیار هوشمند",
  titleTranslate: "ترجمه‌گر", subTranslate: "ترجمه فوری و دقیق متن",
@@ -781,12 +834,8 @@ const TRANSLATIONS = {
  btnStartTranslate: "Start Translation", translating: "Translating...", btnDownloadResult: "Download Translation",
  voiceStatusIdle: "Tap to start a voice conversation",
  phSearchHistory: " Search history...",
- statChatsLabel: "Chats", statTransLabel: "Translations", statFilesLabel: "Files",
- btnEditProfile: "Edit Profile",
- grpAccount: "Account", rowProfile: "Profile", btnView: "View", rowLogout: "Log out of account",
- grpUiLang: "App Interface Language", rowUiLang: "Display Language",
- langFa: "فارسی", langEn: "English",
- grpAiLang: "AI Response Language", rowAiLang: "Chat Reply Language",
+ statChatsLabel: "Chats", statTransLabel: "Translations", statFiles
+   grpAiLang: "AI Response Language", rowAiLang: "Chat Reply Language",
  grpVoice: "Voice", rowVoiceIn: "Voice Input",
  grpAppearance: "Appearance", rowGlass: "Dark + Gold Mode (Glassmorphism)",
  grpAbout: "About", rowAboutAlpha: "About Alpha", rowPrivacy: "Privacy",
@@ -797,6 +846,7 @@ const TRANSLATIONS = {
  creatorTitle: "Creator",
  greeting: "Hello",
  titleAssistants: "Assistants", subAssistants: "Choose an AI assistant",
+ titleTools: "AI Tools", subTools: "Professional text tools",
  titleHome: "Home", subHome: "Alpha Dashboard",
  titleChat: "AI Chat", subChat: "Chat with a smart assistant",
  titleTranslate: "Translator", subTranslate: "Fast, accurate text translation",
@@ -828,6 +878,7 @@ const app = {
  this.populateLangSelects();
  this.populateAiModes();
  this.populateAssistants();
+ this.populateTools();
 
  document.addEventListener("click", (e) => {
  const menu = document.getElementById("topMenu");
@@ -906,6 +957,33 @@ const app = {
  this.enterApp(state.user);
  },
 
+ /* ---------------- AI TOOLS ---------------- */
+ populateTools() {
+ const wrap = document.getElementById("toolsGrid");
+ if (!wrap) return;
+ wrap.innerHTML = "";
+ AI_TOOLS.forEach(t => {
+ const c = document.createElement("div");
+ c.className = "tool-card glass";
+ c.onclick = () => this.openTool(t.id);
+ c.innerHTML = `<div class="tool-ic">${t.icon}</div><div><b>${t.title}</b><span>${t.desc}</span></div>`;
+ wrap.appendChild(c);
+ });
+ },
+ openTool(id) {
+ const t = AI_TOOLS.find(x => x.id === id);
+ if (!t) return;
+ state.currentToolPrompt = t.prompt;
+ state.currentToolName = t.title;
+ state.currentMode = "general";
+ this.newChat();
+ this.nav("chat");
+ setTimeout(() => {
+ const input = document.getElementById("chatInput");
+ if (input) input.placeholder = `در مورد «${t.title}» بنویسید...`;
+ }, 0);
+ },
+
  /* ---------------- ASSISTANTS ---------------- */
  populateAssistants() {
  const wrap = document.getElementById("assistGrid");
@@ -942,6 +1020,7 @@ const app = {
  state.navHistory.push(state.currentView);
  }
  state.currentView = view;
+ if (view === "chat" && !state.currentToolName) state.currentToolPrompt = null;
  document.querySelectorAll(".view >section").forEach(s =>s.classList.add("hidden"));
  document.getElementById("view-" + view).classList.remove("hidden");
  document.querySelectorAll(".nav-item").forEach(b =>b.classList.remove("active"));
@@ -949,6 +1028,7 @@ const app = {
  if (btn) btn.classList.add("active");
  const titles = {
  assistants: [this.tt("titleAssistants"), this.tt("subAssistants")],
+ tools: [this.tt("titleTools"), this.tt("subTools")],
  home: [this.tt("titleHome"), this.tt("subHome")], chat: [this.tt("titleChat"), this.tt("subChat")],
  translate: [this.tt("titleTranslate"), this.tt("subTranslate")], pdf: [this.tt("titlePdf"), this.tt("subPdf")],
  voice: [this.tt("titleVoice"), this.tt("subVoice")], history: [this.tt("titleHistory"), this.tt("subHistory")],
@@ -1077,8 +1157,10 @@ const app = {
  document.getElementById("chatArea").appendChild(typing);
 
  const modeObj = AI_MODES.find(m =>m.id === state.currentMode);
+ const toolPrompt = state.currentToolPrompt;
+ const baseSys = toolPrompt || (modeObj ? modeObj.sys : AI_MODES[0].sys);
  const langName = state.aiRespLang === "fa" ? "Persian (فارسی)" : state.aiRespLang;
- const sys = `${modeObj.sys}\n\nIMPORTANT: Respond ONLY in ${langName}. Write your entire reply in a single language — do not mix in English or any other language, not even individual words or phrases, unless the user's message itself is written in a different language (in that case, reply fully in that same single language instead). Never switch languages mid-reply.`;
+ const sys = `${baseSys}\n\nIMPORTANT: Respond ONLY in ${langName}. Write your entire reply in a single language — do not mix in English or any other language, not even individual words or phrases, unless the user's message itself is written in a different language (in that case, reply fully in that same single language instead). Never switch languages mid-reply.`;
  const payload = [{ role: "system", content: sys }, ...chat.messages.slice(-12)];
 
  try {
