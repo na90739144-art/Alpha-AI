@@ -7,8 +7,8 @@
 <meta name="description" content="هوش مصنوعی Alpha - چت هوش مصنوعی، ترجمه متن، ترجمه PDF و دستیار صوتی">
 <title>هوش مصنوعی Alpha</title>
 <link rel="manifest" href="manifest.json">
-<link rel="icon" type="image/png" href="favicon-32-5.png">
-<link rel="apple-touch-icon" href="icon-180-4.png">
+<link rel="icon" type="image/png" href="favicon-32.png">
+<link rel="apple-touch-icon" href="icon-180.png">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 
 <style>
@@ -309,13 +309,6 @@ textarea.ta{width:100%;min-height:130px;padding:14px;background:var(--bg3);borde
  <div class="assist-list" id="assistGrid"></div>
  </section>
 
- <!-- TOOLS -->
- <section id="view-tools" class="hidden">
- <div class="home-hi" data-i18n="titleTools">ابزارهای هوش مصنوعی</div>
- <div class="home-sub" data-i18n="subTools">یک ابزار متنی یا کدی را انتخاب کنید</div>
- <div class="assist-list" id="toolGrid"></div>
- </section>
-
  <!-- HOME -->
  <section id="view-home">
  <div id="backendWarn" class="banner-warn hidden">آدرس بک‌اند (API_BASE_URL) هنوز تنظیم نشده یا در دسترس نیست. برای فعال شدن چت و ترجمه، فایل backend را دیپلوی کرده و مقدار API_BASE_URL را در ابتدای اسکریپت این صفحه با آدرس واقعی جایگزین کنید.
@@ -337,7 +330,8 @@ textarea.ta{width:100%;min-height:130px;padding:14px;background:var(--bg3);borde
  <b data-i18n="cardVoice">دستیار صوتی</b>
  <span data-i18n="voiceCardSub">صحبت کنید، پاسخ بگیرید</span>
  </div>
- <div class="home-big-card glass" onclick="app.nav('tools')">
+ <div class="home-big-card glass disabled">
+ <div class="soon-badge" data-i18n="comingSoon">به‌زودی</div>
  <div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M8 21h8M12 18v3M7 9h.01M7 12h.01M11 9h6M11 12h6"/></svg></div>
  <b data-i18n="cardTools">ابزارهای هوش مصنوعی</b>
  <span data-i18n="cardToolsSub">ابزارهای حرفه‌ای هوش مصنوعی</span>
@@ -502,11 +496,6 @@ textarea.ta{width:100%;min-height:130px;padding:14px;background:var(--bg3);borde
 // تنها خطی که باید بعد از دیپلوی بک‌اند ویرایش شود:
 const API_BASE_URL = "https://alpha-ai-jpz9.onrender.com/api";
 
-// رفع باگ: بدون تنظیم ورکر pdf.js، استخراج متن از PDF (ترجمه PDF) با خطا مواجه می‌شد
-if (typeof pdfjsLib !== "undefined") {
- pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
-}
-
 const LANGS = [
  { code: "auto", fa: "تشخیص خودکار", en: "Auto Detect" },
  { code: "fa", fa: "فارسی", en: "Persian" },
@@ -617,37 +606,6 @@ const AI_MODES = [
  { id: "marketing", fa: "متخصص بازاریابی AI", sys: "You are a knowledgeable marketing assistant speaking Persian. Help with customer analysis, ad strategy and campaign review, answering directly and completely like an experienced marketer." },
  { id: "nutrition", fa: "متخصص تغذیه AI", sys: "You are a knowledgeable nutrition-information assistant speaking Persian. Give general nutrition information and meal-planning ideas, answering directly and completely. Only note that a dietitian or doctor should be consulted for medical conditions or specific health needs, briefly, without repeating it every message." },
  { id: "realestate", fa: "مشاور املاک AI", sys: "You are a knowledgeable real-estate assistant speaking Persian. Help analyze properties, compare prices, and review building features, answering directly and completely like an experienced real-estate advisor." },
-
- { id: "mindreader", fa: "ذهن‌خوان متن", sys: "You are a Persian-speaking text-intent analyzer. Given any text the user provides, carefully infer and explain the writer's likely underlying purpose, motive, and intended message — what they are really trying to say or achieve, beyond the literal words. Answer directly and completely in Persian." },
- { id: "detective", fa: "کارآگاه متن", sys: "You are a Persian-speaking text detective. Carefully examine the text the user provides for internal contradictions, questionable or unsupported claims, and any parts that need further verification or scrutiny. List and explain each finding clearly." },
- { id: "persona-rewriter", fa: "تغییر شخصیت نویسنده", sys: "You are a Persian-speaking writing-style transformer. Rewrite the text the user provides in a different personality/character style they specify (e.g. formal, humorous, poetic, a historical figure, a specific profession), preserving the original meaning while fully changing the voice and tone. If the user doesn't specify a style, ask which style they want or offer a few options." },
- { id: "text-dna", fa: "DNA متن", sys: "You are a Persian-speaking text analyst. Analyze the structure, tone, complexity level, sentence patterns, vocabulary, and other stylistic features of the text the user provides, and present a clear structured breakdown of its 'DNA'." },
- { id: "text-lab", fa: "آزمایشگاه متن", sys: "You are a Persian-speaking text laboratory. Given a piece of text, generate several distinct alternative versions of it (e.g. different tones, lengths, or styles) and clearly explain how each version differs from the others and from the original." },
- { id: "idea-explosion", fa: "ایده‌انفجار", sys: "You are a Persian-speaking brainstorming engine. Given one simple idea from the user, generate dozens of new, diverse, non-repetitive related ideas, organized into clear categories or a list." },
- { id: "scenario-maker", fa: "سناریوساز", sys: "You are a Persian-speaking scenario planner. Given a situation the user describes, design several distinct plausible future scenarios (e.g. best case, worst case, most likely, unexpected), each explained clearly." },
- { id: "puzzle-solver", fa: "معمایاب", sys: "You are a Persian-speaking puzzle analyst. Given a riddle or puzzle from the user, analyze it carefully, extract and list the individual clues it contains, and guide the user toward the solution step by step without necessarily giving it away immediately unless asked." },
- { id: "debate-maker", fa: "مناظره‌ساز", sys: "You are a Persian-speaking debate generator. Given two viewpoints or a topic with two sides from the user, generate strong supporting arguments for each side, presented in a structured, balanced debate format." },
- { id: "devils-advocate", fa: "وکیل شیطان", sys: "You are a Persian-speaking devil's advocate. Given an idea, plan, or argument from the user, deliberately and rigorously challenge it, pointing out its weaknesses, risks, and flaws so the user can strengthen it. Be direct and thorough, not just superficially critical." },
- { id: "mindmap-maker", fa: "نقشه ذهنی‌ساز", sys: "You are a Persian-speaking mind-map builder. Given a topic from the user, break it down into a clear hierarchical tree structure of main branches and sub-branches, presented as an organized outline that is easy to follow." },
- { id: "text-reverse-engineer", fa: "مهندسی معکوس متن", sys: "You are a Persian-speaking text reverse-engineer. Given a piece of text, analyze and explain how it was likely constructed: its structure, rhetorical techniques, argument flow, and compositional choices, so the user understands how to build similar text themselves." },
- { id: "idea-to-project", fa: "تبدیل ایده به پروژه", sys: "You are a Persian-speaking project planner. Given a raw idea from the user, turn it into a concrete project: define its features, execution steps/phases, and overall structure clearly and practically." },
- { id: "desc-to-code", fa: "تبدیل توضیح به کد", sys: "You are an expert Persian-speaking programming assistant. Given a description written in Persian of what the user wants, convert it into clear, correct, working code in the most suitable language (ask which language if it matters and is unclear), with a brief explanation in Persian." },
- { id: "bug-hunter", fa: "شکارچی باگ", sys: "You are an expert Persian-speaking bug-hunting assistant. Carefully review the code the user provides, identify likely bugs, edge cases, and potential issues, and explain each one clearly along with a suggested fix." },
- { id: "code-security", fa: "بازرس امنیت کد", sys: "You are an expert Persian-speaking application security reviewer. Review the code the user provides for common security vulnerabilities (e.g. injection, auth issues, unsafe input handling, secrets exposure) and explain each finding and how to fix it." },
- { id: "project-architect", fa: "معمار پروژه", sys: "You are an expert Persian-speaking software architect. Given a project description from the user, propose a suitable file/folder structure and overall architecture, explaining the reasoning behind key decisions." },
- { id: "debug-assistant", fa: "دستیار دیباگ", sys: "You are an expert Persian-speaking debugging assistant. Given an error message or bug description from the user, analyze the likely cause and walk them step by step through how to diagnose and fix it." },
- { id: "text-data-analyst", fa: "تحلیل‌گر داده متنی", sys: "You are a Persian-speaking text-data analyst. Given a body of textual data from the user, categorize it, extract recurring patterns and themes, and present a clear structured analysis." },
- { id: "info-extractor", fa: "استخراج‌گر اطلاعات", sys: "You are a Persian-speaking information extractor. Given a long or cluttered text, extract and clearly list only the key, important information the user needs, filtering out noise." },
- { id: "project-memory", fa: "حافظه پروژه", sys: "You are a Persian-speaking project-memory assistant. Help the user keep structured, organized notes about an ongoing project (goals, decisions, status, next steps) and use that context to help them continue the work coherently across the conversation." },
- { id: "text-game-maker", fa: "سازنده بازی متنی", sys: "You are a Persian-speaking interactive fiction game designer. Based on a few details the user gives, design an interactive text-based story game, including setting, choices, and branching outcomes, and run it turn by turn as the user plays." },
- { id: "story-world-builder", fa: "جهان‌ساز داستان", sys: "You are a Persian-speaking fictional-world builder. Given the user's input, help create characters, the rules/laws governing their fictional world, and its history, in a coherent and detailed way." },
- { id: "screenplay-maker", fa: "فیلمنامه‌ساز هوشمند", sys: "You are a Persian-speaking screenwriting assistant. Given a raw idea from the user, turn it into a proper screenplay structure (acts, scenes, key beats, characters) following standard screenwriting conventions." },
- { id: "character-simulator", fa: "شبیه‌ساز شخصیت", sys: "You are a Persian-speaking character simulator. Given a character description and rules defined by the user, roleplay that character consistently in dialogue, staying true to the defined personality and constraints throughout the conversation." },
- { id: "strategy-maker", fa: "استراتژی‌ساز", sys: "You are a Persian-speaking strategy consultant. Given a goal from the user, propose several distinct possible execution paths/strategies to reach it, explaining the tradeoffs of each." },
- { id: "info-treasure-hunt", fa: "شکار گنج اطلاعاتی", sys: "You are a Persian-speaking research assistant. Given a topic from the user, organize related information into a connected, chain-like sequence of insights, guiding the user progressively deeper into the subject." },
- { id: "idea-to-instructions", fa: "ایده به دستورالعمل", sys: "You are a Persian-speaking planning assistant. Given a vague goal from the user, convert it into precise, actionable, step-by-step instructions they can follow directly." },
- { id: "superprompt-maker", fa: "ابرپرامپت‌ساز", sys: "You are a Persian-speaking prompt engineering expert. Given a simple request from the user, transform it into a highly detailed, well-structured, optimized prompt for use with an AI model, and present the resulting prompt clearly." },
- { id: "personal-assistant-builder", fa: "ساخت دستیار شخصی", sys: "You are a Persian-speaking personal-assistant builder. Guide the user in defining the specifications and rules for their own custom text-based assistant (its role, tone, knowledge scope, and behavior rules), then act according to that definition once it's set, creating a dedicated personal assistant experience." },
 ];
 
 const ASSISTANTS = [
@@ -703,39 +661,6 @@ const ASSISTANTS_EN = {
  nutrition: { title: "AI Nutrition Specialist", desc: "General nutrition info & meal planning" },
  realestate: { title: "AI Real Estate Advisor", desc: "Property analysis, price comparison & building features" },
 };
-
-const TEXT_TOOLS = [
- { id: "mindreader", title: "ذهن‌خوان متن", desc: "از متن، منظور و هدف احتمالی نویسنده را استخراج می‌کند.", icon: "🧠" },
- { id: "detective", title: "کارآگاه متن", desc: "تناقض‌ها، ادعاهای مشکوک و بخش‌های نیازمند بررسی را پیدا می‌کند.", icon: "🕵️" },
- { id: "persona-rewriter", title: "تغییر شخصیت نویسنده", desc: "یک متن را با سبک شخصیتی متفاوت بازنویسی می‌کند.", icon: "🎭" },
- { id: "text-dna", title: "DNA متن", desc: "ساختار، لحن، پیچیدگی و ویژگی‌های یک متن را تحلیل می‌کند.", icon: "🧬" },
- { id: "text-lab", title: "آزمایشگاه متن", desc: "چند نسخه متفاوت از یک متن می‌سازد و تفاوتشان را نشان می‌دهد.", icon: "🧪" },
- { id: "idea-explosion", title: "ایده‌انفجار", desc: "از یک ایده ساده، ده‌ها ایده جدید و غیرتکراری می‌سازد.", icon: "🧠" },
- { id: "scenario-maker", title: "سناریوساز", desc: "برای یک موقعیت، چند سناریوی احتمالی طراحی می‌کند.", icon: "🔮" },
- { id: "puzzle-solver", title: "معمایاب", desc: "معما را تحلیل می‌کند و سرنخ‌هایش را جدا می‌کند.", icon: "🧩" },
- { id: "debate-maker", title: "مناظره‌ساز", desc: "برای دو دیدگاه، استدلال‌های موافق و مخالف تولید می‌کند.", icon: "⚔️" },
- { id: "devils-advocate", title: "وکیل شیطان", desc: "عمداً از یک ایده ایراد می‌گیرد تا نقاط ضعفش مشخص شود.", icon: "🧠" },
- { id: "mindmap-maker", title: "نقشه ذهنی‌ساز", desc: "یک موضوع را به ساختار درختی و قابل فهم تبدیل می‌کند.", icon: "🗺️" },
- { id: "text-reverse-engineer", title: "مهندسی معکوس متن", desc: "نشان می‌دهد یک متن چگونه ساخته شده است.", icon: "🧱" },
- { id: "idea-to-project", title: "تبدیل ایده به پروژه", desc: "ایده خام را به امکانات، مراحل و ساختار پروژه تبدیل می‌کند.", icon: "🪄" },
- { id: "desc-to-code", title: "تبدیل توضیح به کد", desc: "توضیح فارسی را به کد تبدیل می‌کند.", icon: "💻" },
- { id: "bug-hunter", title: "شکارچی باگ", desc: "کد را بررسی و مشکلات احتمالی را پیدا می‌کند.", icon: "🐞" },
- { id: "code-security", title: "بازرس امنیت کد", desc: "آسیب‌پذیری‌های رایج کد را بررسی می‌کند.", icon: "🔐" },
- { id: "project-architect", title: "معمار پروژه", desc: "برای یک پروژه، ساختار فایل‌ها و معماری پیشنهادی می‌سازد.", icon: "🧠" },
- { id: "debug-assistant", title: "دستیار دیباگ", desc: "خطای برنامه را تحلیل و مسیر رفع آن را توضیح می‌دهد.", icon: "🧰" },
- { id: "text-data-analyst", title: "تحلیل‌گر داده متنی", desc: "داده‌های متنی را دسته‌بندی و الگوهایشان را استخراج می‌کند.", icon: "📊" },
- { id: "info-extractor", title: "استخراج‌گر اطلاعات", desc: "اطلاعات مهم را از متن‌های شلوغ جدا می‌کند.", icon: "🕸️" },
- { id: "project-memory", title: "حافظه پروژه", desc: "اطلاعات یک پروژه را ساختاریافته نگه می‌دارد و هنگام ادامه کار استفاده می‌کند.", icon: "🧠" },
- { id: "text-game-maker", title: "سازنده بازی متنی", desc: "با چند توضیح، یک بازی داستانی تعاملی طراحی می‌کند.", icon: "🎮" },
- { id: "story-world-builder", title: "جهان‌ساز داستان", desc: "شخصیت‌ها، قوانین جهان و تاریخچه یک دنیای خیالی را می‌سازد.", icon: "🌌" },
- { id: "screenplay-maker", title: "فیلمنامه‌ساز هوشمند", desc: "ایده خام را به ساختار فیلمنامه تبدیل می‌کند.", icon: "🎬" },
- { id: "character-simulator", title: "شبیه‌ساز شخصیت", desc: "گفت‌وگو را بر اساس شخصیت و قوانین تعریف‌شده اجرا می‌کند.", icon: "🗣️" },
- { id: "strategy-maker", title: "استراتژی‌ساز", desc: "برای یک هدف، چند مسیر اجرایی مختلف پیشنهاد می‌دهد.", icon: "🧠" },
- { id: "info-treasure-hunt", title: "شکار گنج اطلاعاتی", desc: "از یک موضوع، اطلاعات مرتبط را به شکل زنجیره‌ای سازمان‌دهی می‌کند.", icon: "🏴‍☠️" },
- { id: "idea-to-instructions", title: "ایده به دستورالعمل", desc: "یک هدف مبهم را به دستورهای دقیق و قابل اجرا تبدیل می‌کند.", icon: "⚡" },
- { id: "superprompt-maker", title: "ابرپرامپت‌ساز", desc: "از یک درخواست ساده، پرامپت بسیار دقیق و ساختاریافته می‌سازد.", icon: "🧠" },
- { id: "personal-assistant-builder", title: "ساخت دستیار شخصی", desc: "کاربر مشخصات و قوانین دستیار خودش را تعریف می‌کند و یک دستیار متنی اختصاصی می‌سازد.", icon: "🤖" },
-];
 
 const state = {
  user: null,
@@ -812,7 +737,6 @@ const TRANSLATIONS = {
  creatorTitle: "سازنده",
  greeting: "سلام",
  titleAssistants: "دستیارها", subAssistants: "انتخاب دستیار هوش مصنوعی",
- titleTools: "ابزارهای هوش مصنوعی", subTools: "یک ابزار متنی یا کدی را انتخاب کنید",
  titleHome: "خانه", subHome: "داشبورد Alpha",
  titleChat: "چت هوش مصنوعی", subChat: "گفت‌وگو با دستیار هوشمند",
  titleTranslate: "ترجمه‌گر", subTranslate: "ترجمه فوری و دقیق متن",
@@ -873,7 +797,6 @@ const TRANSLATIONS = {
  creatorTitle: "Creator",
  greeting: "Hello",
  titleAssistants: "Assistants", subAssistants: "Choose an AI assistant",
- titleTools: "AI Tools", subTools: "Choose a text or code tool",
  titleHome: "Home", subHome: "Alpha Dashboard",
  titleChat: "AI Chat", subChat: "Chat with a smart assistant",
  titleTranslate: "Translator", subTranslate: "Fast, accurate text translation",
@@ -1008,27 +931,6 @@ const app = {
  this.nav(a.nav);
  },
 
- /* ---------------- TOOLS ---------------- */
- populateTools() {
- const wrap = document.getElementById("toolGrid");
- wrap.innerHTML = "";
- TEXT_TOOLS.forEach(t => {
- const c = document.createElement("div");
- c.className = "assist-row glass";
- c.onclick = () => this.openTool(t.id);
- c.innerHTML = `<div class="ic" style="font-size:20px;line-height:1">${t.icon}</div><div class="txt"><b>${t.title}</b><span>${t.desc}</span></div>`;
- wrap.appendChild(c);
- });
- },
- openTool(id) {
- const t = TEXT_TOOLS.find(x => x.id === id);
- if (!t) return;
- state.currentMode = t.id;
- this.newChat();
- this.populateAiModes();
- this.nav("chat");
- },
-
  /* ---------------- NAV ---------------- */
  nav(view, isBack) {
  if (state.currentView === "voice" && view !== "voice") {
@@ -1047,7 +949,6 @@ const app = {
  if (btn) btn.classList.add("active");
  const titles = {
  assistants: [this.tt("titleAssistants"), this.tt("subAssistants")],
- tools: [this.tt("titleTools"), this.tt("subTools")],
  home: [this.tt("titleHome"), this.tt("subHome")], chat: [this.tt("titleChat"), this.tt("subChat")],
  translate: [this.tt("titleTranslate"), this.tt("subTranslate")], pdf: [this.tt("titlePdf"), this.tt("subPdf")],
  voice: [this.tt("titleVoice"), this.tt("subVoice")], history: [this.tt("titleHistory"), this.tt("subHistory")],
@@ -1058,7 +959,6 @@ const app = {
  document.getElementById("sidebar").classList.remove("open");
  if (view === "history") this.renderHistory();
  if (view === "profile") this.updateStats();
- if (view === "tools") this.populateTools();
  },
  goBack() {
  if (state.navHistory.length > 0) {
@@ -1117,7 +1017,6 @@ const app = {
  },
  quickAsk() {
  const input = document.getElementById("quickAskInput");
- if (!input) return;
  const text = input.value.trim();
  if (!text) return;
  this.newChat();
@@ -1439,4 +1338,95 @@ const app = {
  const trans = store.get(uk("pta_translations"), []);
  const pdfs = store.get(uk("pta_pdfs"), []);
  let rows = [];
- chats.forEach(c =>rows.push({ type: "chat", id: c.id, title: c.titl
+ chats.forEach(c =>rows.push({ type: "chat", id: c.id, title: c.title, ts: c.ts, icon: "" }));
+ trans.forEach(t =>rows.push({ type: "trans", id: t.id, title: `${t.src.slice(0, 30)}...`, ts: t.ts, icon: "" }));
+ pdfs.forEach(p =>rows.push({ type: "pdf", id: p.id, title: p.name, ts: p.ts, icon: "" }));
+ rows = rows.filter(r =>r.title.toLowerCase().includes(q)).sort((a, b) =>b.ts - a.ts);
+
+ const wrap = document.getElementById("histList");
+ wrap.innerHTML = rows.map(r => `
+ <div class="hist-row glass">
+ <div class="l">${r.icon} <div><b>${this.esc(r.title)}</b><span>${new Date(r.ts).toLocaleString("fa-IR")}</span></div></div>
+ <div class="hist-actions">
+ ${r.type === "chat" ? `<button onclick="app.openChat('${r.id}')">ادامه</button>` : ""}
+ <button onclick="app.deleteHistory('${r.type}','${r.id}')">حذف</button>
+ </div>
+ </div>`).join("") || `<p style="color:var(--muted);font-size:12px;text-align:center;margin-top:30px">چیزی یافت نشد.</p>`;
+ },
+ openChat(id) {
+ state.currentChatId = id;
+ const chats = store.get(uk("pta_chats"), {});
+ const chat = chats[id];
+ document.getElementById("chatArea").innerHTML = "";
+ chat.messages.forEach(m =>this.addChatBubble(m.content, m.role === "user" ? "user" : "ai"));
+ this.nav("chat");
+ },
+ deleteHistory(type, id) {
+ if (!confirm("حذف شود؟")) return;
+ if (type === "chat") { const c = store.get(uk("pta_chats"), {}); delete c[id]; store.set(uk("pta_chats"), c); }
+ if (type === "trans") { store.set(uk("pta_translations"), store.get(uk("pta_translations"), []).filter(t =>t.id !== id)); }
+ if (type === "pdf") { store.set(uk("pta_pdfs"), store.get(uk("pta_pdfs"), []).filter(p =>p.id !== id)); }
+ this.renderHistory();
+ this.renderSidebarHistory();
+ },
+
+ /* ---------------- SETTINGS ---------------- */
+ setUiLang(l) {
+ state.uiLang = l;
+ state.aiRespLang = l;
+ store.set("pta_ui_lang", l);
+ document.getElementById("uiFa").classList.toggle("active", l === "fa");
+ document.getElementById("uiEn").classList.toggle("active", l === "en");
+ document.documentElement.setAttribute("dir", l === "fa" ? "rtl" : "ltr");
+ document.documentElement.setAttribute("lang", l);
+ this.applyUiLang();
+ if (state.currentView) this.nav(state.currentView, true);
+ if (document.getElementById("assistGrid")) this.populateAssistants();
+ this.renderWelcomeIfNeeded();
+ },
+ tt(key) {
+ const d = TRANSLATIONS[state.uiLang] || TRANSLATIONS.fa;
+ return d[key] !== undefined ? d[key] : (TRANSLATIONS.fa[key] || key);
+ },
+ applyUiLang() {
+ document.querySelectorAll("[data-i18n]").forEach(el => {
+ const key = el.getAttribute("data-i18n");
+ el.textContent = this.tt(key);
+ });
+ document.querySelectorAll("[data-i18n-ph]").forEach(el => {
+ const key = el.getAttribute("data-i18n-ph");
+ el.setAttribute("placeholder", this.tt(key));
+ });
+ },
+ toggleSetting(key) {
+ state.settings[key] = !state.settings[key];
+ store.set("pta_settings", state.settings);
+ const id = "sw" + key.charAt(0).toUpperCase() + key.slice(1);
+ const el = document.getElementById(id);
+ if (el) el.classList.toggle("on", state.settings[key]);
+ },
+
+ /* ---------------- HELPERS ---------------- */
+ updateStats() {
+ document.getElementById("statChats").textContent = Object.keys(store.get(uk("pta_chats"), {})).length;
+ document.getElementById("statTrans").textContent = store.get(uk("pta_translations"), []).length;
+ document.getElementById("statFiles").textContent = store.get(uk("pta_pdfs"), []).length;
+ },
+ copyText(id) { navigator.clipboard.writeText(document.getElementById(id).value); },
+ shareText(id) { this.shareRaw(document.getElementById(id).value); },
+ shareRaw(text) {
+ if (navigator.share) navigator.share({ text }).catch(() => {});
+ else { navigator.clipboard.writeText(text); this.showModal("اشتراک‌گذاری", "متن در کلیپ‌بورد کپی شد."); }
+ },
+ showModal(title, body) {
+ document.getElementById("modalTitle").textContent = title;
+ document.getElementById("modalBody").textContent = body;
+ document.getElementById("modalBg").classList.remove("hidden");
+ },
+ esc(s) { const d = document.createElement("div"); d.textContent = s || ""; return d.innerHTML; },
+};
+
+window.addEventListener("load", () =>app.init());
+</script>
+</body>
+</html>
