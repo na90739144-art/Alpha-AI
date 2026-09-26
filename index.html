@@ -871,7 +871,7 @@ const app = {
  const users = store.get("pta_users", {});
  const u = users[email];
  if (!u) { msg.textContent = "ایمیل اشتباه است."; return; }
- if (u.pass !== pass) { msg.textContent = "رمز عبور اشتباه است."; return; }
+ if (u.pass !== pass) { msg.textContent = "رمز عبور را اشتباه وارد کردید."; return; }
  this.enterApp({ name: u.name, email: u.email });
  },
  enterApp(user) {
